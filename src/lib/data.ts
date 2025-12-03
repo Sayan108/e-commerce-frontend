@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import type { Product, Category, SubCategory, Testimonial } from './types';
+import { PlaceHolderImages } from './placeholder-images';
 
 // Set a seed to ensure consistent data generation across server and client
 faker.seed(123);
@@ -11,6 +12,7 @@ const generateProducts = (category: {id: string, name: string}, subcategory: {id
     const originalPrice = parseFloat(faker.commerce.price({ min: 50, max: 500 }));
     const discount = faker.number.int({ min: 10, max: 40 });
     const price = originalPrice * (1 - discount / 100);
+    const productImage = PlaceHolderImages[faker.number.int({ min: 0, max: PlaceHolderImages.length - 1 })];
 
     return {
       id: productId,
@@ -19,8 +21,8 @@ const generateProducts = (category: {id: string, name: string}, subcategory: {id
       price: parseFloat(price.toFixed(2)),
       originalPrice: originalPrice,
       discount: `${discount}% off`,
-      imageUrl: `https://picsum.photos/seed/${productId}/600/600`,
-      imageHint: "product " + i,
+      imageUrl: productImage.imageUrl,
+      imageHint: productImage.imageHint,
       category: category.name,
       categoryId: category.id,
       subcategory: subcategory.name,
@@ -58,13 +60,14 @@ const generateAllData = () => {
     const categoryId = faker.string.uuid();
     const { subcategories, products } = generateSubcategoriesAndProducts({ id: categoryId, name: categoryName });
     allProducts = allProducts.concat(products);
+    const categoryImage = PlaceHolderImages[faker.number.int({ min: 0, max: PlaceHolderImages.length - 1 })];
     categories.push({
       id: categoryId,
       name: categoryName,
       subcategories,
       productCount: products.length,
-      imageUrl: `https://picsum.photos/seed/${categoryId}/400/500`,
-      imageHint: `category ${i}`,
+      imageUrl: categoryImage.imageUrl,
+      imageHint: categoryImage.imageHint,
     });
   }
   

@@ -37,6 +37,54 @@
       "imageHint": "watch bracelet"
     },
     {
+      "id": "product-1",
+      "description": "Stylish handbag",
+      "imageUrl": "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?q=80&w=1887&auto=format&fit=crop",
+      "imageHint": "stylish handbag"
+    },
+    {
+      "id": "product-2",
+      "description": "White t-shirt",
+      "imageUrl": "https://images.unsplash.com/photo-1581655353564-df123a1eb820?q=80&w=1887&auto=format&fit=crop",
+      "imageHint": "white t-shirt"
+    },
+    {
+      "id": "product-3",
+      "description": "Black leather jacket",
+      "imageUrl": "https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=1887&auto=format&fit=crop",
+      "imageHint": "leather jacket"
+    },
+    {
+      "id": "product-4",
+      "description": "Blue jeans",
+      "imageUrl": "https://images.unsplash.com/photo-1602293589914-9FF05f8b2c45?q=80&w=1887&auto=format&fit=crop",
+      "imageHint": "blue jeans"
+    },
+    {
+      "id": "product-5",
+      "description": "Red dress",
+      "imageUrl": "https://images.unsplash.com/photo-1572804013427-4d7ca7268217?q=80&w=1965&auto=format&fit=crop",
+      "imageHint": "red dress"
+    },
+    {
+      "id": "product-6",
+      "description": "Running shoes",
+      "imageUrl": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2070&auto=format&fit=crop",
+      "imageHint": "running shoes"
+    },
+    {
+      "id": "product-7",
+      "description": "Sunglasses",
+      "imageUrl": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=1780&auto=format&fit=crop",
+      "imageHint": "sunglasses"
+    },
+    {
+      "id": "product-8",
+      "description": " wristwatch",
+      "imageUrl": "https://images.unsplash.com/photo-1524805444758-089113d48a6d?q=80&w=1888&auto=format&fit=crop",
+      "imageHint": "wrist watch"
+    },
+    {
       "id": "avatar-1",
       "description": "Smiling person's avatar",
       "imageUrl": "https://images.unsplash.com/photo-1484863137850-59afcfe05386?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxwZXJzb24lMjBzbWlsaW5nfGVufDB8fHx8MTc2NDcwNjIzNnww&ixlib=rb-4.1.0&q=80&w=1080",

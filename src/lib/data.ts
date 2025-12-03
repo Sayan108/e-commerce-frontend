@@ -1,6 +1,9 @@
 import { faker } from '@faker-js/faker';
 import type { Product, Category, SubCategory, Testimonial } from './types';
 
+// Set a seed to ensure consistent data generation across server and client
+faker.seed(123);
+
 const generateProducts = (category: {id: string, name: string}, subcategory: {id: string, name: string}, count: number): Product[] => {
   return Array.from({ length: count }, (_, i) => {
     const productName = faker.commerce.productName();

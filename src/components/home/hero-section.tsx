@@ -1,5 +1,10 @@
+
+'use client';
 import Image from "next/image";
 import Link from "next/link";
+import React from "react";
+import Autoplay from "embla-carousel-autoplay";
+
 import {
   Carousel,
   CarouselContent,
@@ -39,6 +44,9 @@ const heroBanners = [
 ];
 
 export function HeroSection() {
+    const plugin = React.useRef(
+        Autoplay({ delay: 5000, stopOnInteraction: true })
+    );
   return (
     <section className="w-full">
       <Carousel
@@ -46,6 +54,9 @@ export function HeroSection() {
         opts={{
           loop: true,
         }}
+        plugins={[plugin.current]}
+        onMouseEnter={plugin.current.stop}
+        onMouseLeave={plugin.current.reset}
       >
         <CarouselContent>
           {heroBanners.map((banner) => (
@@ -62,16 +73,16 @@ export function HeroSection() {
                         priority
                       />
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4">
-                    <div className="bg-black/50 p-6 md:p-10 rounded-lg shadow-2xl backdrop-blur-sm">
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
+                  <div className="absolute inset-0 flex flex-col items-start justify-center text-left text-white p-8 md:p-16 lg:p-24">
+                    <div className="max-w-md animate-fade-in-up">
                         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-6xl font-headline">
                         {banner.title}
                         </h1>
-                        <p className="mt-4 max-w-xl text-lg text-primary-foreground/80">
+                        <p className="mt-4 text-lg text-primary-foreground/90">
                         {banner.description}
                         </p>
-                        <Button asChild size="lg" className="mt-6" variant="secondary">
+                        <Button asChild size="lg" className="mt-8" variant="secondary">
                         <Link href={banner.buttonLink}>{banner.buttonText}</Link>
                         </Button>
                     </div>

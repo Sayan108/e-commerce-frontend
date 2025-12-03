@@ -58,7 +58,7 @@ export function Footer() {
         </div>
         <Separator className="mt-12" />
         <div className="pt-8 text-center text-sm text-muted-foreground">
-            <p>&copy; {new Date().getFullYear()} BoutiqueBlast. All Rights Reserved.</p>
+            <p>&copy; {new Date().getFullYear()} BoutiqueBlast India. All Rights Reserved.</p>
         </div>
       </div>
     </footer>

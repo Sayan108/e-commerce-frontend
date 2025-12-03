@@ -124,21 +124,21 @@ export default function ContactPage() {
                     <Mail className="h-6 w-6 text-primary mt-1"/>
                     <div>
                         <h3 className="font-semibold">Email</h3>
-                        <p className="text-muted-foreground">support@boutiqueblast.com</p>
+                        <p className="text-muted-foreground">support@boutiqueblast.co.in</p>
                     </div>
                 </div>
                 <div className="flex items-start gap-4">
                     <Phone className="h-6 w-6 text-primary mt-1"/>
                     <div>
                         <h3 className="font-semibold">Phone</h3>
-                        <p className="text-muted-foreground">(123) 456-7890</p>
+                        <p className="text-muted-foreground">+91 98765 43210</p>
                     </div>
                 </div>
                 <div className="flex items-start gap-4">
                     <MapPin className="h-6 w-6 text-primary mt-1"/>
                     <div>
                         <h3 className="font-semibold">Address</h3>
-                        <p className="text-muted-foreground">123 Fashion Ave, New York, NY 10001</p>
+                        <p className="text-muted-foreground">123 Fashion Street, Bengaluru, 560001, India</p>
                     </div>
                 </div>
             </div>

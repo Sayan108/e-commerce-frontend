@@ -47,8 +47,10 @@ export default function SummaryPage() {
         
         if (orderId) {
             clearCart();
-            localStorage.removeItem('selectedAddress');
-            localStorage.removeItem('paymentMethod');
+            if (typeof window !== 'undefined') {
+                localStorage.removeItem('selectedAddress');
+                localStorage.removeItem('paymentMethod');
+            }
             toast({
                 title: 'Order Placed!',
                 description: 'Thank you for your purchase. Your order is being processed.',

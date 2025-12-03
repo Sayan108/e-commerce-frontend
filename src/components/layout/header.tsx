@@ -1,0 +1,157 @@
+'use client';
+
+import Link from 'next/link';
+import { CircleUserRound, Menu, Search, ShoppingCart } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { useCart } from '@/context/cart-context';
+import { useAuth } from '@/context/auth-context';
+import { Logo } from '../shared/logo';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Badge } from '../ui/badge';
+
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/categories', label: 'Categories' },
+  { href: '/contact', label: 'Contact Us' },
+];
+
+export function Header() {
+  const { cartCount } = useCart();
+  const { isAuthenticated, user, logout } = useAuth();
+  const isMobile = useIsMobile();
+
+  const userMenu = (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon" className="rounded-full">
+          <CircleUserRound />
+          <span className="sr-only">User menu</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        {isAuthenticated ? (
+          <>
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href="/profile">Profile</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/profile/orders">Orders</Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => logout()}>Logout</DropdownMenuItem>
+          </>
+        ) : (
+          <>
+            <DropdownMenuItem asChild>
+              <Link href="/login">Login</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/register">Register</Link>
+            </DropdownMenuItem>
+          </>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+
+  const desktopNav = (
+    <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
+      <Logo />
+      <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
+        {navLinks.map(link => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className="transition-colors hover:text-primary"
+          >
+            {link.label}
+          </Link>
+        ))}
+      </nav>
+      <div className="flex items-center gap-4">
+        <Button variant="ghost" size="icon">
+          <Search />
+          <span className="sr-only">Search</span>
+        </Button>
+        {userMenu}
+        <Link href="/cart" passHref>
+          <Button variant="ghost" size="icon" asChild>
+            <div className='relative'>
+                <ShoppingCart />
+                {cartCount > 0 && <Badge variant="destructive" className="absolute -right-2 -top-2 h-5 w-5 justify-center p-0">{cartCount}</Badge>}
+                <span className="sr-only">Shopping Cart</span>
+            </div>
+          </Button>
+        </Link>
+      </div>
+    </div>
+  );
+
+  const mobileNav = (
+    <div className="container mx-auto flex h-16 items-center justify-between px-4">
+      <Logo />
+      <div className="flex items-center gap-2">
+        <Link href="/cart" passHref>
+            <Button variant="ghost" size="icon" asChild>
+                <div className='relative'>
+                    <ShoppingCart />
+                    {cartCount > 0 && <Badge variant="destructive" className="absolute -right-2 -top-2 h-5 w-5 justify-center p-0">{cartCount}</Badge>}
+                    <span className="sr-only">Shopping Cart</span>
+                </div>
+            </Button>
+        </Link>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <Menu />
+              <span className="sr-only">Toggle navigation menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="right">
+            <nav className="grid gap-6 text-lg font-medium mt-10">
+              {navLinks.map(link => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="transition-colors hover:text-primary"
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <DropdownMenuSeparator/>
+              {isAuthenticated ? (
+                <>
+                <Link href="/profile" className="transition-colors hover:text-primary">Profile</Link>
+                <Link href="/profile/orders" className="transition-colors hover:text-primary">Orders</Link>
+                <a onClick={() => logout()} className="transition-colors hover:text-primary cursor-pointer">Logout</a>
+                </>
+              ) : (
+                <>
+                <Link href="/login" className="transition-colors hover:text-primary">Login</Link>
+                <Link href="/register" className="transition-colors hover:text-primary">Register</Link>
+                </>
+              )}
+            </nav>
+          </SheetContent>
+        </Sheet>
+      </div>
+    </div>
+  );
+
+  return (
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      {isMobile ? mobileNav : desktopNav}
+    </header>
+  );
+}

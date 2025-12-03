@@ -1,3 +1,58 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-1",
+      "description": "Fashion model in a stylish outfit",
+      "imageUrl": "https://images.unsplash.com/photo-1568252542512-9fe8fe9c87bb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxmYXNoaW9uJTIwbW9kZWx8ZW58MHx8fHwxNzY0NzI2NTE5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fashion model"
+    },
+    {
+      "id": "hero-2",
+      "description": "Collection of accessories on a table",
+      "imageUrl": "https://images.unsplash.com/photo-1652766540048-de0a878a3266?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxmYXNoaW9uJTIwYWNjZXNzb3JpZXN8ZW58MHx8fHwxNzY0NzMzMTczfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fashion accessories"
+    },
+    {
+      "id": "hero-3",
+      "description": "Person trying on shoes",
+      "imageUrl": "https://images.unsplash.com/photo-1758186174667-54929c178e18?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxzdHlsaXNoJTIwc2hvZXN8ZW58MHx8fHwxNzY0Njg5MjY3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "stylish shoes"
+    },
+    {
+      "id": "category-clothing",
+      "description": "Stylish clothing on a rack",
+      "imageUrl": "https://images.unsplash.com/photo-1555529733-ba28d9c4587c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxjbG90aGluZyUyMHJhY2t8ZW58MHx8fHwxNzY0NzAyNTkyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "clothing rack"
+    },
+    {
+      "id": "category-shoes",
+      "description": "A pair of elegant shoes",
+      "imageUrl": "https://images.unsplash.com/photo-1760616172899-0681b97a2de3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxlbGVnYW50JTIwc2hvZXN8ZW58MHx8fHwxNzY0NzM5ODk0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "elegant shoes"
+    },
+    {
+      "id": "category-accessories",
+      "description": "A watch and a bracelet",
+      "imageUrl": "https://images.unsplash.com/photo-1672861063794-ce703827c290?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHx3YXRjaCUyMGJyYWNlbGV0fGVufDB8fHx8MTc2NDcxNjQ3Mnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "watch bracelet"
+    },
+    {
+      "id": "avatar-1",
+      "description": "Smiling person's avatar",
+      "imageUrl": "https://images.unsplash.com/photo-1484863137850-59afcfe05386?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxwZXJzb24lMjBzbWlsaW5nfGVufDB8fHx8MTc2NDcwNjIzNnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person smiling"
+    },
+    {
+      "id": "avatar-2",
+      "description": "Person's avatar with glasses",
+      "imageUrl": "https://images.unsplash.com/photo-1639179045538-62bba1166e77?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxwZXJzb24lMjBnbGFzc2VzfGVufDB8fHx8MTc2NDY4ODkzNXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person glasses"
+    },
+    {
+      "id": "avatar-3",
+      "description": "Person with a hat avatar",
+      "imageUrl": "https://images.unsplash.com/photo-1609181510664-4b84fcfbabff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxwZXJzb24lMjBoYXR8ZW58MHx8fHwxNzY0NzI1OTU0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person hat"
+    }
+  ]
 }

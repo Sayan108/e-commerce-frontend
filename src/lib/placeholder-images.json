@@ -19,70 +19,124 @@
       "imageHint": "stylish shoes"
     },
     {
-      "id": "category-clothing",
-      "description": "Stylish clothing on a rack",
-      "imageUrl": "https://images.unsplash.com/photo-1555529733-ba28d9c4587c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxjbG90aGluZyUyMHJhY2t8ZW58MHx8fHwxNzY0NzAyNTkyfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "clothing rack"
-    },
-    {
-      "id": "category-shoes",
-      "description": "A pair of elegant shoes",
-      "imageUrl": "https://images.unsplash.com/photo-1760616172899-0681b97a2de3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxlbGVnYW50JTIwc2hvZXN8ZW58MHx8fHwxNzY0NzM5ODk0fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "elegant shoes"
-    },
-    {
-      "id": "category-accessories",
-      "description": "A watch and a bracelet",
-      "imageUrl": "https://images.unsplash.com/photo-1672861063794-ce703827c290?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHx3YXRjaCUyMGJyYWNlbGV0fGVufDB8fHx8MTc2NDcxNjQ3Mnww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "watch bracelet"
-    },
-    {
-      "id": "product-1",
-      "description": "Stylish handbag",
+      "id": "product-tote",
+      "description": "A classic leather tote bag",
       "imageUrl": "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?q=80&w=1887&auto=format&fit=crop",
-      "imageHint": "stylish handbag"
+      "imageHint": "leather tote"
     },
     {
-      "id": "product-2",
-      "description": "White t-shirt",
-      "imageUrl": "https://images.unsplash.com/photo-1581655353564-df123a1eb820?q=80&w=1887&auto=format&fit=crop",
-      "imageHint": "white t-shirt"
+      "id": "product-scarf",
+      "description": "A colorful silk neck scarf",
+      "imageUrl": "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=1935&auto=format&fit=crop",
+      "imageHint": "silk scarf"
     },
     {
-      "id": "product-3",
-      "description": "Black leather jacket",
-      "imageUrl": "https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=1887&auto=format&fit=crop",
-      "imageHint": "leather jacket"
+      "id": "product-denim-jacket",
+      "description": "A vintage-style denim jacket",
+      "imageUrl": "https://images.unsplash.com/photo-1543087904-142c9f2c684a?q=80&w=1887&auto=format&fit=crop",
+      "imageHint": "denim jacket"
     },
     {
-      "id": "product-4",
-      "description": "Blue jeans",
-      "imageUrl": "https://images.unsplash.com/photo-1602293589914-9FF05f8b2c45?q=80&w=1887&auto=format&fit=crop",
-      "imageHint": "blue jeans"
+      "id": "product-boots",
+      "description": "Stylish leather ankle boots",
+      "imageUrl": "https://images.unsplash.com/photo-1603575396113-739097aa73c7?q=80&w=1887&auto=format&fit=crop",
+      "imageHint": "ankle boots"
     },
     {
-      "id": "product-5",
-      "description": "Red dress",
-      "imageUrl": "https://images.unsplash.com/photo-1572804013427-4d7ca7268217?q=80&w=1965&auto=format&fit=crop",
-      "imageHint": "red dress"
+      "id": "product-shirt",
+      "description": "A striped cotton shirt",
+      "imageUrl": "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?q=80&w=1925&auto=format&fit=crop",
+      "imageHint": "cotton shirt"
     },
     {
-      "id": "product-6",
-      "description": "Running shoes",
+      "id": "product-trousers",
+      "description": "Elegant high-waisted trousers",
+      "imageUrl": "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=1887&auto=format&fit=crop",
+      "imageHint": "high-waisted trousers"
+    },
+    {
+      "id": "product-beanie",
+      "description": "A cozy knit beanie hat",
+      "imageUrl": "https://images.unsplash.com/photo-1575428652377-b4587c4d75a6?q=80&w=1887&auto=format&fit=crop",
+      "imageHint": "knit beanie"
+    },
+    {
+      "id": "product-sunglasses",
+      "description": "Modern aviator sunglasses",
+      "imageUrl": "https://images.unsplash.com/photo-1577803645773-f9e47440d080?q=80&w=1887&auto=format&fit=crop",
+      "imageHint": "aviator sunglasses"
+    },
+    {
+      "id": "product-loafers",
+      "description": "Brown suede loafers",
+      "imageUrl": "https://images.unsplash.com/photo-1560343357-9a0a05aa6639?q=80&w=1964&auto=format&fit=crop",
+      "imageHint": "suede loafers"
+    },
+    {
+      "id": "product-blazer",
+      "description": "A tailored plaid wool blazer",
+      "imageUrl": "https://images.unsplash.com/photo-1519098635131-4e6901894a87?q=80&w=1887&auto=format&fit=crop",
+      "imageHint": "plaid blazer"
+    },
+    {
+      "id": "product-sneakers",
+      "description": "White canvas sneakers",
+      "imageUrl": "https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=2012&auto=format&fit=crop",
+      "imageHint": "canvas sneakers"
+    },
+    {
+      "id": "product-chinos",
+      "description": "Men's slim fit chinos",
+      "imageUrl": "https://images.unsplash.com/photo-1604176354204-9268737828e4?q=80&w=1887&auto=format&fit=crop",
+      "imageHint": "slim chinos"
+    },
+    {
+      "id": "product-maxi-dress",
+      "description": "A flowing floral maxi dress",
+      "imageUrl": "https://images.unsplash.com/photo-1594610364993-555fb7fbdef4?q=80&w=1887&auto=format&fit=crop",
+      "imageHint": "maxi dress"
+    },
+    {
+      "id": "product-crossbody",
+      "description": "A small crossbody leather bag",
+      "imageUrl": "https://images.unsplash.com/photo-1588117301044-52549a56762f?q=80&w=1887&auto=format&fit=crop",
+      "imageHint": "crossbody bag"
+    },
+    {
+      "id": "product-sweater",
+      "description": "A soft cashmere v-neck sweater",
+      "imageUrl": "https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?q=80&w=1972&auto=format&fit=crop",
+      "imageHint": "cashmere sweater"
+    },
+    {
+      "id": "product-running-shoes",
+      "description": "Sporty running shoes",
       "imageUrl": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2070&auto=format&fit=crop",
       "imageHint": "running shoes"
     },
     {
-      "id": "product-7",
-      "description": "Sunglasses",
-      "imageUrl": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=1780&auto=format&fit=crop",
-      "imageHint": "sunglasses"
+      "id": "product-watch",
+      "description": "An elegant wristwatch",
+      "imageUrl": "https://images.unsplash.com/photo-1524805444758-089113d48a6d?q=80&w=1888&auto=format&fit=crop",
+      "imageHint": "wristwatch"
     },
     {
-      "id": "product-8",
-      "description": " wristwatch",
-      "imageUrl": "https://images.unsplash.com/photo-1524805444758-089113d48a6d?q=80&w=1888&auto=format&fit=crop",
-      "imageHint": "wrist watch"
+      "id": "product-trench-coat",
+      "description": "A classic beige trench coat",
+      "imageUrl": "https://images.unsplash.com/photo-1542861608-59b437f83d7a?q=80&w=1887&auto=format&fit=crop",
+      "imageHint": "trench coat"
+    },
+    {
+      "id": "product-formal-shoes",
+      "description": "Men's black formal shoes",
+      "imageUrl": "https://images.unsplash.com/photo-1449505278894-297fdb3edbc1?q=80&w=2070&auto=format&fit=crop",
+      "imageHint": "formal shoes"
+    },
+    {
+      "id": "product-earrings",
+      "description": "Gold hoop earrings",
+      "imageUrl": "https://images.unsplash.com/photo-1617038220319-276d3cfab638?q=80&w=1887&auto=format&fit=crop",
+      "imageHint": "hoop earrings"
     },
     {
       "id": "avatar-1",

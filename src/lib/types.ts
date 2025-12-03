@@ -13,6 +13,7 @@ export interface Product {
   subcategoryId: string;
   rating: number;
   reviews: number;
+  imageId?: string;
 }
 
 export interface SubCategory {

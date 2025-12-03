@@ -8,18 +8,24 @@ const generateProducts = (category: {id: string, name: string}, subcategory: {id
   return Array.from({ length: count }, (_, i) => {
     const productName = faker.commerce.productName();
     const productId = faker.string.uuid();
+    const originalPrice = parseFloat(faker.commerce.price({ min: 50, max: 500 }));
+    const discount = faker.number.int({ min: 10, max: 40 });
+    const price = originalPrice * (1 - discount / 100);
+
     return {
       id: productId,
       name: productName,
       description: faker.commerce.productDescription(),
-      price: parseFloat(faker.commerce.price()),
+      price: parseFloat(price.toFixed(2)),
+      originalPrice: originalPrice,
+      discount: `${discount}% off`,
       imageUrl: `https://picsum.photos/seed/${productId}/600/600`,
       imageHint: "product " + i,
       category: category.name,
       categoryId: category.id,
       subcategory: subcategory.name,
       subcategoryId: subcategory.id,
-      rating: faker.number.float({ min: 3, max: 5, precision: 0.1 }),
+      rating: faker.number.float({ min: 3.5, max: 5, precision: 0.1 }),
       reviews: faker.number.int({ min: 10, max: 500 }),
     };
   });

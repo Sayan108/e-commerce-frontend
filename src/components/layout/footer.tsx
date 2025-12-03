@@ -2,55 +2,64 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Logo } from '../shared/logo';
+import { Separator } from '../ui/separator';
 
 const TwitterIcon = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 1.4 3.3 4.9 3.3 4.9s-5.2-.8-5.2-.8l-.5 2.2s-2.6 1.4-4.4 1.4-4.4-1.4-4.4-1.4l-.5-2.2s-5.2.8-5.2.8 1.7-3.5 3.3-4.9c-1.3-1.3-2-3.4-2-3.4s2.1.8 4.2 2.2c2.1-1.4 4.2-2.2 4.2-2.2z" /></svg>
+    <svg {...props} fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
 );
 const FacebookIcon = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg>
+    <svg {...props} fill="currentColor" viewBox="0 0 24 24"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7v4h3V22h4z" /></svg>
 );
 const InstagramIcon = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" x2="17.51" y1="6.5" y2="6.5" /></svg>
+    <svg {...props} fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" d="M12.315 2.315a4.425 4.425 0 0 1 4.425 4.425v.715a4.425 4.425 0 0 1-4.425 4.425a4.425 4.425 0 0 1-4.425-4.425V6.74a4.425 4.425 0 0 1 4.425-4.425Zm0 1.14a3.285 3.285 0 0 0-3.285 3.285v.715a3.285 3.285 0 0 0 3.285 3.285a3.285 3.285 0 0 0 3.285-3.285V6.74a3.285 3.285 0 0 0-3.285-3.285Z" clipRule="evenodd" /><path d="M10.893 2.25a.553.553 0 0 0-.447.199a.553.553 0 0 0-.199.447v4.256a.553.553 0 0 0 .199.447a.553.553 0 0 0 .447.199h4.256a.553.553 0 0 0 .447-.199a.553.553 0 0 0 .199-.447V2.896a.553.553 0 0 0-.199-.447a.553.553 0 0 0-.447-.199h-4.256Z" /><path fillRule="evenodd" d="M4.685 1.5h14.63a3.185 3.185 0 0 1 3.185 3.185v14.63a3.185 3.185 0 0 1-3.185 3.185H4.685A3.185 3.185 0 0 1 1.5 19.315V4.685A3.185 3.185 0 0 1 4.685 1.5Zm-1.14 3.185a1.14 1.14 0 0 1 1.14-1.14h14.63a1.14 1.14 0 0 1 1.14 1.14v14.63a1.14 1.14 0 0 1-1.14 1.14H4.685a1.14 1.14 0 0 1-1.14-1.14V4.685Z" clipRule="evenodd" /></svg>
 );
 
 
 export function Footer() {
   return (
-    <footer className="bg-muted text-muted-foreground py-12">
-      <div className="container mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 md:grid-cols-4">
-        <div className="flex flex-col gap-4">
-          <Logo />
-          <p className="text-sm">
-            An elegant online boutique with a blast of style.
-          </p>
+    <footer className="bg-muted">
+      <div className="container mx-auto max-w-7xl px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+            <div className="md:col-span-4 flex flex-col gap-4">
+                <Logo />
+                <p className="text-sm text-muted-foreground">
+                    An elegant online boutique with a blast of style.
+                </p>
+                <div className="flex space-x-4 mt-2">
+                    <Link href="#" className="text-muted-foreground hover:text-primary"><TwitterIcon className="h-5 w-5" /></Link>
+                    <Link href="#" className="text-muted-foreground hover:text-primary"><FacebookIcon className="h-5 w-5" /></Link>
+                    <Link href="#" className="text-muted-foreground hover:text-primary"><InstagramIcon className="h-5 w-5" /></Link>
+                </div>
+            </div>
+            <div className="md:col-span-2">
+                <h3 className="mb-4 text-sm font-semibold text-foreground">Shop</h3>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li><Link href="/categories" className="hover:text-primary">All Categories</Link></li>
+                    <li><Link href="/#featured" className="hover:text-primary">Featured</Link></li>
+                    <li><Link href="/#new-arrivals" className="hover:text-primary">New Arrivals</Link></li>
+                </ul>
+            </div>
+            <div className="md:col-span-2">
+                <h3 className="mb-4 text-sm font-semibold text-foreground">Support</h3>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li><Link href="/contact" className="hover:text-primary">Contact Us</Link></li>
+                    <li><Link href="/faq" className="hover:text-primary">FAQ</Link></li>
+                    <li><Link href="/profile" className="hover:text-primary">My Account</Link></li>
+                </ul>
+            </div>
+            <div className="md:col-span-4">
+                <h3 className="mb-4 text-sm font-semibold text-foreground">Newsletter</h3>
+                <p className="mb-4 text-sm text-muted-foreground">Subscribe to get the latest on sales, new releases and more.</p>
+                <form className="flex gap-2">
+                    <Input type="email" placeholder="Enter your email" className="bg-background"/>
+                    <Button type="submit" variant="default">Subscribe</Button>
+                </form>
+            </div>
         </div>
-        <div>
-          <h3 className="mb-4 text-sm font-semibold text-foreground">Quick Links</h3>
-          <ul className="space-y-2 text-sm">
-            <li><Link href="/categories" className="hover:text-primary">Shop</Link></li>
-            <li><Link href="/contact" className="hover:text-primary">Contact</Link></li>
-            <li><Link href="/profile" className="hover:text-primary">My Account</Link></li>
-          </ul>
+        <Separator className="mt-12" />
+        <div className="pt-8 text-center text-sm text-muted-foreground">
+            <p>&copy; {new Date().getFullYear()} BoutiqueBlast. All Rights Reserved.</p>
         </div>
-        <div>
-          <h3 className="mb-4 text-sm font-semibold text-foreground">Follow Us</h3>
-          <div className="flex space-x-4">
-            <Link href="#" className="hover:text-primary"><TwitterIcon className="h-5 w-5" /></Link>
-            <Link href="#" className="hover:text-primary"><FacebookIcon className="h-5 w-5" /></Link>
-            <Link href="#" className="hover:text-primary"><InstagramIcon className="h-5 w-5" /></Link>
-          </div>
-        </div>
-        <div>
-          <h3 className="mb-4 text-sm font-semibold text-foreground">Newsletter</h3>
-          <p className="mb-4 text-sm">Subscribe to get the latest on sales, new releases and more.</p>
-          <form className="flex gap-2">
-            <Input type="email" placeholder="Enter your email" className="bg-background"/>
-            <Button type="submit" variant="default">Subscribe</Button>
-          </form>
-        </div>
-      </div>
-      <div className="container mx-auto mt-8 max-w-7xl border-t pt-8 px-4 text-center text-sm">
-        <p>&copy; {new Date().getFullYear()} BoutiqueBlast. All Rights Reserved.</p>
       </div>
     </footer>
   );

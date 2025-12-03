@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { createContext, useContext, ReactNode } from 'react';
@@ -5,6 +6,8 @@ import { useLocalStorage } from '@/hooks/use-local-storage';
 import { User, Address, Order } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
+import { products } from '@/lib/data';
+import { faker } from '@faker-js/faker';
 
 interface AuthContextType {
   user: User | null;
@@ -20,18 +23,49 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const createDummyData = () => {
+    const dummyAddress: Address = {
+        id: `addr-${Date.now()}`,
+        type: 'Home',
+        line1: '123 Fashion Street',
+        city: 'Bengaluru',
+        state: 'Karnataka',
+        zip: '560001',
+        country: 'India'
+    };
+
+    const dummyOrders: Order[] = Array.from({ length: 3 }).map((_, i) => {
+        const orderItems = products.slice(i * 3, i * 3 + 3).map(p => ({ ...p, quantity: faker.number.int({ min: 1, max: 2 }) }));
+        const total = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        return {
+            id: `order-${Date.now()}-${i}`,
+            date: faker.date.past().toISOString(),
+            items: orderItems,
+            total: total,
+            status: faker.helpers.arrayElement(['Delivered', 'Shipped', 'Pending']),
+            shippingAddress: dummyAddress,
+            paymentMethod: faker.helpers.arrayElement(['Online', 'COD']),
+            trackingNumber: `TN${faker.string.alphanumeric(10).toUpperCase()}`
+        }
+    });
+
+    return { dummyAddress, dummyOrders };
+};
+
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useLocalStorage<User | null>('user', null);
   const router = useRouter();
   const { toast } = useToast();
 
   const login = (email: string, name: string = 'Guest User') => {
+    const { dummyAddress, dummyOrders } = createDummyData();
     const mockUser: User = {
       id: `user-${Date.now()}`,
       name: name,
       email: email,
-      addresses: user?.addresses || [],
-      orders: user?.orders || [],
+      addresses: user?.addresses?.length ? user.addresses : [dummyAddress],
+      orders: user?.orders?.length ? user.orders : dummyOrders,
     };
     setUser(mockUser);
     toast({ title: 'Login Successful', description: `Welcome back, ${name}!` });
@@ -39,12 +73,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
   
   const register = (name: string, email: string) => {
+    const { dummyAddress, dummyOrders } = createDummyData();
     const newUser: User = {
         id: `user-${Date.now()}`,
         name,
         email,
-        addresses: [],
-        orders: [],
+        addresses: [dummyAddress],
+        orders: dummyOrders,
     };
     setUser(newUser);
     toast({ title: 'Registration Successful', description: `Welcome, ${name}!` });

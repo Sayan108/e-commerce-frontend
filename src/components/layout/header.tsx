@@ -17,6 +17,8 @@ import { useAuth } from '@/context/auth-context';
 import { Logo } from '../shared/logo';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Badge } from '../ui/badge';
+import { SearchDialog } from '../shared/search-dialog';
+import { useState } from 'react';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -28,6 +30,7 @@ export function Header() {
   const { cartCount } = useCart();
   const { isAuthenticated, user, logout } = useAuth();
   const isMobile = useIsMobile();
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const userMenu = (
     <DropdownMenu>
@@ -80,10 +83,12 @@ export function Header() {
         ))}
       </nav>
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon">
-          <Search />
-          <span className="sr-only">Search</span>
-        </Button>
+        <SearchDialog open={searchOpen} onOpenChange={setSearchOpen}>
+          <Button variant="ghost" size="icon" onClick={() => setSearchOpen(true)}>
+            <Search />
+            <span className="sr-only">Search</span>
+          </Button>
+        </SearchDialog>
         {userMenu}
         <Link href="/cart" passHref>
           <Button variant="ghost" size="icon" asChild>
@@ -102,6 +107,12 @@ export function Header() {
     <div className="container mx-auto flex h-16 items-center justify-between px-4">
       <Logo />
       <div className="flex items-center gap-2">
+        <SearchDialog open={searchOpen} onOpenChange={setSearchOpen}>
+           <Button variant="ghost" size="icon" onClick={() => setSearchOpen(true)}>
+            <Search />
+            <span className="sr-only">Search</span>
+          </Button>
+        </SearchDialog>
         <Link href="/cart" passHref>
             <Button variant="ghost" size="icon" asChild>
                 <div className='relative'>

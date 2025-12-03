@@ -95,3 +95,18 @@ export const getFeaturedProducts = (count: number = 8): Product[] => {
     // simple shuffle and slice for variety on each load if this function was re-run
     return [...products].sort(() => 0.5 - Math.random()).slice(0, count);
 }
+export const searchProducts = (query: string): Product[] => {
+    if (!query) {
+      return [];
+    }
+  
+    const lowercasedQuery = query.toLowerCase();
+    return products.filter(product => {
+      return (
+        product.name.toLowerCase().includes(lowercasedQuery) ||
+        product.description.toLowerCase().includes(lowercasedQuery) ||
+        product.category.toLowerCase().includes(lowercasedQuery) ||
+        product.subcategory.toLowerCase().includes(lowercasedQuery)
+      );
+    });
+};

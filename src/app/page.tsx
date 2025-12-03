@@ -2,6 +2,7 @@ import { HeroSection } from "@/components/home/hero-section";
 import { FeaturedProducts } from "@/components/home/featured-products";
 import { CategoryHighlights } from "@/components/home/category-highlights";
 import { Testimonials } from "@/components/home/testimonials";
+import { MarketingVideo } from "@/components/home/marketing-video";
 
 export default function Home() {
   return (
@@ -9,6 +10,7 @@ export default function Home() {
       <HeroSection />
       <CategoryHighlights />
       <FeaturedProducts />
+      <MarketingVideo />
       <Testimonials />
     </div>
   );

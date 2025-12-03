@@ -16,7 +16,7 @@ export function MarketingVideo() {
             className="w-full h-full object-cover"
             src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
             poster="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&auto=format&fit=crop"
-            controls
+            autoPlay
             loop
             muted
             playsInline

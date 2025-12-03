@@ -1,3 +1,4 @@
+
 'use client';
 import { useAuth } from '@/context/auth-context';
 import {
@@ -15,6 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose
 } from '@/components/ui/dialog';
 import {
   Form,
@@ -84,7 +86,7 @@ const AddressForm = ({ address, onSave, closeDialog }: { address?: Address; onSa
 
 export default function AddressesPage() {
     const { user, addAddress, updateAddress, deleteAddress } = useAuth();
-    const [dialogOpen, setDialogOpen] = useState(false);
+    const [addDialogOpen, setAddDialogOpen] = useState(false);
 
     if (!user) return (
       <Card>
@@ -106,36 +108,39 @@ export default function AddressesPage() {
                     <CardTitle>My Addresses</CardTitle>
                     <CardDescription>Manage your saved shipping addresses.</CardDescription>
                 </div>
-                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
                     <DialogTrigger asChild>
                         <Button><PlusCircle className="mr-2 h-4 w-4" /> Add New</Button>
                     </DialogTrigger>
                     <DialogContent>
                         <DialogHeader><DialogTitle>Add New Address</DialogTitle></DialogHeader>
-                        <AddressForm onSave={addAddress} closeDialog={() => setDialogOpen(false)} />
+                        <AddressForm onSave={addAddress} closeDialog={() => setAddDialogOpen(false)} />
                     </DialogContent>
                 </Dialog>
             </CardHeader>
             <CardContent>
                 <div className="space-y-4">
-                    {user.addresses.length > 0 ? user.addresses.map((address) => (
+                    {user.addresses.length > 0 ? user.addresses.map((address) => {
+                        const [editDialogOpen, setEditDialogOpen] = useState(false);
+                        return (
                         <div key={address.id} className="border p-4 rounded-md flex justify-between items-start">
                             <div>
                                 <p className="font-semibold">{address.type}</p>
                                 <p className="text-muted-foreground">{address.line1}, {address.city}, {address.state} {address.zip}</p>
                             </div>
                             <div className="flex gap-2">
-                                <Dialog>
+                                <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
                                     <DialogTrigger asChild><Button variant="ghost" size="icon"><Edit className="h-4 w-4"/></Button></DialogTrigger>
                                     <DialogContent>
                                         <DialogHeader><DialogTitle>Edit Address</DialogTitle></DialogHeader>
-                                        <AddressForm address={address} onSave={updateAddress} closeDialog={() => {}} />
+                                        <AddressForm address={address} onSave={updateAddress} closeDialog={() => setEditDialogOpen(false)} />
                                     </DialogContent>
                                 </Dialog>
                                 <Button variant="ghost" size="icon" onClick={() => deleteAddress(address.id)}><Trash className="h-4 w-4 text-destructive"/></Button>
                             </div>
                         </div>
-                    )) : (
+                        )
+                    }) : (
                         <p className="text-muted-foreground text-center py-4">You have no saved addresses.</p>
                     )}
                 </div>

@@ -25,7 +25,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const createDummyData = () => {
     const dummyAddress: Address = {
-        id: `addr-${Date.now()}`,
+        id: `addr-${faker.string.uuid()}`,
         type: 'Home',
         line1: '123 Fashion Street',
         city: 'Bengaluru',
@@ -38,7 +38,7 @@ const createDummyData = () => {
         const orderItems = products.slice(i * 3, i * 3 + 3).map(p => ({ ...p, quantity: faker.number.int({ min: 1, max: 2 }) }));
         const total = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
         return {
-            id: `order-${Date.now()}-${i}`,
+            id: `order-${faker.string.uuid()}`,
             date: faker.date.past().toISOString(),
             items: orderItems,
             total: total,
@@ -59,13 +59,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
 
   const login = (email: string, name: string = 'Guest User') => {
+    const existingUser = JSON.parse(localStorage.getItem('user') || 'null');
+    
+    if (existingUser) {
+        setUser(existingUser);
+        toast({ title: 'Login Successful', description: `Welcome back, ${existingUser.name}!` });
+        return true;
+    }
+
     const { dummyAddress, dummyOrders } = createDummyData();
     const mockUser: User = {
-      id: `user-${Date.now()}`,
+      id: `user-${faker.string.uuid()}`,
       name: name,
       email: email,
-      addresses: user?.addresses?.length ? user.addresses : [dummyAddress],
-      orders: user?.orders?.length ? user.orders : dummyOrders,
+      addresses: [dummyAddress],
+      orders: dummyOrders,
     };
     setUser(mockUser);
     toast({ title: 'Login Successful', description: `Welcome back, ${name}!` });
@@ -75,7 +83,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const register = (name: string, email: string) => {
     const { dummyAddress, dummyOrders } = createDummyData();
     const newUser: User = {
-        id: `user-${Date.now()}`,
+        id: `user-${faker.string.uuid()}`,
         name,
         email,
         addresses: [dummyAddress],
@@ -88,23 +96,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     setUser(null);
+    if (typeof window !== 'undefined') {
+        localStorage.removeItem('user');
+    }
     toast({ title: 'Logged Out', description: 'You have been successfully logged out.' });
     router.push('/');
   };
 
   const addOrder = (orderData: Omit<Order, 'id' | 'date'>) => {
     if(!user) return;
-    const orderId = `order-${Date.now()}`;
+    const orderId = `order-${faker.string.uuid()}`;
     const newOrder: Order = {
         ...orderData,
         id: orderId,
         date: new Date().toISOString(),
-        trackingNumber: `TN${Date.now()}`
+        trackingNumber: `TN${faker.string.alphanumeric(10).toUpperCase()}`
     };
-    setUser(u => u ? ({
-        ...u,
-        orders: [newOrder, ...u.orders],
-    }) : null);
+    setUser(currentUser => {
+        if (!currentUser) return null;
+        return {
+            ...currentUser,
+            orders: [newOrder, ...currentUser.orders],
+        }
+    });
     return orderId;
   }
 
@@ -112,7 +126,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (!user) return;
     const newAddress: Address = {
         ...addressData,
-        id: `addr-${Date.now()}`,
+        id: `addr-${faker.string.uuid()}`,
     };
      setUser(u => u ? ({
         ...u,

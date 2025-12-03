@@ -1,3 +1,4 @@
+
 'use client';
 import { useAuth } from '@/context/auth-context';
 import { useCart } from '@/context/cart-context';
@@ -17,8 +18,8 @@ export default function SummaryPage() {
     const router = useRouter();
     const { toast } = useToast();
 
-    const [selectedAddressId] = useLocalStorage<string | undefined>('selectedAddress', undefined);
-    const [paymentMethod] = useLocalStorage<'Online' | 'COD' | undefined>('paymentMethod', undefined);
+    const [selectedAddressId, setSelectedAddressId] = useLocalStorage<string | undefined>('selectedAddress', undefined);
+    const [paymentMethod, setPaymentMethod] = useLocalStorage<'Online' | 'COD' | undefined>('paymentMethod', undefined);
     const [shippingAddress, setShippingAddress] = useState<Address | null>(null);
 
     useEffect(() => {
@@ -30,6 +31,7 @@ export default function SummaryPage() {
         if (address) {
             setShippingAddress(address);
         } else {
+            // if address is not found (e.g. user deleted it), go back
             router.push('/checkout/address');
         }
     }, [user, selectedAddressId, paymentMethod, router]);
@@ -47,10 +49,10 @@ export default function SummaryPage() {
         
         if (orderId) {
             clearCart();
-            if (typeof window !== 'undefined') {
-                localStorage.removeItem('selectedAddress');
-                localStorage.removeItem('paymentMethod');
-            }
+            // clean up local storage for checkout flow
+            setSelectedAddressId(undefined);
+            setPaymentMethod(undefined);
+            
             toast({
                 title: 'Order Placed!',
                 description: 'Thank you for your purchase. Your order is being processed.',

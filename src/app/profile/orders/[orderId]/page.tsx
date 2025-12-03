@@ -1,5 +1,6 @@
+
 'use client';
-import { useAuth } from '@/context/auth-content';
+import { useAuth } from '@/context/auth-context';
 import { notFound } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Order } from '@/lib/types';
@@ -76,26 +77,24 @@ const OrderDetailSkeleton = () => (
 
 export default function OrderDetailPage({ params }: { params: { orderId: string } }) {
     const { user } = useAuth();
-    const [order, setOrder] = useState<Order | undefined>(undefined);
+    const [order, setOrder] = useState<Order | null | undefined>(undefined);
 
     useEffect(() => {
         if (user) {
-            const foundOrder = user.orders.find(o => o.id === params.orderId);
-            setTimeout(() => {
-                if (foundOrder) {
-                    setOrder(foundOrder);
-                } else {
-                    setOrder(undefined); // Explicitly set to allow notFound() to trigger
-                }
-            }, 500); // Simulate loading
+            // Small delay to allow state to propagate after placing order
+            const timer = setTimeout(() => {
+                const foundOrder = user.orders.find(o => o.id === params.orderId);
+                setOrder(foundOrder || null);
+            }, 100);
+            return () => clearTimeout(timer);
         }
     }, [user, params.orderId]);
 
-    if (order === undefined && user) { // Loading state
+    if (order === undefined) { // Initial loading state
         return <OrderDetailSkeleton />;
     }
 
-    if (!order) { // Not found after loading
+    if (order === null) { // Not found after loading
         notFound();
     }
     

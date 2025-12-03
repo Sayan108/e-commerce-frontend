@@ -4,12 +4,31 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ProfilePage() {
     const { user } = useAuth();
     
     if (!user) {
-        return <div>Loading profile...</div>;
+        return (
+            <Card>
+                <CardHeader>
+                    <Skeleton className="h-6 w-1/2" />
+                    <Skeleton className="h-4 w-3/4" />
+                </CardHeader>
+                <CardContent className="space-y-6">
+                    <div className="space-y-2">
+                        <Skeleton className="h-4 w-24" />
+                        <Skeleton className="h-10 w-full" />
+                    </div>
+                     <div className="space-y-2">
+                        <Skeleton className="h-4 w-24" />
+                        <Skeleton className="h-10 w-full" />
+                    </div>
+                    <Skeleton className="h-10 w-32" />
+                </CardContent>
+            </Card>
+        );
     }
 
     return (

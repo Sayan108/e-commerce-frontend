@@ -9,6 +9,32 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useCart } from '@/context/cart-context';
 import { Star, Minus, Plus } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
+
+const ProductPageSkeleton = () => (
+    <div className="container mx-auto max-w-7xl px-4 py-8">
+      <div className="grid md:grid-cols-2 gap-8 lg:gap-16">
+        <Skeleton className="aspect-square w-full rounded-lg" />
+        <div className="space-y-6">
+          <Skeleton className="h-10 w-3/4" />
+          <div className="flex items-center gap-4">
+            <Skeleton className="h-6 w-28" />
+            <Skeleton className="h-6 w-20" />
+          </div>
+          <Skeleton className="h-10 w-1/4" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-5/6" />
+          </div>
+          <div className="flex items-center gap-4">
+            <Skeleton className="h-12 w-32" />
+            <Skeleton className="h-12 flex-1" />
+          </div>
+        </div>
+      </div>
+    </div>
+);
 
 export default function ProductPage({ params }: { params: { productId: string } }) {
   const [product, setProduct] = useState<Product | null>(null);
@@ -17,15 +43,23 @@ export default function ProductPage({ params }: { params: { productId: string } 
 
   useEffect(() => {
     const foundProduct = getProductById(params.productId);
-    if (foundProduct) {
-      setProduct(foundProduct);
-    } else {
-      notFound();
-    }
+    // Simulate network delay
+    setTimeout(() => {
+        if (foundProduct) {
+            setProduct(foundProduct);
+        } else {
+            // Will be caught by notFound() outside of timeout in a real app
+            setProduct(null); // Set to null to stop loading, notFound will handle it
+        }
+    }, 500);
   }, [params.productId]);
   
+  if (product === null && typeof getProductById(params.productId) === 'undefined') {
+      notFound();
+  }
+  
   if (!product) {
-    return <div className="container mx-auto flex justify-center items-center h-96">Loading...</div>;
+    return <ProductPageSkeleton />;
   }
 
   const handleQuantityChange = (amount: number) => {

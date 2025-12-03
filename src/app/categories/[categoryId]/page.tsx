@@ -1,3 +1,4 @@
+'use client';
 import { notFound } from 'next/navigation';
 import { getCategoryById, getProductsByCategory } from '@/lib/data';
 import { ProductCard } from '@/components/products/product-card';
@@ -7,16 +8,47 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
+import { ProductCardSkeleton } from '@/components/products/product-card-skeleton';
+import { useState, useEffect } from 'react';
+import type { Category, Product } from '@/lib/types';
+
 
 export default function CategoryPage({ params }: { params: { categoryId: string } }) {
-  const category = getCategoryById(params.categoryId);
+  const [category, setCategory] = useState<Category | null | undefined>(undefined);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  useEffect(() => {
+    const categoryData = getCategoryById(params.categoryId);
+    setCategory(categoryData);
+    if(categoryData){
+      const productsData = getProductsByCategory(params.categoryId);
+      setAllProducts(productsData);
+    }
+    setIsLoading(false);
+  }, [params.categoryId]);
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto max-w-7xl px-4 py-8">
+        <div className="animate-pulse">
+            <div className="h-10 bg-muted rounded-md w-1/3 mb-2"></div>
+            <div className="h-6 bg-muted rounded-md w-1/2 mb-8"></div>
+            <div className="h-10 bg-muted rounded-md w-full mb-6"></div>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {Array.from({ length: 8 }).map((_, i) => (
+                    <ProductCardSkeleton key={i} />
+                ))}
+            </div>
+        </div>
+      </div>
+    );
+  }
   
   if (!category) {
     notFound();
   }
   
-  const allProducts = getProductsByCategory(params.categoryId);
-
   return (
     <div className="container mx-auto max-w-7xl px-4 py-8">
       <header className="mb-8">

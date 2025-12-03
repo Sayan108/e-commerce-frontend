@@ -30,6 +30,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Address } from '@/lib/types';
 import { useState } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const addressSchema = z.object({
   type: z.enum(['Home', 'Work']),
@@ -85,7 +86,18 @@ export default function AddressesPage() {
     const { user, addAddress, updateAddress, deleteAddress } = useAuth();
     const [dialogOpen, setDialogOpen] = useState(false);
 
-    if (!user) return <div>Loading addresses...</div>;
+    if (!user) return (
+      <Card>
+          <CardHeader>
+              <Skeleton className="h-6 w-1/3" />
+              <Skeleton className="h-4 w-1/2" />
+          </CardHeader>
+          <CardContent className="space-y-4">
+              <Skeleton className="h-16 w-full" />
+              <Skeleton className="h-16 w-full" />
+          </CardContent>
+      </Card>
+  );
 
     return (
         <Card>

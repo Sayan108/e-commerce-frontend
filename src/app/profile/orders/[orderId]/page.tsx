@@ -9,6 +9,7 @@ import { format } from 'date-fns';
 import Image from 'next/image';
 import { Check, Package, Truck, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const trackingSteps = [
     { name: 'Order Placed', icon: Check, status: 'Pending'},
@@ -17,23 +18,85 @@ const trackingSteps = [
     { name: 'Delivered', icon: Home, status: 'Delivered'},
 ];
 
+const OrderDetailSkeleton = () => (
+    <div className="space-y-8">
+        <Card>
+            <CardHeader>
+                <Skeleton className="h-6 w-1/2" />
+                <Skeleton className="h-4 w-1/3" />
+            </CardHeader>
+            <CardContent>
+                <div className="mb-8">
+                    <Skeleton className="h-6 w-1/4 mb-4" />
+                    <div className="flex justify-between">
+                        {Array.from({length: 4}).map((_, i) => (
+                            <div key={i} className="flex-1 flex flex-col items-center">
+                                <Skeleton className="h-10 w-10 rounded-full" />
+                                <Skeleton className="h-4 w-20 mt-2" />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <Separator className="my-8" />
+                <div className="space-y-4">
+                    {Array.from({length: 2}).map((_, i) => (
+                         <div key={i} className="flex items-center py-4">
+                             <Skeleton className="h-20 w-20 rounded-md" />
+                             <div className="ml-4 flex-grow space-y-2">
+                                 <Skeleton className="h-5 w-3/4" />
+                                 <Skeleton className="h-4 w-1/4" />
+                             </div>
+                             <Skeleton className="h-6 w-16" />
+                         </div>
+                    ))}
+                </div>
+            </CardContent>
+        </Card>
+        <div className="grid md:grid-cols-2 gap-8">
+            <Card>
+                <CardHeader><Skeleton className="h-6 w-1/2" /></CardHeader>
+                <CardContent className="space-y-2">
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-4 w-1/2" />
+                </CardContent>
+            </Card>
+            <Card>
+                <CardHeader><Skeleton className="h-6 w-1/2" /></CardHeader>
+                <CardContent className="space-y-2">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                    <Separator />
+                    <Skeleton className="h-6 w-full" />
+                </CardContent>
+            </Card>
+        </div>
+    </div>
+);
+
+
 export default function OrderDetailPage({ params }: { params: { orderId: string } }) {
     const { user } = useAuth();
-    const [order, setOrder] = useState<Order | null>(null);
+    const [order, setOrder] = useState<Order | undefined>(undefined);
 
     useEffect(() => {
         if (user) {
             const foundOrder = user.orders.find(o => o.id === params.orderId);
-            if (foundOrder) {
-                setOrder(foundOrder);
-            } else {
-                notFound();
-            }
+            setTimeout(() => {
+                if (foundOrder) {
+                    setOrder(foundOrder);
+                } else {
+                    setOrder(undefined); // Explicitly set to allow notFound() to trigger
+                }
+            }, 500); // Simulate loading
         }
     }, [user, params.orderId]);
 
-    if (!order) {
-        return <div>Loading order details...</div>;
+    if (order === undefined && user) { // Loading state
+        return <OrderDetailSkeleton />;
+    }
+
+    if (!order) { // Not found after loading
+        notFound();
     }
     
     const currentStepIndex = trackingSteps.findIndex(step => step.status === order.status);

@@ -19,6 +19,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { Badge } from '../ui/badge';
 import { SearchDialog } from '../shared/search-dialog';
 import { useState } from 'react';
+import { SearchBar } from '../shared/search-bar';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -69,7 +70,7 @@ export function Header() {
   );
 
   const desktopNav = (
-    <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
+    <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4 gap-8">
       <Logo />
       <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
         {navLinks.map(link => (
@@ -82,13 +83,10 @@ export function Header() {
           </Link>
         ))}
       </nav>
-      <div className="flex items-center gap-4">
-        <SearchDialog open={searchOpen} onOpenChange={setSearchOpen}>
-          <Button variant="ghost" size="icon" onClick={() => setSearchOpen(true)}>
-            <Search />
-            <span className="sr-only">Search</span>
-          </Button>
-        </SearchDialog>
+      <div className="flex items-center gap-4 flex-1 justify-end">
+        <div className="w-full max-w-sm">
+            <SearchBar onSearch={() => {}} />
+        </div>
         {userMenu}
         <Link href="/cart" passHref>
           <Button variant="ghost" size="icon" asChild>

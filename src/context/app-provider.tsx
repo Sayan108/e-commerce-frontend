@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useRouter();
+  console.log("kjdfjd");
   useEffect(() => {
     setNavigator(navigate);
   }, [navigate]);

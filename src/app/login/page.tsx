@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,11 +13,18 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAuth } from "@/context/auth-context";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
+import useAuth from "@/hooks/useAuth";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email." }),
@@ -26,8 +33,6 @@ const formSchema = z.object({
 
 export default function LoginPage() {
   const { login } = useAuth();
-  const router = useRouter();
-  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -39,25 +44,20 @@ export default function LoginPage() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Extracting name from email for mock display
-    const name = values.email.split('@')[0];
-    const success = login(values.email, name);
-    if (success) {
-      router.push("/profile");
-    } else {
-        toast({
-            title: "Login Failed",
-            description: "Invalid credentials, please try again.",
-            variant: "destructive",
-        })
-    }
+
+    login({ email: values.email, password: "" });
   }
 
   return (
     <div className="container mx-auto max-w-md px-4 py-20">
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-headline">Welcome Back!</CardTitle>
-          <CardDescription>Sign in to continue to BoutiqueBlast</CardDescription>
+          <CardTitle className="text-2xl font-headline">
+            Welcome Back!
+          </CardTitle>
+          <CardDescription>
+            Sign in to continue to BoutiqueBlast
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -82,18 +82,27 @@ export default function LoginPage() {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="••••••••" {...field} />
+                      <Input
+                        type="password"
+                        placeholder="••••••••"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">Sign In</Button>
+              <Button type="submit" className="w-full">
+                Sign In
+              </Button>
             </form>
           </Form>
           <p className="mt-6 text-center text-sm text-muted-foreground">
             Don't have an account?{" "}
-            <Link href="/register" className="font-semibold text-primary hover:underline">
+            <Link
+              href="/register"
+              className="font-semibold text-primary hover:underline"
+            >
               Sign up
             </Link>
           </p>

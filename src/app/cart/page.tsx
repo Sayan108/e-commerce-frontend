@@ -1,25 +1,33 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { useCart } from '@/context/cart-context';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { Trash2, Minus, Plus, ShoppingBag } from 'lucide-react';
+import Image from "next/image";
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Trash2, Minus, Plus, ShoppingBag } from "lucide-react";
 
 export default function CartPage() {
-  const { cartItems, updateQuantity, removeFromCart, cartTotal, cartCount } = useCart();
-
   return (
     <div className="container mx-auto max-w-7xl px-4 py-8">
       <header className="mb-8">
-        <h1 className="text-4xl font-bold tracking-tight font-headline">Shopping Cart</h1>
-        <p className="mt-2 text-lg text-muted-foreground">You have {cartCount} item(s) in your cart.</p>
+        <h1 className="text-4xl font-bold tracking-tight font-headline">
+          Shopping Cart
+        </h1>
+        <p className="mt-2 text-lg text-muted-foreground">
+          You have 5 item(s) in your cart.
+        </p>
       </header>
 
-      {cartItems.length === 0 ? (
+      {/* {cartItems.length === 0 ? (
         <div className="text-center py-20 border-2 border-dashed rounded-lg">
             <ShoppingBag className="mx-auto h-16 w-16 text-muted-foreground" />
           <h2 className="mt-6 text-xl font-semibold">Your cart is empty</h2>
@@ -101,7 +109,7 @@ export default function CartPage() {
             </Card>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

@@ -1,21 +1,19 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import type { Product } from '@/lib/types';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { useCart } from '@/context/cart-context';
-import { Star } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import Image from "next/image";
+import Link from "next/link";
+import type { Product } from "@/lib/types";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+
+import { Star } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface ProductCardProps {
   product: Product;
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const { addToCart } = useCart();
-
   return (
     <Card className="flex flex-col overflow-hidden transition-all duration-300 hover:shadow-xl group border rounded-lg">
       <CardContent className="p-0 relative">
@@ -34,29 +32,33 @@ export function ProductCard({ product }: ProductCardProps) {
       </CardContent>
       <div className="flex-grow p-4 bg-background flex flex-col justify-between">
         <div>
-            <Link href={`/products/${product.id}`} className="block">
-                <h3 className="text-base font-semibold leading-tight hover:text-primary transition-colors mb-1 truncate">
-                    {product.name}
-                </h3>
-            </Link>
-             <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                <div className="flex items-center gap-1 bg-secondary text-secondary-foreground px-2 py-0.5 rounded">
-                    <span className="font-bold">{product.rating.toFixed(1)}</span>
-                    <Star className="w-3 h-3 fill-current" />
-                </div>
-                <span>({product.reviews})</span>
+          <Link href={`/products/${product.id}`} className="block">
+            <h3 className="text-base font-semibold leading-tight hover:text-primary transition-colors mb-1 truncate">
+              {product.name}
+            </h3>
+          </Link>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+            <div className="flex items-center gap-1 bg-secondary text-secondary-foreground px-2 py-0.5 rounded">
+              <span className="font-bold">{product.rating.toFixed(1)}</span>
+              <Star className="w-3 h-3 fill-current" />
             </div>
-             <div className="flex items-baseline gap-2 mb-4">
-                <p className="text-xl font-bold text-foreground">
-                ${product.price.toFixed(2)}
-                </p>
-                <p className="text-sm text-muted-foreground line-through">
-                ${product.originalPrice.toFixed(2)}
-                </p>
-                <p className="text-sm font-semibold text-green-600 dark:text-green-400">{product.discount}</p>
-            </div>
+            <span>({product.reviews})</span>
+          </div>
+          <div className="flex items-baseline gap-2 mb-4">
+            <p className="text-xl font-bold text-foreground">
+              ${product.price.toFixed(2)}
+            </p>
+            <p className="text-sm text-muted-foreground line-through">
+              ${product.originalPrice.toFixed(2)}
+            </p>
+            <p className="text-sm font-semibold text-green-600 dark:text-green-400">
+              {product.discount}
+            </p>
+          </div>
         </div>
-        <Button onClick={() => addToCart(product)} className="w-full">Add to Cart</Button>
+        <Button onClick={() => {}} className="w-full">
+          Add to Cart
+        </Button>
       </div>
     </Card>
   );

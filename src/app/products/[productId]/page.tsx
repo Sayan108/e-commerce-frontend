@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input";
 
 import { Star, Minus, Plus } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSelector } from "react-redux";
+import { RootState } from "@/lib/redux";
 
 const ProductPageSkeleton = () => (
   <div className="container mx-auto max-w-7xl px-4 py-8">
@@ -41,28 +43,10 @@ export default function ProductPage({
 }: {
   params: { productId: string };
 }) {
-  const [product, setProduct] = useState<Product | null>(null);
+  const { currentProduct: product } = useSelector(
+    (state: RootState) => state.products
+  );
   const [quantity, setQuantity] = useState(1);
-
-  useEffect(() => {
-    const foundProduct = getProductById(params.productId);
-    // Simulate network delay
-    setTimeout(() => {
-      if (foundProduct) {
-        setProduct(foundProduct);
-      } else {
-        // Will be caught by notFound() outside of timeout in a real app
-        setProduct(null); // Set to null to stop loading, notFound will handle it
-      }
-    }, 500);
-  }, [params.productId]);
-
-  if (
-    product === null &&
-    typeof getProductById(params.productId) === "undefined"
-  ) {
-    notFound();
-  }
 
   if (!product) {
     return <ProductPageSkeleton />;
@@ -77,12 +61,11 @@ export default function ProductPage({
       <div className="grid md:grid-cols-2 gap-8 lg:gap-16">
         <div className="aspect-square relative w-full rounded-lg overflow-hidden">
           <Image
-            src={product.imageUrl}
+            src={product.imageurl}
             alt={product.name}
             fill
             className="object-cover"
             sizes="(max-width: 768px) 100vw, 50vw"
-            data-ai-hint={product.imageHint}
           />
         </div>
         <div>
@@ -95,7 +78,7 @@ export default function ProductPage({
                 <Star
                   key={i}
                   className={`w-5 h-5 ${
-                    i < Math.round(product.rating)
+                    i < Math.round(4)
                       ? "fill-primary text-primary"
                       : "fill-muted-foreground/30 text-muted-foreground/30"
                   }`}
@@ -103,7 +86,7 @@ export default function ProductPage({
               ))}
             </div>
             <span className="text-muted-foreground text-sm">
-              ({product.reviews} reviews)
+              ({10} reviews)
             </span>
           </div>
           <p className="mt-4 text-3xl font-bold">${product.price.toFixed(2)}</p>

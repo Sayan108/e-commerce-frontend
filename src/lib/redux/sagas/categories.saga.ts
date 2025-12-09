@@ -14,7 +14,11 @@ function* fetchCategoriesSaga() {
   try {
     const response: AxiosResponse = yield call(getCategories);
 
-    const categories = response.data;
+    const categories = response.data.list.map((category: any) => ({
+      id: category._id,
+      imageurl: category.imageurl + "?w=800&auto=format&fit=crop",
+      name: category.name,
+    }));
 
     yield put(fetchCategoriesSuccess(categories));
   } catch (error: any) {

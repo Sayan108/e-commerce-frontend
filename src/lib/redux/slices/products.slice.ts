@@ -54,5 +54,7 @@ export const {
   fetchProductsStart,
   fetchProductsSuccess,
   fetchProductsFailure,
+
+  setProductFilter,
 } = productsSlice.actions;
 export default productsSlice.reducer;

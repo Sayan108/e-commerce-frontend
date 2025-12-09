@@ -10,16 +10,32 @@ import {
 import { AxiosResponse } from "axios";
 import { getProducts } from "@/lib/services/api.services";
 import { store } from "..";
+import { Product } from "../types/product.types";
 
 // Fetch Products Data with Filters and Pagination
 
 // Fetch Products by Category
 function* fetchProducts() {
+  console.log("ggghgh");
   try {
     const { filter } = store.getState().products;
     const response: AxiosResponse = yield call(getProducts, filter);
-
-    yield put(fetchProductsSuccess(response.data));
+    const products: Product[] = response.data.data.map((product: any) => ({
+      id: product._id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      originalPrice: product.originalPrice,
+      imageurl: product.imageUrl,
+      categoryId: product.categoryId,
+    }));
+    console.log(products);
+    yield put(
+      fetchProductsSuccess({
+        data: products,
+        totalCount: response.data.pagination.total,
+      })
+    );
   } catch (error: any) {
     yield put(
       fetchProductsFailure(error?.message || "Failed to load products")

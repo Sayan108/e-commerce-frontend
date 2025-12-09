@@ -5,11 +5,9 @@ export interface Product {
   name: string;
   description: string;
   price: number;
+  originalPrice: number;
   imageurl: string;
   categoryId: string;
-  inStock: boolean;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface ProductFilter {

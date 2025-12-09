@@ -7,6 +7,7 @@ const initialState: CategoriesState = {
   categories: [],
   loading: false,
   error: null,
+  selectedCategory: null,
 };
 
 // Slice
@@ -26,6 +27,10 @@ const categoriesSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+
+    setCurrentCategory: (state, action: PayloadAction<Category>) => {
+      state.selectedCategory = action.payload;
+    },
   },
 });
 
@@ -34,5 +39,7 @@ export const {
   fetchCategoriesStart,
   fetchCategoriesSuccess,
   fetchCategoriesFailure,
+
+  setCurrentCategory,
 } = categoriesSlice.actions;
 export default categoriesSlice.reducer;

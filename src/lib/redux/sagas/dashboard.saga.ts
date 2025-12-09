@@ -7,14 +7,25 @@ import {
   fetchDashboardFailure,
 } from "../slices/dashboard.slice";
 import { AxiosResponse } from "axios";
+import { Banner } from "../types/dashboard.types";
 
 // Fetch Dashboard Data (Banners and Videos)
 function* fetchDashboardSaga() {
   try {
     const bannersResponse: AxiosResponse = yield call(getBanner);
     const videosResponse: AxiosResponse = yield call(getVideos);
+    console.log(bannersResponse.data);
 
-    const banners = bannersResponse.data;
+    const banners: Banner[] = bannersResponse.data.banners.map(
+      (banner: any) => ({
+        id: banner._id,
+        description: banner.description,
+        name: banner.name,
+        imageurl: banner.imageurl,
+        link: banner.link,
+      })
+    );
+    console.log(banners);
     const videos = videosResponse.data;
 
     yield put(fetchDashboardSuccess({ banners, videos }));

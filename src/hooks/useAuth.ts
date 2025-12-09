@@ -9,8 +9,6 @@ import {
 } from "@/lib/redux/types/auth.types";
 import { RootState } from "@/lib/redux";
 import { authActions } from "@/lib/redux/slices/auth.slice";
-import { useRouter } from "next/router";
-import { useToast } from "./use-toast";
 
 interface UseAuthReturn {
   login: (data: LoginPayload) => void;

@@ -34,6 +34,12 @@ const formSchema = z.object({
 export default function LoginPage() {
   const { login } = useAuth();
 
+  const router = useRouter();
+
+  const successCallBack = () => {
+    router.push("/");
+  };
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -45,7 +51,7 @@ export default function LoginPage() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Extracting name from email for mock display
 
-    login({ email: values.email, password: "" });
+    login({ email: values.email, password: "", successCallBack });
   }
 
   return (

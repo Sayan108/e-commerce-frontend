@@ -38,6 +38,10 @@ export default function RegisterPage() {
   const router = useRouter();
   const { toast } = useToast();
 
+  const successCallBack = () => {
+    router.push("/");
+  };
+
   const { register, loading } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -50,7 +54,12 @@ export default function RegisterPage() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    register({ email: values.email, password: values.password, name: "" });
+    register({
+      email: values.email,
+      password: values.password,
+      name: "",
+      successCallBack,
+    });
   }
 
   return (

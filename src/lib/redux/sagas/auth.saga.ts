@@ -13,8 +13,11 @@ import { AxiosResponse } from "axios";
 // ---- LOGIN ----
 function* loginSaga(action: any) {
   try {
-    const res: AxiosResponse = yield call(loginApi, action.payload);
+    const { successCallBack, ...rest } = action.payload;
+    const res: AxiosResponse = yield call(loginApi, rest);
+
     yield put(authActions.loginSuccess(res.data));
+    action.payload.successCallBack();
   } catch (e: any) {
     yield put(
       authActions.authFailure(e.response?.data?.message || "Login failed")
@@ -25,8 +28,11 @@ function* loginSaga(action: any) {
 // ---- REGISTER ----
 function* registerSaga(action: any) {
   try {
-    const res: AxiosResponse = yield call(registerApi, action.payload);
+    const { successCallBack, ...rest } = action.payload;
+    const res: AxiosResponse = yield call(registerApi, rest);
     yield put(authActions.registerSuccess(res.data));
+
+    action.payload.successCallBack();
   } catch (e: any) {
     yield put(
       authActions.authFailure(e.response?.data?.message || "Register failed")

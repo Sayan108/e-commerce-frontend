@@ -3,7 +3,13 @@ import { all } from "redux-saga/effects";
 import authRootSaga from "./auth.saga";
 import dashboardRootSaga from "./dashboard.saga";
 import categoriesRootSaga from "./categories.saga";
+import productsRootSaga from "./product.saga";
 
 export default function* rootSaga() {
-  yield all([authRootSaga(), dashboardRootSaga(), categoriesRootSaga()]);
+  yield all([
+    authRootSaga(),
+    dashboardRootSaga(),
+    categoriesRootSaga(),
+    productsRootSaga(),
+  ]);
 }

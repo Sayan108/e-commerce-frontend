@@ -20,7 +20,7 @@ function* fetchProducts() {
   try {
     const { filter } = store.getState().products;
     const response: AxiosResponse = yield call(getProducts, filter);
-    const products: Product[] = response.data.data.map((product: any) => ({
+    const products: Product[] = response.data.data.data.map((product: any) => ({
       id: product._id,
       name: product.name,
       description: product.description,
@@ -29,11 +29,11 @@ function* fetchProducts() {
       imageurl: product.imageUrl,
       categoryId: product.categoryId,
     }));
-    console.log(products);
+    console.log(products, "getting products ");
     yield put(
       fetchProductsSuccess({
         data: products,
-        totalCount: response.data.pagination.total,
+        totalCount: response.data.data.pagination.total,
       })
     );
   } catch (error: any) {

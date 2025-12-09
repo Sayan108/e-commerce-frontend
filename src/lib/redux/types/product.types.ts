@@ -33,6 +33,7 @@ export interface ProductState {
   loading: boolean;
   error: string | null;
   filter: ProductFilter;
+  currentProduct: Product | null;
 }
 
 export enum SortOrder {

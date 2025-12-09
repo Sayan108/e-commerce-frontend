@@ -10,7 +10,7 @@ export default function Home() {
   const { loading, videos, banners } = useDashboard();
   return (
     <div className="flex flex-col gap-16 md:gap-24">
-      <HeroSection bannerList={banners} />
+      <HeroSection bannerList={banners} loading={loading} />
       <CategoryHighlights />
       <FeaturedProducts />
       <MarketingVideo />

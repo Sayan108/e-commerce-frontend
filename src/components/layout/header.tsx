@@ -19,6 +19,7 @@ import { Badge } from "../ui/badge";
 import { SearchDialog } from "../shared/search-dialog";
 import { useState } from "react";
 import { SearchBar } from "../shared/search-bar";
+import useProducts from "@/hooks/useProducts";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -83,7 +84,7 @@ export function Header() {
       </nav>
       <div className="flex items-center gap-4 flex-1 justify-end">
         <div className="w-full max-w-sm">
-          <SearchBar onSearch={() => {}} />
+          <SearchBar />
         </div>
         {userMenu}
         <Link href="/cart" passHref>

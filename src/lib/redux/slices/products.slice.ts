@@ -14,6 +14,7 @@ const initialState: ProductState = {
   totalCount: 0,
   loading: false,
   error: null,
+  currentProduct: null,
 
   filter: {},
 };
@@ -46,6 +47,14 @@ const productsSlice = createSlice({
     ) => {
       state.filter = { ...state.filter, ...action.payload };
     },
+
+    clearProducts: (state) => {
+      state = initialState;
+    },
+
+    setCurrentProduct: (state, action: PayloadAction<Product>) => {
+      state.currentProduct = action.payload;
+    },
   },
 });
 
@@ -55,6 +64,10 @@ export const {
   fetchProductsSuccess,
   fetchProductsFailure,
 
+  clearProducts,
+
   setProductFilter,
+
+  setCurrentProduct,
 } = productsSlice.actions;
 export default productsSlice.reducer;

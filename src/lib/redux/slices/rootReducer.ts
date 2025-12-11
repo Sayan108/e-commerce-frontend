@@ -6,6 +6,7 @@ import categoriesReducer from "./categories.slice";
 import productReducer from "./products.slice";
 import addressReducer from "./address.slice";
 import cartReducer from "./cart.slice";
+import orderReducer from "./order.slice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   products: productReducer,
   address: addressReducer,
   cart: cartReducer,
+  order: orderReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

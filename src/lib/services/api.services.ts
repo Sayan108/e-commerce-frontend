@@ -1,4 +1,5 @@
 // src/store/auth/authApi.ts
+import { Order } from "../redux/slices/order.slice";
 import { Address } from "../redux/types/address.types";
 import {
   LoginPayload,
@@ -60,3 +61,8 @@ export const deleteCart = (id: string) =>
   client.delete(`${ApiEndpoints.CART}/${id}`);
 
 export const clearCart = () => client.delete(ApiEndpoints.CART);
+
+export const createOrder = (payload: Omit<Order, "_id">) =>
+  client.post(ApiEndpoints.ORDER, payload);
+
+export const getOrders = () => client.get(ApiEndpoints.ORDER);

@@ -4,6 +4,8 @@ import authRootSaga from "./auth.saga";
 import dashboardRootSaga from "./dashboard.saga";
 import categoriesRootSaga from "./categories.saga";
 import productsRootSaga from "./product.saga";
+import addressRootSaga from "./address.saga";
+import cartRootSaga from "./cart.saga";
 
 export default function* rootSaga() {
   yield all([
@@ -11,5 +13,7 @@ export default function* rootSaga() {
     dashboardRootSaga(),
     categoriesRootSaga(),
     productsRootSaga(),
+    addressRootSaga(),
+    cartRootSaga(),
   ]);
 }

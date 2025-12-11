@@ -1,7 +1,7 @@
 // src/types/dashboard.types.ts
 
 export interface Banner {
-  id: string;
+  _id: string;
   name: string;
   description: string;
   link: string;
@@ -9,7 +9,7 @@ export interface Banner {
 }
 
 export interface Video {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   videolink: string;

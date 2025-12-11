@@ -9,7 +9,11 @@ export enum ApiEndpoints {
   DASHBOARD_BANNER = "/ecommercedashboard/banner",
   DASHBOARD_VIDEO = "/ecommercedashboard/videos",
 
-  GET_CATEGORIES = "/categories",
+  CATEGORIES = "/categories",
 
-  GET_PRODUCTS = "/products",
+  PRODUCTS = "/products",
+
+  ADDRESS = "/address",
+
+  CART = "/cart",
 }

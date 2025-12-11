@@ -116,7 +116,7 @@ export default function OrdersPage() {
               {user.orders.map((order) => (
                 <TableRow key={order.id}>
                   <TableCell className="font-medium">{order.id}</TableCell>
-                  <TableCell>{format(new Date(order.date), "PPP")}</TableCell>
+                  {/* <TableCell>{format(new Date(order.date), "PPP")}</TableCell> */}
                   <TableCell>
                     <Badge
                       variant={

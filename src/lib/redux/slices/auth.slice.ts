@@ -13,6 +13,7 @@ const initialState: AuthState = {
   token: null,
   loading: false,
   error: null,
+  isAuthenticated: false,
 };
 
 const authSlice = createSlice({
@@ -41,6 +42,7 @@ const authSlice = createSlice({
       state.loading = false;
       state.token = action.payload.token;
       state.user = action.payload.user;
+      state.isAuthenticated = true;
     },
     registerSuccess(
       state: AuthState,
@@ -49,6 +51,7 @@ const authSlice = createSlice({
       state.loading = false;
       state.token = action.payload.token;
       state.user = action.payload.user;
+      state.isAuthenticated = true;
     },
     getProfileSuccess(state: AuthState, action: PayloadAction<User>) {
       state.loading = false;
@@ -69,6 +72,8 @@ const authSlice = createSlice({
       state.token = null;
       state.user = null;
       state.error = null;
+      state.isAuthenticated = false;
+      state.loading = false;
     },
   },
 });

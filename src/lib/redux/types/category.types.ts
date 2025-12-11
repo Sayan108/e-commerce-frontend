@@ -1,7 +1,7 @@
 // src/types/categories.types.ts
 
 export interface Category {
-  id: string;
+  _id: string;
   name: string;
   description: string;
   imageurl: string;

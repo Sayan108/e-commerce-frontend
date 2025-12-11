@@ -13,7 +13,7 @@ export default function Home() {
       <HeroSection bannerList={banners} loading={loading} />
       <CategoryHighlights />
       <FeaturedProducts />
-      <MarketingVideo />
+      <MarketingVideo videos={videos} loading={loading} />
       <Testimonials />
     </div>
   );

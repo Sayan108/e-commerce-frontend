@@ -15,9 +15,11 @@ interface UseAuthReturn {
   register: (data: RegisterPayload) => void;
   getProfile: () => void;
   updateUser: (data: UpdateUserPayload) => void;
+  logOut: () => void;
   user: any; // Adjust this type based on the structure of your user object
   loading: boolean;
   error: string | null;
+  isAuthenticated: boolean;
 }
 
 // Custom hook for authentication actions
@@ -25,7 +27,7 @@ const useAuth = (): UseAuthReturn => {
   const dispatch = useDispatch();
 
   // Accessing relevant state from Redux store
-  const { user, loading, error } = useSelector(
+  const { user, loading, error, isAuthenticated } = useSelector(
     (state: RootState) => state.auth
   );
 
@@ -58,11 +60,17 @@ const useAuth = (): UseAuthReturn => {
     [dispatch]
   );
 
+  const logOut = useCallback(() => {
+    dispatch(authActions.logout());
+  }, [dispatch]);
+
   return {
     login,
     register,
     getProfile,
     updateUser,
+    logOut,
+    isAuthenticated,
     user,
     loading,
     error,

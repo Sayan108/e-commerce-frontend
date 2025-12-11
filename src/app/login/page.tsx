@@ -51,7 +51,7 @@ export default function LoginPage() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Extracting name from email for mock display
 
-    login({ email: values.email, password: "", successCallBack });
+    login({ email: values.email, password: values.password, successCallBack });
   }
 
   return (

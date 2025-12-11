@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Product } from "@/lib/redux/types/product.types";
 import { useDispatch } from "react-redux";
 import { setCurrentProduct } from "@/lib/redux/slices/products.slice";
+import { useCart } from "@/hooks/useCart";
 
 interface ProductCardProps {
   product: Product;
@@ -18,6 +19,8 @@ export function ProductCard({ product }: ProductCardProps) {
 
   const dispatch = useDispatch();
 
+  const { addToCart } = useCart();
+
   return (
     <Card
       className="
@@ -28,7 +31,7 @@ export function ProductCard({ product }: ProductCardProps) {
     >
       {/* Product Image */}
       <div className="relative w-full aspect-square overflow-hidden">
-        <Link href={`/products/${product.id}`}>
+        <Link href={`/products/${product._id}`}>
           <Image
             src={product.imageurl}
             alt={product.name}
@@ -58,7 +61,7 @@ export function ProductCard({ product }: ProductCardProps) {
             "
           >
             <Link
-              href={`/products/${product.id}`}
+              href={`/products/${product._id}`}
               onClick={() => {
                 console.log(product);
                 dispatch(setCurrentProduct(product));
@@ -86,7 +89,7 @@ export function ProductCard({ product }: ProductCardProps) {
       {/* Product Content */}
       <div className="p-4 flex flex-col gap-3">
         <Link
-          href={`/products/${product.id}`}
+          href={`/products/${product._id}`}
           onClick={() => {
             dispatch(setCurrentProduct(product));
           }}
@@ -118,6 +121,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <Button
           onClick={() => {
             dispatch(setCurrentProduct(product));
+            addToCart(1);
           }}
           className="w-full rounded-lg py-5 font-semibold transition-all"
         >

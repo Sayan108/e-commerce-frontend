@@ -10,7 +10,6 @@ import {
 import { AxiosResponse } from "axios";
 import { getProducts } from "@/lib/services/api.services";
 import { store } from "..";
-import { Product } from "../types/product.types";
 
 // Fetch Products Data with Filters and Pagination
 
@@ -20,19 +19,10 @@ function* fetchProducts() {
   try {
     const { filter } = store.getState().products;
     const response: AxiosResponse = yield call(getProducts, filter);
-    const products: Product[] = response.data.data.data.map((product: any) => ({
-      id: product._id,
-      name: product.name,
-      description: product.description,
-      price: product.price,
-      originalPrice: product.originalPrice,
-      imageurl: product.imageUrl,
-      categoryId: product.categoryId,
-    }));
-    console.log(products, "getting products ");
+
     yield put(
       fetchProductsSuccess({
-        data: products,
+        data: response.data.data.data,
         totalCount: response.data.data.pagination.total,
       })
     );

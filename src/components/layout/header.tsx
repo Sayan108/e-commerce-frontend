@@ -20,17 +20,20 @@ import { SearchDialog } from "../shared/search-dialog";
 import { useState } from "react";
 import { SearchBar } from "../shared/search-bar";
 import useProducts from "@/hooks/useProducts";
+import useAuth from "@/hooks/useAuth";
 
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/categories", label: "Categories" },
   { href: "/contact", label: "Contact Us" },
 ];
-const isAuthenticated = false;
 
 export function Header() {
   const isMobile = useIsMobile();
   const [searchOpen, setSearchOpen] = useState(false);
+  const { isAuthenticated, logOut } = useAuth();
+
+  const cartCount = 2;
 
   const userMenu = (
     <DropdownMenu>
@@ -91,7 +94,14 @@ export function Header() {
           <Button variant="ghost" size="icon" asChild>
             <div className="relative">
               <ShoppingCart />
-              {/* {cartCount > 0 && <Badge variant="destructive" className="absolute -right-2 -top-2 h-5 w-5 justify-center p-0">{cartCount}</Badge>} */}
+              {cartCount > 0 && (
+                <Badge
+                  variant="destructive"
+                  className="absolute -right-2 -top-2 h-5 w-5 justify-center p-0"
+                >
+                  {cartCount}
+                </Badge>
+              )}
               <span className="sr-only">Shopping Cart</span>
             </div>
           </Button>
@@ -118,7 +128,14 @@ export function Header() {
           <Button variant="ghost" size="icon" asChild>
             <div className="relative">
               <ShoppingCart />
-              {/* {cartCount > 0 && <Badge variant="destructive" className="absolute -right-2 -top-2 h-5 w-5 justify-center p-0">{cartCount}</Badge>} */}
+              {cartCount > 0 && (
+                <Badge
+                  variant="destructive"
+                  className="absolute -right-2 -top-2 h-5 w-5 justify-center p-0"
+                >
+                  {cartCount}
+                </Badge>
+              )}
               <span className="sr-only">Shopping Cart</span>
             </div>
           </Button>
@@ -142,18 +159,43 @@ export function Header() {
                 </Link>
               ))}
               <DropdownMenuSeparator />
-              {/* {isAuthenticated ? (
+              {isAuthenticated ? (
                 <>
-                <Link href="/profile" className="transition-colors hover:text-primary">Profile</Link>
-                <Link href="/profile/orders" className="transition-colors hover:text-primary">Orders</Link>
-                <a onClick={() => logout()} className="transition-colors hover:text-primary cursor-pointer">Logout</a>
+                  <Link
+                    href="/profile"
+                    className="transition-colors hover:text-primary"
+                  >
+                    Profile
+                  </Link>
+                  <Link
+                    href="/profile/orders"
+                    className="transition-colors hover:text-primary"
+                  >
+                    Orders
+                  </Link>
+                  <a
+                    onClick={() => logOut()}
+                    className="transition-colors hover:text-primary cursor-pointer"
+                  >
+                    Logout
+                  </a>
                 </>
               ) : (
                 <>
-                <Link href="/login" className="transition-colors hover:text-primary">Login</Link>
-                <Link href="/register" className="transition-colors hover:text-primary">Register</Link>
+                  <Link
+                    href="/login"
+                    className="transition-colors hover:text-primary"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="transition-colors hover:text-primary"
+                  >
+                    Register
+                  </Link>
                 </>
-              )} */}
+              )}
             </nav>
           </SheetContent>
         </Sheet>

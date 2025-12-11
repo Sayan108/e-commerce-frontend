@@ -1,15 +1,18 @@
 // src/store/auth/types.ts
 
 export interface User {
-  id: string;
+  _id: string;
   name: string;
   email: string;
+  phone: string;
+  role: string;
 }
 
 export interface AuthState {
   user: User | null;
   token: string | null;
   loading: boolean;
+  isAuthenticated: boolean;
   error: string | null;
 }
 

@@ -7,7 +7,7 @@ import {
   fetchDashboardFailure,
 } from "../slices/dashboard.slice";
 import { AxiosResponse } from "axios";
-import { Banner } from "../types/dashboard.types";
+import { Banner, Video } from "../types/dashboard.types";
 
 // Fetch Dashboard Data (Banners and Videos)
 function* fetchDashboardSaga() {
@@ -25,8 +25,13 @@ function* fetchDashboardSaga() {
         link: banner.link,
       })
     );
-    console.log(banners);
-    const videos = videosResponse.data;
+    const videos: Video[] = videosResponse.data.videos.map((video: any) => ({
+      id: video._id,
+      title: video.title,
+      description: video.description,
+      videoink: video.videolink,
+      thumbnail: video.thumbnail,
+    }));
 
     yield put(fetchDashboardSuccess({ banners, videos }));
   } catch (error: any) {

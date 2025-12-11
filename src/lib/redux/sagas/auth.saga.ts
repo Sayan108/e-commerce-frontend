@@ -15,7 +15,7 @@ function* loginSaga(action: any) {
   try {
     const { successCallBack, ...rest } = action.payload;
     const res: AxiosResponse = yield call(loginApi, rest);
-
+    console.log(res.data);
     yield put(authActions.loginSuccess(res.data));
     action.payload.successCallBack();
   } catch (e: any) {
@@ -30,6 +30,7 @@ function* registerSaga(action: any) {
   try {
     const { successCallBack, ...rest } = action.payload;
     const res: AxiosResponse = yield call(registerApi, rest);
+    console.log(res.data);
     yield put(authActions.registerSuccess(res.data));
 
     action.payload.successCallBack();

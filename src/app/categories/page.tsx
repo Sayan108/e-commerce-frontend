@@ -19,9 +19,9 @@ export default function CategoriesPage() {
 
   const handleClick = (category: Category) => {
     fetchProducts();
-    fetchProductByCategory(category.id);
+    fetchProductByCategory(category._id);
     dispatch(setCurrentCategory(category));
-    router.push(`/categories/${category.id}`);
+    router.push(`/categories/${category._id}`);
   };
 
   return (
@@ -52,7 +52,7 @@ export default function CategoriesPage() {
             ))
           : categories.map((category) => (
               <Card
-                key={category.id}
+                key={category._id}
                 className="group overflow-hidden rounded-2xl border bg-background transition-all duration-300 hover:shadow-2xl"
                 onClick={() => handleClick(category)}
               >

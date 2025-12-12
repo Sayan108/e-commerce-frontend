@@ -5,15 +5,15 @@ import {
   Order,
   OrderType,
   placeOrderRequest,
+  setCurrentOrder,
 } from "@/lib/redux/slices/order.slice";
 import { RootState } from "@/lib/redux";
 
 export function useOrders() {
   const dispatch = useDispatch();
 
-  const { orders, orderDetails, loading, placingOrder, error } = useSelector(
-    (state: RootState) => state.order
-  );
+  const { orders, orderDetails, loading, placingOrder, error, currentOrder } =
+    useSelector((state: RootState) => state.order);
 
   return {
     orders,
@@ -21,9 +21,12 @@ export function useOrders() {
     loading,
     placingOrder,
     error,
+    currentOrder,
 
     getOrders: () => dispatch(fetchOrdersRequest()),
 
     placeOrder: (type: OrderType) => dispatch(placeOrderRequest(type)),
+
+    setCurrentOrder: (order: Order) => dispatch(setCurrentOrder(order)),
   };
 }

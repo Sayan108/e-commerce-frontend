@@ -38,7 +38,7 @@ function* placeOrderWorker(action: any): any {
       shippingAddressId,
       billingAddressId,
     });
-    yield put(placeOrderSuccess(res.data));
+    yield put(placeOrderSuccess(res.data.order));
     navigate("/profile/orders");
     yield put(
       showSnackbar({

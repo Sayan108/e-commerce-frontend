@@ -21,6 +21,8 @@ export interface Order {
   items: OrderItem[];
   total: number;
   status: string;
+  billingaddress: string;
+  shippingaddress: string;
   createdAt: string;
 }
 
@@ -30,6 +32,7 @@ interface OrderState {
   loading: boolean;
   placingOrder: boolean;
   error: string | null;
+  currentOrder: Order | null;
 }
 
 const initialState: OrderState = {
@@ -38,6 +41,7 @@ const initialState: OrderState = {
   loading: false,
   placingOrder: false,
   error: null,
+  currentOrder: null,
 };
 
 const orderSlice = createSlice({
@@ -67,6 +71,9 @@ const orderSlice = createSlice({
       state.placingOrder = false;
       state.error = action.payload;
     },
+    setCurrentOrder: (state, action: PayloadAction<Order>) => {
+      state.currentOrder = action.payload;
+    },
   },
 });
 
@@ -78,6 +85,8 @@ export const {
   placeOrderRequest,
   placeOrderSuccess,
   placeOrderFailure,
+
+  setCurrentOrder,
 } = orderSlice.actions;
 
 export default orderSlice.reducer;

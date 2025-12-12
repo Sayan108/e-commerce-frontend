@@ -5,12 +5,16 @@ interface AddressState {
   data: Address[];
   loading: boolean;
   error: string | null;
+  currentShippingAddress: Address | null;
+  currentbillingAddress: Address | null;
 }
 
 const initialState: AddressState = {
   data: [],
   loading: false,
   error: null,
+  currentShippingAddress: null,
+  currentbillingAddress: null,
 };
 
 const addressSlice = createSlice({
@@ -99,6 +103,13 @@ const addressSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+
+    setCurrentShippingaddress: (state, action: PayloadAction<Address>) => {
+      state.currentShippingAddress = action.payload;
+    },
+    setCurrentBillingaddress: (state, action: PayloadAction<Address>) => {
+      state.currentbillingAddress = action.payload;
+    },
   },
 });
 
@@ -120,6 +131,8 @@ export const {
   deleteAddressFailure,
 
   clearAddress,
+  setCurrentBillingaddress,
+  setCurrentShippingaddress,
 } = addressSlice.actions;
 
 export default addressSlice.reducer;

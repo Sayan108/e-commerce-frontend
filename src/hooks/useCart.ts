@@ -7,6 +7,7 @@ import {
   updateCartRequest,
   deleteCartRequest,
   clearCartRequest,
+  addToDraftCart,
 } from "@/lib/redux/slices/cart.slice";
 
 import { CartItem } from "@/lib/redux/types/cart.types";
@@ -18,12 +19,24 @@ export const useCart = () => {
     (state: RootState) => state.cart
   );
 
+  const { currentProduct } = useSelector((state: RootState) => state.products);
+
   const fetchCart = () => dispatch(fetchCartRequest());
   const addToCart = (quantity: number) => dispatch(addToCartRequest(quantity));
   const updateCart = (item: Partial<CartItem>) =>
     dispatch(updateCartRequest(item));
   const deleteCart = (id: string) => dispatch(deleteCartRequest(id));
   const clearCart = () => dispatch(clearCartRequest());
+
+  const addToDraftCartAndCheckout = (quantity: number) => {
+    const draftCart: CartItem = {
+      quantity,
+      thumbnail: currentProduct?.imageurl,
+      price: currentProduct?.price ?? 0,
+      productId: currentProduct?._id ?? "",
+    };
+    dispatch(addToDraftCart(draftCart));
+  };
 
   return {
     items,

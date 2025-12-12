@@ -31,9 +31,11 @@ const navLinks = [
 export function Header() {
   const isMobile = useIsMobile();
   const [searchOpen, setSearchOpen] = useState(false);
-  const { isAuthenticated, logOut } = useAuth();
-
-  const cartCount = 2;
+  const {
+    isAuthenticated,
+    logOut,
+    user: { cartItemCount: cartCount = 0 },
+  } = useAuth();
 
   const userMenu = (
     <DropdownMenu>

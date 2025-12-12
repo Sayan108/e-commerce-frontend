@@ -28,6 +28,7 @@ import { AxiosResponse } from "axios";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { CartItem } from "../types/cart.types";
 import { store } from "..";
+import { authActions } from "../slices/auth.slice";
 
 /* ========================
    FETCH CART
@@ -48,6 +49,10 @@ function* fetchCartWorker() {
 function* addToCartWorker(action: PayloadAction<number>) {
   try {
     const currentProduct = store.getState().products.currentProduct;
+    const isAuthenticated = store.getState().auth.isAuthenticated;
+    if (!isAuthenticated) {
+      return;
+    }
     const payload: Omit<CartItem, "_id"> = {
       itemname: currentProduct?.name ?? "",
       productId: currentProduct?._id ?? "",
@@ -57,7 +62,9 @@ function* addToCartWorker(action: PayloadAction<number>) {
       thumbnail: currentProduct?.imageurl,
     };
     const res: AxiosResponse = yield call(addToCart, payload);
-    yield put(addToCartSuccess(res.data.item));
+
+    yield put(addToCartSuccess(res.data.cartItem));
+    yield put(authActions.updateCartCount(1));
   } catch (err: any) {
     yield put(addToCartFailure(err.message));
   }
@@ -83,6 +90,7 @@ function* deleteCartWorker(action: PayloadAction<string>) {
   try {
     yield call(deleteCart, action.payload);
     yield put(deleteCartSuccess(action.payload));
+    yield put(authActions.updateCartCount(-1));
   } catch (err: any) {
     yield put(deleteCartFailure(err.message));
   }

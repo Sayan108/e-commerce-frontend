@@ -62,7 +62,7 @@ export const deleteCart = (id: string) =>
 
 export const clearCart = () => client.delete(ApiEndpoints.CART);
 
-export const createOrder = (payload: Omit<Order, "_id">) =>
+export const createOrder = (payload: any) =>
   client.post(ApiEndpoints.ORDER, payload);
 
 export const getOrders = () => client.get(ApiEndpoints.ORDER);

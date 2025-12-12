@@ -75,6 +75,15 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.loading = false;
     },
+
+    updateCartCount(state: AuthState, action: PayloadAction<number>) {
+      if (!state.user) return;
+
+      const current = state.user.cartItemCount ?? 0;
+      const updated = current + action.payload;
+
+      state.user.cartItemCount = updated < 0 ? 0 : updated;
+    },
   },
 });
 

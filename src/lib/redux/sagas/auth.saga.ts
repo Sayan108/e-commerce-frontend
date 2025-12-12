@@ -9,6 +9,7 @@ import {
 } from "@/lib/services/api.services";
 
 import { AxiosResponse } from "axios";
+import { ISnackBarType, showSnackbar } from "../slices/snackbar.slice";
 
 // ---- LOGIN ----
 function* loginSaga(action: any) {
@@ -17,6 +18,12 @@ function* loginSaga(action: any) {
     const res: AxiosResponse = yield call(loginApi, rest);
     console.log(res.data);
     yield put(authActions.loginSuccess(res.data));
+    yield put(
+      showSnackbar({
+        message: "Logged in successfully",
+        type: ISnackBarType.success,
+      })
+    );
     action.payload.successCallBack();
   } catch (e: any) {
     yield put(
@@ -34,6 +41,12 @@ function* registerSaga(action: any) {
     yield put(authActions.registerSuccess(res.data));
 
     action.payload.successCallBack();
+    yield put(
+      showSnackbar({
+        message: "User account created successfully",
+        type: ISnackBarType.success,
+      })
+    );
   } catch (e: any) {
     yield put(
       authActions.authFailure(e.response?.data?.message || "Register failed")
@@ -56,6 +69,12 @@ function* updateUserSaga(action: any) {
   try {
     const res: AxiosResponse = yield call(updateUserApi, action.payload);
     yield put(authActions.updateUserSuccess(res.data));
+    yield put(
+      showSnackbar({
+        message: "User account updated successfully",
+        type: ISnackBarType.success,
+      })
+    );
   } catch (e: any) {
     yield put(authActions.authFailure("Failed to update user"));
   }

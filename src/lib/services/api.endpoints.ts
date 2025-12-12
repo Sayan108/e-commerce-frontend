@@ -17,5 +17,5 @@ export enum ApiEndpoints {
 
   CART = "/cart",
 
-  ORDER = "/order",
+  ORDER = "/orders",
 }

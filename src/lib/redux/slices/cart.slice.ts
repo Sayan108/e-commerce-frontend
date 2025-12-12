@@ -4,6 +4,7 @@ import { CartItem } from "@/lib/redux/types/cart.types";
 interface CartState {
   items: CartItem[];
   loading: boolean;
+  draftCart: Array<Omit<CartItem, "_id">>;
   error: string | null;
 }
 
@@ -11,6 +12,7 @@ const initialState: CartState = {
   items: [],
   loading: false,
   error: null,
+  draftCart: [],
 };
 
 const cartSlice = createSlice({
@@ -94,6 +96,22 @@ const cartSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+
+    addToDraftCart: (state, action: PayloadAction<Omit<CartItem, "_id">>) => {
+      state.draftCart = [action.payload, ...state.draftCart];
+    },
+
+    removeFromDrafrCart: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.items = state.items.filter((i) => i._id !== action.payload);
+    },
+
+    updateDraftCart: (state, action: PayloadAction<CartItem>) => {
+      state.loading = false;
+      state.items = state.items.map((i) =>
+        i._id === action.payload._id ? action.payload : i
+      );
+    },
   },
 });
 
@@ -117,6 +135,10 @@ export const {
   clearCartRequest,
   clearCartSuccess,
   clearCartFailure,
+
+  addToDraftCart,
+  updateDraftCart,
+  removeFromDrafrCart,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

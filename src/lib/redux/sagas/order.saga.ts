@@ -11,6 +11,9 @@ import {
 } from "../slices/order.slice";
 import { createOrder, getOrders } from "@/lib/services/api.services";
 import { AxiosResponse } from "axios";
+import { authActions } from "../slices/auth.slice";
+import { store } from "..";
+import { PayloadAction } from "@reduxjs/toolkit";
 
 function* fetchOrdersWorker(): any {
   try {
@@ -23,8 +26,17 @@ function* fetchOrdersWorker(): any {
 
 function* placeOrderWorker(action: any): any {
   try {
-    const res: AxiosResponse = yield call(createOrder, action.payload);
+    const shippingAddressId =
+      store.getState().address.currentShippingAddress?._id;
+    const billingAddressId =
+      store.getState().address.currentbillingAddress?._id;
+
+    const res: AxiosResponse = yield call(createOrder, {
+      shippingAddressId,
+      billingAddressId,
+    });
     yield put(placeOrderSuccess(res.data));
+    yield put(authActions.updateCartCount(-1));
   } catch (err: any) {
     yield put(placeOrderFailure(err.message));
   }

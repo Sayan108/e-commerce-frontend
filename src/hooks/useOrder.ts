@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchOrdersRequest,
   Order,
+  OrderType,
   placeOrderRequest,
 } from "@/lib/redux/slices/order.slice";
 import { RootState } from "@/lib/redux";
@@ -23,7 +24,6 @@ export function useOrders() {
 
     getOrders: () => dispatch(fetchOrdersRequest()),
 
-    placeOrder: (payload: Omit<Order, "_id">) =>
-      dispatch(placeOrderRequest(payload)),
+    placeOrder: (type: OrderType) => dispatch(placeOrderRequest(type)),
   };
 }

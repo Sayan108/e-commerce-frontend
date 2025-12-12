@@ -7,6 +7,7 @@ import productReducer from "./products.slice";
 import addressReducer from "./address.slice";
 import cartReducer from "./cart.slice";
 import orderReducer from "./order.slice";
+import snackBarReducer from "./snackbar.slice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   address: addressReducer,
   cart: cartReducer,
   order: orderReducer,
+  snackbar: snackBarReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

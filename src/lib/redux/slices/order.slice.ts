@@ -10,6 +10,11 @@ interface OrderItem {
   thumbnail?: string;
 }
 
+export enum OrderType {
+  items,
+  fullCart,
+}
+
 export interface Order {
   _id: string;
   userId: string;
@@ -51,7 +56,7 @@ const orderSlice = createSlice({
       state.error = action.payload;
     },
 
-    placeOrderRequest: (state, _: PayloadAction<Omit<Order, "_id">>) => {
+    placeOrderRequest: (state, _: PayloadAction<OrderType>) => {
       state.placingOrder = true;
     },
     placeOrderSuccess: (state, action: PayloadAction<Order>) => {

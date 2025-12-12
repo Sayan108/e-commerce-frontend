@@ -1,147 +1,208 @@
 "use client";
 
-import { useLocalStorage } from "@/hooks/use-local-storage";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Address } from "@/lib/types";
-import { useToast } from "@/hooks/use-toast";
-import Image from "next/image";
+import { useCart } from "@/hooks/useCart";
+import { useAddress } from "@/hooks/useAddress";
+import { Loader2 } from "lucide-react";
+import { useOrders } from "@/hooks/useOrder";
+import { OrderType } from "@/lib/redux/slices/order.slice";
 
 export default function SummaryPage() {
   const router = useRouter();
 
-  // Dummy localStorage data
-  const [selectedAddressId, setSelectedAddressId] = useLocalStorage<
-    string | undefined
-  >("selectedAddress", "1");
-  const [paymentMethod, setPaymentMethod] = useLocalStorage<
-    "Online" | "COD" | undefined
-  >("paymentMethod", "Online");
+  const { items: cartItems, loading: cartLoading } = useCart();
+  const {
+    currentShippingAddress,
+    currentbillingAddress,
+    loading: addressLoading,
+  } = useAddress();
 
-  // Dummy cart data
-  const [cartItems] = useState([
-    {
-      id: "1",
-      name: "Product 1",
-      imageUrl: "https://via.placeholder.com/150",
-      price: 29.99,
-      quantity: 2,
-    },
-    {
-      id: "2",
-      name: "Product 2",
-      imageUrl: "https://via.placeholder.com/150",
-      price: 49.99,
-      quantity: 1,
-    },
-  ]);
+  const loading = cartLoading || addressLoading;
 
-  // Calculate the cart total
   const cartTotal = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
+    (total, item) => total + item.quantity * item.price,
     0
   );
 
-  useEffect(() => {
-    // Placeholder effect for side effects when values change
-  }, [selectedAddressId, paymentMethod, router]);
+  const { placeOrder } = useOrders();
 
   const handlePlaceOrder = () => {
-    // Placeholder for handling the order
-    alert("Order placed successfully!");
+    if (!currentShippingAddress || !currentbillingAddress) return;
+    placeOrder(OrderType.fullCart);
   };
 
-  if (!paymentMethod) {
-    return <div>Loading summary...</div>;
-  }
-
   return (
-    <div className="mx-auto max-w-4xl grid md:grid-cols-3 gap-8">
-      {/* Left column: Order Review */}
-      <div className="md:col-span-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Review Your Order</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="divide-y">
-              {cartItems.map((item) => (
-                <li key={item.id} className="flex items-center py-4">
-                  <Image
-                    src={item.imageUrl}
-                    alt={item.name}
-                    width={64}
-                    height={64}
-                    className="rounded-md object-cover"
-                  />
-                  <div className="ml-4 flex-grow">
-                    <h3 className="font-semibold">{item.name}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Qty: {item.quantity}
-                    </p>
-                  </div>
-                  <p className="font-semibold">
-                    ${(item.price * item.quantity).toFixed(2)}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
-      </div>
+    <div className="mx-auto max-w-6xl py-10 px-4 md:px-0">
+      <div className="grid md:grid-cols-3 gap-10">
+        {/* LEFT – ORDER ITEMS */}
+        <div className="md:col-span-2 space-y-6">
+          <Card className="shadow-md">
+            <CardHeader>
+              <CardTitle className="text-2xl font-semibold">
+                Order Items
+              </CardTitle>
+            </CardHeader>
 
-      {/* Right column: Summary */}
-      <div className="space-y-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>Shipping To</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {/* <p>{shippingAddress.line1}, {shippingAddress.city}</p>
-            <p>{shippingAddress.state}, {shippingAddress.zip}</p> */}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Payment Method</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>{paymentMethod}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Order Summary</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <div className="flex justify-between">
-              <span>Subtotal</span>
-              <span>${cartTotal.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Shipping</span>
-              <span>Free</span>
-            </div>
-            <Separator />
-            <div className="flex justify-between font-bold text-lg">
-              <span>Total</span>
-              <span>${cartTotal.toFixed(2)}</span>
-            </div>
-          </CardContent>
-        </Card>
-        <Button onClick={handlePlaceOrder} size="lg" className="w-full">
-          Place Order
-        </Button>
-        <Button
-          variant="outline"
-          onClick={() => router.back()}
-          className="w-full"
-        >
-          Back
-        </Button>
+            <CardContent>
+              {loading ? (
+                <div className="flex justify-center py-10">
+                  <Loader2 className="animate-spin h-6 w-6 text-primary" />
+                </div>
+              ) : cartItems.length === 0 ? (
+                <p className="text-center text-muted-foreground py-6">
+                  Your cart is empty.
+                </p>
+              ) : (
+                <ul className="divide-y">
+                  {cartItems.map((item) => (
+                    <li
+                      key={item._id}
+                      className="flex items-center justify-between py-4"
+                    >
+                      <div className="flex items-center gap-4">
+                        <Image
+                          src={item.thumbnail ?? ""}
+                          alt={item.itemname}
+                          width={80}
+                          height={80}
+                          className="rounded-md object-cover border w-20 h-20"
+                        />
+                        <div>
+                          <h3 className="font-medium text-base capitalize">
+                            {item.itemname}
+                          </h3>
+                          <p className="text-sm text-muted-foreground">
+                            Qty: {item.quantity}
+                          </p>
+                        </div>
+                      </div>
+
+                      <p className="font-semibold text-lg">
+                        ₹{(item.price * item.quantity).toFixed(2)}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* RIGHT – ORDER SUMMARY */}
+        <div className="space-y-6">
+          {/* PRICE SUMMARY */}
+          <Card className="shadow-md">
+            <CardHeader>
+              <CardTitle className="text-xl">Price Summary</CardTitle>
+            </CardHeader>
+
+            <CardContent className="space-y-3 text-sm">
+              <div className="flex justify-between">
+                <span>Subtotal</span>
+                <span className="font-medium">₹{cartTotal.toFixed(2)}</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span>Shipping</span>
+                <span className="font-medium">Free</span>
+              </div>
+
+              <Separator />
+
+              <div className="flex justify-between text-lg font-semibold">
+                <span>Total</span>
+                <span>₹{cartTotal.toFixed(2)}</span>
+              </div>
+            </CardContent>
+          </Card>
+          {/* SHIPPING ADDRESS */}
+          <Card className="shadow-md">
+            <CardHeader>
+              <CardTitle className="text-xl">Shipping Address</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {addressLoading ? (
+                <p className="text-sm text-muted-foreground">Loading...</p>
+              ) : currentShippingAddress ? (
+                <div className="space-y-1">
+                  <p className="font-medium">
+                    {currentShippingAddress.lineOne}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {currentShippingAddress.city},{" "}
+                    {currentShippingAddress.state}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {currentShippingAddress.zip},{" "}
+                    {currentShippingAddress.country}
+                  </p>
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  No shipping address selected.
+                </p>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* BILLING ADDRESS */}
+          <Card className="shadow-md">
+            <CardHeader>
+              <CardTitle className="text-xl">Billing Address</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {addressLoading ? (
+                <p className="text-sm text-muted-foreground">Loading...</p>
+              ) : currentbillingAddress ? (
+                <div className="space-y-1">
+                  <p className="font-medium">{currentbillingAddress.lineOne}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {currentbillingAddress.city}, {currentbillingAddress.state}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {currentbillingAddress.zip}, {currentbillingAddress.country}
+                  </p>
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  No billing address selected.
+                </p>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* BUTTONS */}
+          <Button
+            size="lg"
+            className="w-full"
+            disabled={
+              loading ||
+              cartItems.length === 0 ||
+              !currentShippingAddress ||
+              !currentbillingAddress
+            }
+            onClick={handlePlaceOrder}
+          >
+            {loading ? (
+              <Loader2 className="animate-spin h-5 w-5" />
+            ) : (
+              "Place Order"
+            )}
+          </Button>
+
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => router.back()}
+          >
+            Back
+          </Button>
+        </div>
       </div>
     </div>
   );

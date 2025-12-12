@@ -18,9 +18,10 @@ import { ISnackBarType, showSnackbar } from "../slices/snackbar.slice";
 
 function* fetchOrdersWorker(): any {
   try {
-    const res = yield call(getOrders);
+    const userId = store.getState().auth.user._id;
+    const res = yield call(getOrders, userId);
     console.log(res);
-    yield put(fetchOrdersSuccess(res.data));
+    yield put(fetchOrdersSuccess(res.data.orders.data));
   } catch (err: any) {
     yield put(fetchOrdersFailure(err.message));
   }

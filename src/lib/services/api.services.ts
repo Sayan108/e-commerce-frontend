@@ -65,4 +65,5 @@ export const clearCart = () => client.delete(ApiEndpoints.CART);
 export const createOrder = (payload: any) =>
   client.post(ApiEndpoints.ORDER, payload);
 
-export const getOrders = () => client.get(ApiEndpoints.ORDER);
+export const getOrders = (userId: string) =>
+  client.get(ApiEndpoints.ORDER + "/" + userId);

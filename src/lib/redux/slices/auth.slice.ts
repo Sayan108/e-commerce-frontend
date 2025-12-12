@@ -7,10 +7,17 @@ import {
   UpdateUserPayload,
   User,
 } from "../types/auth.types";
-
+const initialUser = {
+  _id: "",
+  name: "",
+  email: "",
+  phone: "",
+  role: "",
+  cartItemCount: 0,
+};
 const initialState: AuthState = {
-  user: null,
-  token: null,
+  user: initialUser,
+  token: "",
   loading: false,
   error: null,
   isAuthenticated: false,
@@ -69,8 +76,8 @@ const authSlice = createSlice({
     },
 
     logout(state: AuthState) {
-      state.token = null;
-      state.user = null;
+      state.token = "";
+      state.user = initialUser;
       state.error = null;
       state.isAuthenticated = false;
       state.loading = false;

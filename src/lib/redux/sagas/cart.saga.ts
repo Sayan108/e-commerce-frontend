@@ -29,6 +29,7 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { CartItem } from "../types/cart.types";
 import { store } from "..";
 import { authActions } from "../slices/auth.slice";
+import { ISnackBarType, showSnackbar } from "../slices/snackbar.slice";
 
 /* ========================
    FETCH CART
@@ -64,9 +65,21 @@ function* addToCartWorker(action: PayloadAction<number>) {
     const res: AxiosResponse = yield call(addToCart, payload);
 
     yield put(addToCartSuccess(res.data.cartItem));
+    yield put(
+      showSnackbar({
+        message: "Item added to cart successfully",
+        type: ISnackBarType.success,
+      })
+    );
     yield put(authActions.updateCartCount(1));
   } catch (err: any) {
     yield put(addToCartFailure(err.message));
+    yield put(
+      showSnackbar({
+        message: err.message || "Add to cart failed ",
+        type: ISnackBarType.error,
+      })
+    );
   }
 }
 
@@ -78,8 +91,20 @@ function* updateCartWorker(action: PayloadAction<Partial<CartItem>>) {
     const { _id, ...data } = action.payload;
     const res: AxiosResponse = yield call(updateCart, _id ?? "", data);
     yield put(updateCartSuccess(res.data.updated));
+    yield put(
+      showSnackbar({
+        message: "Cart updated successfully",
+        type: ISnackBarType.success,
+      })
+    );
   } catch (err: any) {
     yield put(updateCartFailure(err.message));
+    yield put(
+      showSnackbar({
+        message: "Cart update failed ",
+        type: ISnackBarType.error,
+      })
+    );
   }
 }
 
@@ -91,8 +116,20 @@ function* deleteCartWorker(action: PayloadAction<string>) {
     yield call(deleteCart, action.payload);
     yield put(deleteCartSuccess(action.payload));
     yield put(authActions.updateCartCount(-1));
+    yield put(
+      showSnackbar({
+        message: "Cart deleted successfully",
+        type: ISnackBarType.error,
+      })
+    );
   } catch (err: any) {
     yield put(deleteCartFailure(err.message));
+    yield put(
+      showSnackbar({
+        message: "Cart delete failed",
+        type: ISnackBarType.error,
+      })
+    );
   }
 }
 
@@ -103,8 +140,20 @@ function* clearCartWorker() {
   try {
     yield call(clearCart);
     yield put(clearCartSuccess());
+    yield put(
+      showSnackbar({
+        message: "Cart cleared successfully",
+        type: ISnackBarType.success,
+      })
+    );
   } catch (err: any) {
     yield put(clearCartFailure(err.message));
+    yield put(
+      showSnackbar({
+        message: "Cart clear failed",
+        type: ISnackBarType.error,
+      })
+    );
   }
 }
 

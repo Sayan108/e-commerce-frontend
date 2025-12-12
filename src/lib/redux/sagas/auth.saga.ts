@@ -10,6 +10,7 @@ import {
 
 import { AxiosResponse } from "axios";
 import { ISnackBarType, showSnackbar } from "../slices/snackbar.slice";
+import { navigate } from "@/lib/utils/navigation";
 
 // ---- LOGIN ----
 function* loginSaga(action: any) {
@@ -24,8 +25,14 @@ function* loginSaga(action: any) {
         type: ISnackBarType.success,
       })
     );
-    action.payload.successCallBack();
+    navigate("/");
   } catch (e: any) {
+    yield put(
+      showSnackbar({
+        message: e.response?.data?.message || "Login failed",
+        type: ISnackBarType.success,
+      })
+    );
     yield put(
       authActions.authFailure(e.response?.data?.message || "Login failed")
     );
@@ -40,14 +47,20 @@ function* registerSaga(action: any) {
     console.log(res.data);
     yield put(authActions.registerSuccess(res.data));
 
-    action.payload.successCallBack();
+    navigate("/");
     yield put(
       showSnackbar({
-        message: "User account created successfully",
+        message: "User account created and logged in successfully",
         type: ISnackBarType.success,
       })
     );
   } catch (e: any) {
+    yield put(
+      showSnackbar({
+        message: e.response?.data?.message || "Register failed",
+        type: ISnackBarType.success,
+      })
+    );
     yield put(
       authActions.authFailure(e.response?.data?.message || "Register failed")
     );

@@ -14,6 +14,8 @@ import { AxiosResponse } from "axios";
 import { authActions } from "../slices/auth.slice";
 import { store } from "..";
 import { PayloadAction } from "@reduxjs/toolkit";
+import { navigate } from "@/hooks/useNavigation";
+import { ISnackBarType, showSnackbar } from "../slices/snackbar.slice";
 
 function* fetchOrdersWorker(): any {
   try {
@@ -36,9 +38,22 @@ function* placeOrderWorker(action: any): any {
       billingAddressId,
     });
     yield put(placeOrderSuccess(res.data));
+    navigate("/profile/orders");
+    yield put(
+      showSnackbar({
+        message: "Order placed successfully",
+        type: ISnackBarType.success,
+      })
+    );
     yield put(authActions.updateCartCount(-1));
   } catch (err: any) {
     yield put(placeOrderFailure(err.message));
+    yield put(
+      showSnackbar({
+        message: "Order place failed",
+        type: ISnackBarType.error,
+      })
+    );
   }
 }
 

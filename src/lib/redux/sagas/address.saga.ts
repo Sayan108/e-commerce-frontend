@@ -21,10 +21,10 @@ import {
   deleteAddressApi,
   getAddress,
   updateAddressApi,
-  updateUserApi,
 } from "@/lib/services/api.services";
 import { AxiosResponse } from "axios";
 import { store } from "..";
+import { ISnackBarType, showSnackbar } from "../slices/snackbar.slice";
 
 /* ==============================
    ✅ WORKERS
@@ -40,8 +40,20 @@ function* saveAddressWorker(action: PayloadAction<Omit<Address, "id">>) {
       userId ?? ""
     );
     yield put(saveAddressSuccess(response.data.address));
+    yield put(
+      showSnackbar({
+        message: "Address added successfully",
+        type: ISnackBarType.success,
+      })
+    );
   } catch (error: any) {
     yield put(saveAddressFailure(error.message));
+    yield put(
+      showSnackbar({
+        message: "Address add failed",
+        type: ISnackBarType.error,
+      })
+    );
   }
 }
 
@@ -63,8 +75,20 @@ function* updateAddressWorker(action: PayloadAction<Partial<Address>>) {
       id: action.payload._id ?? "",
     });
     yield put(updateAddressSuccess(response.data.updated));
+    yield put(
+      showSnackbar({
+        message: "Address updated successfully",
+        type: ISnackBarType.success,
+      })
+    );
   } catch (error: any) {
     yield put(updateAddressFailure(error.message));
+    yield put(
+      showSnackbar({
+        message: "Address update failed",
+        type: ISnackBarType.error,
+      })
+    );
   }
 }
 
@@ -73,8 +97,20 @@ function* deleteAddressWorker(action: PayloadAction<string>) {
   try {
     yield call(deleteAddressApi, action.payload);
     yield put(deleteAddressSuccess(action.payload));
+    yield put(
+      showSnackbar({
+        message: "Address deleted successfully",
+        type: ISnackBarType.success,
+      })
+    );
   } catch (error: any) {
     yield put(deleteAddressFailure(error.message));
+    yield put(
+      showSnackbar({
+        message: "Address delete failed",
+        type: ISnackBarType.error,
+      })
+    );
   }
 }
 

@@ -92,7 +92,7 @@ export function Header() {
           <SearchBar />
         </div>
         {userMenu}
-        <Link href="/cart" passHref>
+        <Link href={isAuthenticated ? "/cart" : "/login"} passHref>
           <Button variant="ghost" size="icon" asChild>
             <div className="relative">
               <ShoppingCart />

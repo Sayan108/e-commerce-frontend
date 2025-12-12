@@ -1,14 +1,13 @@
-// utils/navigateService.js
-let navigateFn: any = null;
+let navigator: ((path: string) => void) | null = null;
 
-export const setNavigator = (navigator: any) => {
-  navigateFn = navigator;
+export const setNavigator = (fn: (path: string) => void) => {
+  navigator = fn;
 };
 
-export const navigate = (...args: any) => {
-  if (navigateFn) {
-    navigateFn(...args);
-  } else {
-    console.warn("Navigator not set yet.");
+export const navigate = (path: string) => {
+  if (!navigator) {
+    console.warn("Navigator not initialized yet");
+    return;
   }
+  navigator(path);
 };

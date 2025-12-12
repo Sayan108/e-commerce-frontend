@@ -10,8 +10,8 @@ export interface User {
 }
 
 export interface AuthState {
-  user: User | null;
-  token: string | null;
+  user: User;
+  token: string;
   loading: boolean;
   isAuthenticated: boolean;
   error: string | null;

@@ -13,7 +13,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     const isProtected = isProtectedRoute(pathname);
 
     if (!isAuthenticated && isProtected) {
-      window.location.href = "/login";
+      window.location.replace("/login");
     }
   }, [isAuthenticated, pathname]);
 

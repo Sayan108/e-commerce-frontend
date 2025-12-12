@@ -8,6 +8,8 @@ import { Product } from "@/lib/redux/types/product.types";
 import { useDispatch } from "react-redux";
 import { setCurrentProduct } from "@/lib/redux/slices/products.slice";
 import { useCart } from "@/hooks/useCart";
+import { Loader } from "lucide-react";
+import useProducts from "@/hooks/useProducts";
 
 interface ProductCardProps {
   product: Product;
@@ -19,7 +21,9 @@ export function ProductCard({ product }: ProductCardProps) {
 
   const dispatch = useDispatch();
 
-  const { addToCart } = useCart();
+  const { addToCart, loading } = useCart();
+
+  const { currentProduct, setProduct } = useProducts();
 
   return (
     <Card
@@ -120,12 +124,16 @@ export function ProductCard({ product }: ProductCardProps) {
         {/* Add to cart */}
         <Button
           onClick={() => {
-            dispatch(setCurrentProduct(product));
+            setProduct(product);
             addToCart(1);
           }}
           className="w-full rounded-lg py-5 font-semibold transition-all"
         >
-          Add to Cart
+          {loading && product?._id === currentProduct?._id ? (
+            <Loader />
+          ) : (
+            "Add to cart"
+          )}
         </Button>
       </div>
     </Card>

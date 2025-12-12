@@ -10,7 +10,7 @@ import {
 
 import { AxiosResponse } from "axios";
 import { ISnackBarType, showSnackbar } from "../slices/snackbar.slice";
-import { navigate } from "@/lib/utils/navigation";
+import { navigate } from "@/hooks/useNavigation";
 
 // ---- LOGIN ----
 function* loginSaga(action: any) {

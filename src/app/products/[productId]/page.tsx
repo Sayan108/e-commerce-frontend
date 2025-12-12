@@ -8,9 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { useSelector } from "react-redux";
-import { RootState } from "@/lib/redux";
 import { useCart } from "@/hooks/useCart";
+import useProducts from "@/hooks/useProducts";
+import { navigate } from "@/hooks/useNavigation";
 
 const ProductPageSkeleton = () => (
   <div className="container mx-auto max-w-7xl px-4 py-8">
@@ -42,13 +42,14 @@ export default function ProductPage({
 }: {
   params: { productId: string };
 }) {
-  const { currentProduct: product } = useSelector(
-    (state: RootState) => state.products
+  const { currentProduct: product } = useProducts();
+
+  const { addToCart, addToDraftCartAndCheckout, currentProductCount } =
+    useCart();
+
+  const [quantity, setQuantity] = useState(
+    currentProductCount(product?._id ?? "")
   );
-
-  const { addToCart } = useCart();
-
-  const [quantity, setQuantity] = useState(1);
 
   if (!product) return <ProductPageSkeleton />;
 
@@ -62,8 +63,8 @@ export default function ProductPage({
   };
 
   const buyNowHandler = () => {
-    console.log("buy now clicked");
-    // redirect to checkout
+    navigate("/checkout/address");
+    addToDraftCartAndCheckout(quantity);
   };
 
   return (

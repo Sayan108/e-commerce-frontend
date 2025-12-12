@@ -15,7 +15,7 @@ import { CartItem } from "@/lib/redux/types/cart.types";
 export const useCart = () => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const { items, loading, error } = useSelector(
+  const { items, loading, error, draftCart } = useSelector(
     (state: RootState) => state.cart
   );
 
@@ -29,17 +29,23 @@ export const useCart = () => {
   const clearCart = () => dispatch(clearCartRequest());
 
   const addToDraftCartAndCheckout = (quantity: number) => {
-    const draftCart: CartItem = {
+    const draftCart: Omit<CartItem, "_id"> = {
       quantity,
       thumbnail: currentProduct?.imageurl,
       price: currentProduct?.price ?? 0,
       productId: currentProduct?._id ?? "",
+      itemname: currentProduct?.name ?? "",
     };
     dispatch(addToDraftCart(draftCart));
   };
 
+  const currentProductCount = (productId: string) => {
+    return items?.find((item) => item.productId === productId)?.quantity ?? 1;
+  };
+
   return {
     items,
+    draftCart,
     loading,
     error,
     fetchCart,
@@ -47,5 +53,7 @@ export const useCart = () => {
     updateCart,
     deleteCart,
     clearCart,
+    addToDraftCartAndCheckout,
+    currentProductCount,
   };
 };

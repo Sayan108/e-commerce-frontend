@@ -13,13 +13,13 @@ import { createOrder, getOrders } from "@/lib/services/api.services";
 import { AxiosResponse } from "axios";
 import { authActions } from "../slices/auth.slice";
 import { store } from "..";
-import { PayloadAction } from "@reduxjs/toolkit";
 import { navigate } from "@/hooks/useNavigation";
 import { ISnackBarType, showSnackbar } from "../slices/snackbar.slice";
 
 function* fetchOrdersWorker(): any {
   try {
     const res = yield call(getOrders);
+    console.log(res);
     yield put(fetchOrdersSuccess(res.data));
   } catch (err: any) {
     yield put(fetchOrdersFailure(err.message));

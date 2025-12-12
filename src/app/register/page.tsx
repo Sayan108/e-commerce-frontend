@@ -25,6 +25,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import useAuth from "@/hooks/useAuth";
+import { Loader } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -35,13 +36,6 @@ const formSchema = z.object({
 });
 
 export default function RegisterPage() {
-  const router = useRouter();
-  const { toast } = useToast();
-
-  const successCallBack = () => {
-    router.push("/");
-  };
-
   const { register, loading } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -58,7 +52,6 @@ export default function RegisterPage() {
       email: values.email,
       password: values.password,
       name: "",
-      successCallBack,
     });
   }
 
@@ -117,8 +110,8 @@ export default function RegisterPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
-                Sign Up
+              <Button disabled={loading} type="submit" className="w-full">
+                {loading ? <Loader /> : "Sign up"}
               </Button>
             </form>
           </Form>

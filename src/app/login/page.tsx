@@ -25,6 +25,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import useAuth from "@/hooks/useAuth";
+import { Loader } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email." }),
@@ -32,13 +33,7 @@ const formSchema = z.object({
 });
 
 export default function LoginPage() {
-  const { login } = useAuth();
-
-  const router = useRouter();
-
-  const successCallBack = () => {
-    router.push("/");
-  };
+  const { login, loading } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -51,7 +46,7 @@ export default function LoginPage() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Extracting name from email for mock display
 
-    login({ email: values.email, password: values.password, successCallBack });
+    login({ email: values.email, password: values.password });
   }
 
   return (
@@ -98,8 +93,8 @@ export default function LoginPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
-                Sign In
+              <Button disabled={loading} type="submit" className="w-full">
+                {loading ? <Loader /> : "Sign in"}
               </Button>
             </form>
           </Form>

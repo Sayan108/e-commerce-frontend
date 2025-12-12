@@ -97,6 +97,10 @@ const cartSlice = createSlice({
       state.error = action.payload;
     },
 
+    /* ========================
+       DRAFT CART
+    ========================= */
+
     addToDraftCart: (state, action: PayloadAction<Omit<CartItem, "_id">>) => {
       state.draftCart = [action.payload, ...state.draftCart];
     },

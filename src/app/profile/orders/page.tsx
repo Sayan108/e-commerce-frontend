@@ -20,6 +20,9 @@ import {
 } from "@/components/ui/card";
 import { ShoppingBag } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import useProducts from "@/hooks/useProducts";
+import { useEffect } from "react";
+import { useOrders } from "@/hooks/useOrder";
 
 const OrdersSkeleton = () => (
   <Card>
@@ -74,14 +77,13 @@ const OrdersSkeleton = () => (
   </Card>
 );
 
-const user = {
-  name: "kjhczfjd",
-  email: "hchxgcjsdh",
-  orders: [{ id: 1323, date: "kfjfkjdf", status: "jhjdshfd", total: 213423 }],
-};
-
 export default function OrdersPage() {
-  if (!user) return <OrdersSkeleton />;
+  const { getOrders, orders, loading } = useOrders();
+  useEffect(() => {
+    getOrders();
+  }, []);
+
+  if (loading) return <OrdersSkeleton />;
 
   return (
     <Card>
@@ -90,7 +92,7 @@ export default function OrdersPage() {
         <CardDescription>View your order history and status.</CardDescription>
       </CardHeader>
       <CardContent>
-        {user.orders.length === 0 ? (
+        {orders.length === 0 ? (
           <div className="text-center py-10 border-2 border-dashed rounded-lg">
             <ShoppingBag className="mx-auto h-12 w-12 text-muted-foreground" />
             <h3 className="mt-4 text-lg font-semibold">No Orders Yet</h3>
@@ -113,9 +115,9 @@ export default function OrdersPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {user.orders.map((order) => (
-                <TableRow key={order.id}>
-                  <TableCell className="font-medium">{order.id}</TableCell>
+              {orders.map((order) => (
+                <TableRow key={order._id}>
+                  <TableCell className="font-medium">{order._id}</TableCell>
                   {/* <TableCell>{format(new Date(order.date), "PPP")}</TableCell> */}
                   <TableCell>
                     <Badge
@@ -131,7 +133,7 @@ export default function OrdersPage() {
                   </TableCell>
                   <TableCell className="text-right">
                     <Button asChild variant="outline" size="sm">
-                      <Link href={`/profile/orders/${order.id}`}>
+                      <Link href={`/profile/orders/${order._id}`}>
                         View Details
                       </Link>
                     </Button>

@@ -20,15 +20,12 @@ export interface AuthState {
 export interface LoginPayload {
   email: string;
   password: string;
-  successCallBack: () => void;
 }
 
 export interface RegisterPayload {
   name: string;
   email: string;
   password: string;
-
-  successCallBack: () => void;
 }
 
 export interface UpdateUserPayload {

@@ -9,5 +9,6 @@ export const navigate = (path: string) => {
     console.warn("Navigator not set yet");
     return;
   }
+  console.log("path", path);
   navigatorFn(path);
 };

@@ -15,6 +15,7 @@ import { authActions } from "../slices/auth.slice";
 import { store } from "..";
 import { navigate } from "@/hooks/useNavigation";
 import { ISnackBarType, showSnackbar } from "../slices/snackbar.slice";
+import { clearDraftCart } from "../slices/cart.slice";
 
 function* fetchOrdersWorker(): any {
   try {
@@ -34,9 +35,12 @@ function* placeOrderWorker(action: any): any {
     const billingAddressId =
       store.getState().address.currentbillingAddress?._id;
 
+    const draftCart = store.getState().cart.draftCart;
+
     const res: AxiosResponse = yield call(createOrder, {
       shippingAddressId,
       billingAddressId,
+      ...(draftCart.length > 0 ? { items: draftCart } : {}),
     });
     yield put(placeOrderSuccess(res.data.order));
     navigate("/profile/orders");
@@ -46,7 +50,8 @@ function* placeOrderWorker(action: any): any {
         type: ISnackBarType.success,
       })
     );
-    yield put(authActions.updateCartCount(-1));
+    if (draftCart.length === 0) yield put(authActions.updateCartCount(-1));
+    else yield put(clearDraftCart());
   } catch (err: any) {
     yield put(placeOrderFailure(err.message));
     yield put(

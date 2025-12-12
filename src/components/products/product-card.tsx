@@ -13,9 +13,13 @@ import useProducts from "@/hooks/useProducts";
 
 interface ProductCardProps {
   product: Product;
+  showAddTocart?: boolean;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({
+  product,
+  showAddTocart = true,
+}: ProductCardProps) {
   const discount =
     ((product.originalPrice - product.price) / product.originalPrice) * 100;
 
@@ -122,19 +126,22 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Add to cart */}
-        <Button
-          onClick={() => {
-            setProduct(product);
-            addToCart(1);
-          }}
-          className="w-full rounded-lg py-5 font-semibold transition-all"
-        >
-          {loading && product?._id === currentProduct?._id ? (
-            <Loader />
-          ) : (
-            "Add to cart"
-          )}
-        </Button>
+
+        {showAddTocart && (
+          <Button
+            onClick={() => {
+              setProduct(product);
+              addToCart(1);
+            }}
+            className="w-full rounded-lg py-5 font-semibold transition-all"
+          >
+            {loading && product?._id === currentProduct?._id ? (
+              <Loader />
+            ) : (
+              "Add to cart"
+            )}
+          </Button>
+        )}
       </div>
     </Card>
   );

@@ -38,8 +38,8 @@ export function CategoryHighlights() {
         {!loading &&
           highlightedCategories.map((category) => (
             <Link
-              href={`/categories/${category.id}`}
-              key={category.id}
+              href={`/categories/${category._id}`}
+              key={category._id}
               className="group"
             >
               <Card className="relative overflow-hidden transition-all duration-300 group-hover:shadow-xl group-hover:-translate-y-1">

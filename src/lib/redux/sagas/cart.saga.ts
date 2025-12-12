@@ -51,6 +51,7 @@ function* addToCartWorker(action: PayloadAction<number>) {
   try {
     const currentProduct = store.getState().products.currentProduct;
     const isAuthenticated = store.getState().auth.isAuthenticated;
+    const cartItem = store.getState().cart.items;
     if (!isAuthenticated) {
       return;
     }
@@ -71,7 +72,10 @@ function* addToCartWorker(action: PayloadAction<number>) {
         type: ISnackBarType.success,
       })
     );
-    yield put(authActions.updateCartCount(1));
+    const existingIndex = cartItem.findIndex(
+      (item) => item.productId === currentProduct?._id
+    );
+    if (existingIndex !== -1) yield put(authActions.updateCartCount(1));
   } catch (err: any) {
     yield put(addToCartFailure(err.message));
     yield put(

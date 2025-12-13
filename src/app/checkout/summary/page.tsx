@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -40,13 +40,23 @@ export default function SummaryPage() {
     0
   );
 
+  const hasMounted = useRef(false);
+
   const handlePlaceOrder = () => {
     if (!currentShippingAddress || !currentbillingAddress) return;
     placeOrder(draftCart?.length ? OrderType.items : OrderType.fullCart);
   };
 
   useEffect(() => {
-    return () => clearDraftCarts();
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      return;
+    }
+
+    return () => {
+      console.log("real unmount");
+      clearDraftCarts();
+    };
   }, []);
 
   return (

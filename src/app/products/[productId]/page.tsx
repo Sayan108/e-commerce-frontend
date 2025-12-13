@@ -43,14 +43,20 @@ export default function ProductPage({
     currentProductReview,
   } = useProducts();
 
-  const { addToCart, addToDraftCartAndCheckout, currentProductCount, loading } =
-    useCart();
+  const {
+    addToCart,
+    addToDraftCartAndCheckout,
+    currentProductCount,
+    loading,
+    clearDraftCarts,
+  } = useCart();
 
   const [quantity, setQuantity] = useState(1);
   const [reviewOpen, setReviewOpen] = useState(false);
 
   useEffect(() => {
     if (product?._id) {
+      clearDraftCarts();
       setQuantity(currentProductCount(product._id));
       if (product?.rating > 0 || product?.reviewCount > 0) getProductReview();
     }
@@ -187,8 +193,8 @@ export default function ProductPage({
             variant="secondary"
             className="flex-1"
             onClick={() => {
-              navigate("/checkout/address");
               addToDraftCartAndCheckout(quantity);
+              navigate("/checkout/address");
             }}
           >
             Buy Now

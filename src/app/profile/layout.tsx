@@ -17,7 +17,7 @@ export default function ProfileLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const { logOut } = useAuth();
+  const { logOut, user } = useAuth();
 
   return (
     <div className="container mx-auto max-w-7xl px-4 py-8">
@@ -26,7 +26,7 @@ export default function ProfileLayout({
           My Account
         </h1>
         <p className="mt-2 text-lg text-muted-foreground">
-          Welcome back, Sayan!
+          Welcome back, {user.name ?? "User"}!
         </p>
       </header>
       <div className="grid md:grid-cols-4 gap-8">

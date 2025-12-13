@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { format } from "date-fns";
 import Image from "next/image";
 import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import { Check, Package, Truck, Home, FileDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useOrders } from "@/hooks/useOrder";
 
+/* ---------------- TRACKING STEPS ---------------- */
 const trackingSteps = [
   { name: "Order Placed", icon: Check, status: "placed" },
   { name: "Shipped", icon: Package, status: "shipped" },
@@ -19,57 +21,53 @@ const trackingSteps = [
   { name: "Delivered", icon: Home, status: "delivered" },
 ];
 
-// ---------- INVOICE DOWNLOAD ----------
+/* ---------------- INVOICE ---------------- */
 const downloadInvoice = (order: any) => {
   const doc = new jsPDF();
-  doc.setFontSize(16);
-  doc.text("Invoice", 15, 20);
 
-  doc.setFontSize(12);
-  doc.text(`Order ID: ${order._id}`, 15, 35);
-  doc.text(`Date: ${format(new Date(order.createdAt), "PPP")}`, 15, 45);
+  doc.setFontSize(18);
+  doc.text("INVOICE", 14, 20);
 
-  // Addresses
-  doc.text("Shipping Address:", 15, 60);
-  doc.text(order.shippingaddress, 15, 68);
+  doc.setFontSize(11);
+  doc.text(`Order ID: ${order._id}`, 14, 30);
+  doc.text(`Order Date: ${format(new Date(order.createdAt), "PPP")}`, 14, 36);
 
-  doc.text("Billing Address:", 15, 85);
-  doc.text(order.billingaddress || order.shippingaddress, 15, 93);
+  doc.text("Shipping Address:", 14, 48);
+  doc.text(order.shippingaddress, 14, 54);
 
-  // Items
-  let yPos = 110;
-  doc.text("Items:", 15, yPos);
+  doc.text("Billing Address:", 110, 48);
+  doc.text(order.billingaddress || order.shippingaddress, 110, 54);
 
-  order.items.forEach((item: any) => {
-    yPos += 10;
-    doc.text(
-      `${item.productname} (x${item.quantity}) — ₹${(
-        item.price * item.quantity
-      ).toFixed(2)}`,
-      15,
-      yPos
-    );
+  autoTable(doc, {
+    startY: 80,
+    head: [["Product", "Qty", "Price", "Total"]],
+    body: order.items.map((item: any) => [
+      item.productname,
+      item.quantity,
+      `₹${item.price}`,
+      `₹${(item.price * item.quantity).toFixed(2)}`,
+    ]),
+    styles: { fontSize: 10 },
+    headStyles: { fillColor: [0, 0, 0] },
   });
 
-  yPos += 15;
-  doc.text(`Total: ₹${order.total.toFixed(2)}`, 15, yPos);
+  const finalY = (doc as any).lastAutoTable.finalY + 10;
+
+  doc.setFontSize(12);
+  doc.text(`Total Amount: ₹${order.total.toFixed(2)}`, 14, finalY);
 
   doc.save(`invoice-${order._id}.pdf`);
 };
 
-// ---------- SKELETON ----------
+/* ---------------- SKELETON ---------------- */
 const OrderDetailSkeleton = () => (
-  <div className="space-y-8 px-1">
-    <Card>
-      <CardHeader>
-        <Skeleton className="h-6 w-1/2" />
-        <Skeleton className="h-4 w-1/3" />
-      </CardHeader>
-    </Card>
+  <div className="space-y-6">
+    <Skeleton className="h-6 w-1/3" />
+    <Skeleton className="h-40" />
   </div>
 );
 
-// ---------- MAIN COMPONENT ----------
+/* ---------------- PAGE ---------------- */
 export default function OrderDetailPage({
   params,
 }: {
@@ -84,88 +82,98 @@ export default function OrderDetailPage({
     trackingSteps.findIndex((s) => s.status === order.status) || 0;
 
   return (
-    <div className="space-y-8 px-1">
-      {/* HEADER + DOWNLOAD */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-xl font-semibold">Order #{order._id.slice(-6)}</h1>
-
-        <Button
-          variant="outline"
-          className="flex items-center gap-2"
-          onClick={() => downloadInvoice(order)}
-        >
-          <FileDown className="w-4 h-4" />
-          Download Invoice
-        </Button>
-      </div>
-
-      {/* MAIN ORDER CARD */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Order Details</CardTitle>
+    <div className="space-y-8 pb-24">
+      {/* HEADER */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold flex items-center gap-2">
+            Order #{order._id.slice(-6)}
+            <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-700 capitalize">
+              {order.status}
+            </span>
+          </h1>
           <p className="text-sm text-muted-foreground">
             Placed on {format(new Date(order.createdAt), "PPP")}
           </p>
+        </div>
+
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex items-center gap-2"
+          onClick={() => downloadInvoice(order)}
+        >
+          <FileDown className="w-4 h-4" /> Invoice
+        </Button>
+      </div>
+
+      {/* TRACKING */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Order Tracking</CardTitle>
         </CardHeader>
-
         <CardContent>
-          {/* TRACKING STEPS */}
-          <div className="mb-10">
-            <h3 className="text-lg font-semibold mb-4">Order Tracking</h3>
+          <div className="relative flex justify-between items-center px-4">
+            <div className="absolute top-5 left-0 right-0 h-1 bg-border" />
+            <div
+              className="absolute top-5 left-0 h-1 bg-primary"
+              style={{ width: `${(currentStepIndex / 3) * 100}%` }}
+            />
 
-            <div className="relative flex justify-between items-center px-4">
-              <div className="absolute top-5 left-0 right-0 h-1 bg-border" />
-              <div
-                className="absolute top-5 left-0 h-1 bg-primary transition-all"
-                style={{ width: `${(currentStepIndex / 3) * 100}%` }}
-              />
+            {trackingSteps.map((step, index) => {
+              const Icon = step.icon;
+              const active = index <= currentStepIndex;
 
-              {trackingSteps.map((step, index) => {
-                const Icon = step.icon;
-                const active = index <= currentStepIndex;
-
-                return (
+              return (
+                <div
+                  key={step.name}
+                  className="flex flex-col items-center z-10"
+                >
                   <div
-                    key={step.name}
-                    className="flex flex-col items-center z-10 w-20"
+                    className={cn(
+                      "flex items-center justify-center w-11 h-11 rounded-full border-2",
+                      active
+                        ? "bg-primary border-primary text-primary-foreground"
+                        : "bg-muted border-border"
+                    )}
                   >
-                    <div
-                      className={cn(
-                        "flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all",
-                        active
-                          ? "bg-primary border-primary text-primary-foreground"
-                          : "bg-muted border-border"
-                      )}
-                    >
+                    {index < currentStepIndex ? (
+                      <Check className="w-5 h-5" />
+                    ) : (
                       <Icon className="w-5 h-5" />
-                    </div>
-                    <p className="text-xs mt-2 text-center font-medium">
-                      {step.name}
-                    </p>
+                    )}
                   </div>
-                );
-              })}
-            </div>
+                  <p className="text-xs mt-2 text-center font-medium">
+                    {step.name}
+                  </p>
+                </div>
+              );
+            })}
           </div>
+        </CardContent>
+      </Card>
 
-          <Separator className="my-8" />
-
-          {/* ORDER ITEMS */}
+      {/* ITEMS */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Order Items</CardTitle>
+        </CardHeader>
+        <CardContent>
           <ul className="divide-y">
-            {order.items.map((item) => (
+            {order.items.map((item: any) => (
               <li key={item.productId} className="flex gap-4 py-4 items-center">
                 <Image
                   src={item.thumbnail || "/placeholder.png"}
                   alt={item.productname}
-                  width={80}
-                  height={80}
-                  className="rounded-md object-cover bg-muted"
+                  width={72}
+                  height={72}
+                  className="rounded-lg object-cover border"
                 />
 
                 <div className="flex-grow">
-                  <h3 className="font-semibold">{item.productname}</h3>
+                  <p className="font-medium">{item.productname}</p>
                   <p className="text-sm text-muted-foreground">
-                    Qty: {item.quantity}
+                    Qty × {item.quantity}
                   </p>
                 </div>
 
@@ -178,22 +186,22 @@ export default function OrderDetailPage({
         </CardContent>
       </Card>
 
-      {/* SHIPPING + BILLING + SUMMARY */}
-      <div className="grid md:grid-cols-3 gap-8">
-        {/* SHIPPING */}
+      {/* ADDRESS + SUMMARY */}
+      <div className="grid md:grid-cols-3 gap-6">
         <Card>
-          <CardHeader>
-            <CardTitle>Shipping Address</CardTitle>
+          <CardHeader className="flex flex-row items-center gap-2">
+            <Truck className="w-5 h-5 text-primary" />
+            <CardTitle>Shipping</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="whitespace-pre-line">{order.shippingaddress}</p>
           </CardContent>
         </Card>
 
-        {/* BILLING */}
         <Card>
-          <CardHeader>
-            <CardTitle>Billing Address</CardTitle>
+          <CardHeader className="flex flex-row items-center gap-2">
+            <Home className="w-5 h-5 text-primary" />
+            <CardTitle>Billing</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="whitespace-pre-line">
@@ -202,25 +210,21 @@ export default function OrderDetailPage({
           </CardContent>
         </Card>
 
-        {/* SUMMARY */}
         <Card>
           <CardHeader>
-            <CardTitle>Order Summary</CardTitle>
+            <CardTitle>Summary</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2">
+          <CardContent className="space-y-3">
             <div className="flex justify-between">
               <span>Subtotal</span>
               <span>₹{order.total.toFixed(2)}</span>
             </div>
-
             <div className="flex justify-between">
               <span>Shipping</span>
-              <span>Free</span>
+              <span className="text-green-600">FREE</span>
             </div>
-
             <Separator />
-
-            <div className="flex justify-between font-bold text-lg">
+            <div className="flex justify-between text-lg font-bold">
               <span>Total</span>
               <span>₹{order.total.toFixed(2)}</span>
             </div>

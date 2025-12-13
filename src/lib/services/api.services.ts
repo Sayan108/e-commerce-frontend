@@ -66,4 +66,13 @@ export const createOrder = (payload: any) =>
   client.post(ApiEndpoints.ORDER, payload);
 
 export const getOrders = (userId: string) =>
-  client.get(ApiEndpoints.ORDER + "/" + userId);
+  client.get(`${ApiEndpoints.ORDER}/${userId}`);
+
+export const getReviews = (productId: string) =>
+  client.get(`${ApiEndpoints.REVIEWS}/${productId}`);
+
+export const postReview = (body: {
+  rating: number;
+  comment: string;
+  productId: string;
+}) => client.post(`${ApiEndpoints.REVIEWS}`, body);

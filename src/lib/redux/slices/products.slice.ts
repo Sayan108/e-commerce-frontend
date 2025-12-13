@@ -1,4 +1,4 @@
-import { ProductFilter } from "./../types/product.types";
+import { ProductFilter, ReviewType } from "./../types/product.types";
 
 // src/store/slices/productsSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
@@ -15,7 +15,7 @@ const initialState: ProductState = {
   loading: false,
   error: null,
   currentProduct: null,
-
+  currentProductReview: [],
   filter: {},
 };
 
@@ -55,6 +55,38 @@ const productsSlice = createSlice({
     setCurrentProduct: (state, action: PayloadAction<Product>) => {
       state.currentProduct = action.payload;
     },
+
+    getReviewsRequest(state, action: PayloadAction<string>) {
+      state.loading = true;
+      state.error = null;
+    },
+    getReviewsSuccess(state, action: PayloadAction<ReviewType[]>) {
+      state.currentProductReview = action.payload;
+      state.loading = false;
+    },
+    getReviewsFailure(state, action: PayloadAction<any>) {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
+    addReviewRequest(
+      state,
+      _: PayloadAction<{
+        rating: number;
+        comment: string;
+        productId: string;
+      }>
+    ) {
+      state.loading = true;
+    },
+    addReviewSuccess(state, action: PayloadAction<ReviewType>) {
+      state.currentProductReview.unshift(action.payload);
+      state.loading = false;
+    },
+    addReviewFailure(state, action: PayloadAction<any>) {
+      state.loading = false;
+      state.error = action.payload;
+    },
   },
 });
 
@@ -69,5 +101,13 @@ export const {
   setProductFilter,
 
   setCurrentProduct,
+
+  addReviewRequest,
+  addReviewSuccess,
+  addReviewFailure,
+
+  getReviewsSuccess,
+  getReviewsRequest,
+  getReviewsFailure,
 } = productsSlice.actions;
 export default productsSlice.reducer;

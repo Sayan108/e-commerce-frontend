@@ -8,6 +8,8 @@ export interface Product {
   originalPrice: number;
   imageurl: string;
   categoryId: string;
+  reviewCount: number;
+  rating: number;
 }
 
 export interface ProductFilter {
@@ -27,6 +29,16 @@ export interface PaginatedResponse<T> {
   totalCount: number;
 }
 
+export interface ReviewType {
+  userId: string;
+  productId: string;
+  _id: string;
+  rating: number;
+  comment: string;
+  userName: string;
+  userProfilePicture: string;
+}
+
 export interface ProductState {
   products: Product[];
   totalCount: number;
@@ -34,6 +46,8 @@ export interface ProductState {
   error: string | null;
   filter: ProductFilter;
   currentProduct: Product | null;
+
+  currentProductReview: ReviewType[];
 }
 
 export enum SortOrder {

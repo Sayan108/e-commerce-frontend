@@ -81,7 +81,7 @@ function* getProfileSaga() {
 function* updateUserSaga(action: any) {
   try {
     const res: AxiosResponse = yield call(updateUserApi, action.payload);
-    yield put(authActions.updateUserSuccess(res.data));
+    yield put(authActions.updateUserSuccess(res.data.updateSelf));
     yield put(
       showSnackbar({
         message: "User account updated successfully",

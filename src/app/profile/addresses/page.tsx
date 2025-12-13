@@ -10,13 +10,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Edit, Trash, PlusCircle } from "lucide-react";
+import { Edit, Trash, Plus, MapPin, Home, Briefcase } from "lucide-react";
 
 import { useAddress } from "@/hooks/useAddress";
 import { Address } from "@/lib/redux/types/address.types";
 import { AddressForm } from "@/components/address/addressForm";
-
-/* ✅ FORM REMAINS SAME AS PREVIOUS MESSAGE */
 
 export default function AddressesPage() {
   const [addOpen, setAddOpen] = useState(false);
@@ -36,50 +34,105 @@ export default function AddressesPage() {
     fetchAddress();
   }, []);
 
-  if (loading) return <Skeleton className="h-40 w-full" />;
+  if (loading)
+    return (
+      <div className="space-y-4">
+        {[1, 2].map((i) => (
+          <Skeleton key={i} className="h-28 w-full rounded-xl" />
+        ))}
+      </div>
+    );
+
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <Card>
-      <CardHeader className="flex justify-between">
-        <CardTitle>My Addresses</CardTitle>
+    <Card className="shadow-sm">
+      {/* HEADER */}
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div>
+          <CardTitle className="text-xl">My Addresses</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Manage your saved delivery locations
+          </p>
+        </div>
+
         <Button onClick={() => setAddOpen(true)}>
-          <PlusCircle className="mr-2 h-4 w-4" /> Add
+          <Plus className="mr-2 h-4 w-4" />
+          Add Address
         </Button>
       </CardHeader>
 
-      <CardContent className="space-y-4">
-        {addresses.map((address) => (
-          <div
-            key={address._id}
-            className="border p-4 rounded-md flex justify-between"
-          >
-            <div>
-              <p className="font-semibold capitalize">{address.addressType}</p>
-              <p>
-                {address.lineOne}, {address.city}, {address.state} -{" "}
-                {address.zip}
-              </p>
-              <p className="text-xs">{address.country}</p>
-            </div>
-
-            <div className="flex gap-2">
-              <Button variant="ghost" onClick={() => setEditAddress(address)}>
-                <Edit className="h-4 w-4" />
-              </Button>
-
-              <Button
-                variant="ghost"
-                onClick={() => deleteAddress(address._id)}
-              >
-                <Trash className="h-4 w-4 text-red-500" />
-              </Button>
-            </div>
+      {/* CONTENT */}
+      <CardContent className="grid gap-4 md:grid-cols-2">
+        {addresses.length === 0 && (
+          <div className="col-span-full text-center py-10 text-muted-foreground">
+            <MapPin className="mx-auto h-8 w-8 mb-3" />
+            <p>No saved addresses yet</p>
+            <Button className="mt-4" onClick={() => setAddOpen(true)}>
+              Add your first address
+            </Button>
           </div>
-        ))}
+        )}
+
+        {addresses.map((address) => {
+          const isHome = address.addressType === "home";
+
+          return (
+            <div
+              key={address._id}
+              className="relative rounded-xl border p-4 transition hover:shadow-md"
+            >
+              {/* ADDRESS TYPE BADGE */}
+              <div className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-muted px-2 py-1 text-xs capitalize">
+                {isHome ? (
+                  <Home className="h-3 w-3" />
+                ) : (
+                  <Briefcase className="h-3 w-3" />
+                )}
+                {address.addressType}
+              </div>
+
+              {/* MAIN CONTENT */}
+              <div className="flex gap-3">
+                <MapPin className="h-5 w-5 mt-1 text-primary" />
+
+                <div className="flex-1">
+                  <p className="font-medium">{address.lineOne}</p>
+
+                  <p className="text-sm text-muted-foreground">
+                    {address.city}, {address.state} – {address.zip}
+                  </p>
+
+                  <p className="text-xs text-muted-foreground">
+                    {address.country}
+                  </p>
+                </div>
+              </div>
+
+              {/* ACTIONS */}
+              <div className="mt-4 flex justify-end gap-2">
+                <Button
+                  size="icon"
+                  variant="outline"
+                  onClick={() => setEditAddress(address)}
+                >
+                  <Edit className="h-4 w-4" />
+                </Button>
+
+                <Button
+                  size="icon"
+                  variant="outline"
+                  onClick={() => deleteAddress(address._id)}
+                >
+                  <Trash className="h-4 w-4 text-red-500" />
+                </Button>
+              </div>
+            </div>
+          );
+        })}
       </CardContent>
 
-      {/* ✅ EDIT */}
+      {/* EDIT DIALOG */}
       <Dialog open={!!editAddress} onOpenChange={() => setEditAddress(null)}>
         <DialogContent>
           <DialogHeader>
@@ -96,11 +149,11 @@ export default function AddressesPage() {
         </DialogContent>
       </Dialog>
 
-      {/* ✅ ADD */}
+      {/* ADD DIALOG */}
       <Dialog open={addOpen} onOpenChange={setAddOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add Address</DialogTitle>
+            <DialogTitle>Add New Address</DialogTitle>
           </DialogHeader>
 
           <AddressForm

@@ -163,15 +163,18 @@ export default function OrderDetailPage({
             {order.items.map((item: any) => (
               <li key={item.productId} className="flex gap-4 py-4 items-center">
                 <Image
-                  src={item.thumbnail || "/placeholder.png"}
-                  alt={item.productname}
+                  src={
+                    item.thumbnail ||
+                    "https://cdn-icons-png.flaticon.com/512/685/685388.png"
+                  }
+                  alt={item.itemname}
                   width={72}
                   height={72}
                   className="rounded-lg object-cover border"
                 />
 
                 <div className="flex-grow">
-                  <p className="font-medium">{item.productname}</p>
+                  <p className="font-medium">{item.itemname}</p>
                   <p className="text-sm text-muted-foreground">
                     Qty × {item.quantity}
                   </p>

@@ -16,22 +16,11 @@ import { Loader2, ArrowLeft } from "lucide-react";
 export default function SummaryPage() {
   const router = useRouter();
 
-  const {
-    items: cartItemsO,
-    loading: cartLoading,
-    draftCart,
-    clearDraftCarts,
-  } = useCart();
+  const { items: cartItemsO, draftCart, clearDraftCarts } = useCart();
 
-  const {
-    currentShippingAddress,
-    currentbillingAddress,
-    loading: addressLoading,
-  } = useAddress();
+  const { currentShippingAddress, currentbillingAddress } = useAddress();
 
-  const { placeOrder } = useOrders();
-
-  const loading = cartLoading || addressLoading;
+  const { placeOrder, loading } = useOrders();
 
   const cartItems = draftCart?.length ? draftCart : cartItemsO;
 

@@ -74,7 +74,10 @@ export default function ProductPage({
           {/* IMAGE */}
           <div className="aspect-square relative w-full rounded-lg overflow-hidden">
             <Image
-              src={product.imageurl || "/placeholder.png"}
+              src={
+                product.imageurl ||
+                "https://cdn-icons-png.flaticon.com/512/685/685388.png"
+              }
               alt={product.name}
               fill
               className="object-cover"

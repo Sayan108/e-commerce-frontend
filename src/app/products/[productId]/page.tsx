@@ -138,11 +138,28 @@ export default function ProductPage({
                 )}
 
                 {currentProductReview?.map((r) => (
-                  <div key={r._id} className="p-3 border rounded-lg">
-                    <p className="text-sm font-medium">{r.userName}</p>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {r.comment}
-                    </p>
+                  <div
+                    key={r?._id}
+                    className="p-3 border rounded-lg flex items-start gap-3"
+                  >
+                    {/* Profile Picture */}
+                    <div className="flex-shrink-0">
+                      <Image
+                        src={r?.userProfilePicture || "/avatar-placeholder.png"}
+                        alt={r?.userName || "User"}
+                        width={40}
+                        height={40}
+                        className="rounded-full object-cover"
+                      />
+                    </div>
+
+                    {/* Review Content */}
+                    <div>
+                      <p className="text-sm font-medium">{r?.userName}</p>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {r?.comment}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>

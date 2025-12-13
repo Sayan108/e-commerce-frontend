@@ -15,7 +15,7 @@ import { OrderType } from "@/lib/redux/slices/order.slice";
 export default function SummaryPage() {
   const router = useRouter();
 
-  const { items: cartItems, loading: cartLoading } = useCart();
+  const { items: cartItemsO, loading: cartLoading, draftCart } = useCart();
   const {
     currentShippingAddress,
     currentbillingAddress,
@@ -24,17 +24,19 @@ export default function SummaryPage() {
 
   const loading = cartLoading || addressLoading;
 
-  const cartTotal = cartItems.reduce(
-    (total, item) => total + item.quantity * item.price,
-    0
-  );
-
   const { placeOrder } = useOrders();
 
   const handlePlaceOrder = () => {
     if (!currentShippingAddress || !currentbillingAddress) return;
     placeOrder(OrderType.fullCart);
   };
+
+  const cartItems = draftCart?.length > 0 ? draftCart : cartItemsO;
+
+  const cartTotal = cartItems.reduce(
+    (total, item) => total + item.quantity * item.price,
+    0
+  );
 
   return (
     <div className="mx-auto max-w-6xl py-10 px-4 md:px-0">
@@ -59,9 +61,9 @@ export default function SummaryPage() {
                 </p>
               ) : (
                 <ul className="divide-y">
-                  {cartItems.map((item) => (
+                  {cartItems.map((item, index) => (
                     <li
-                      key={item._id}
+                      key={index}
                       className="flex items-center justify-between py-4"
                     >
                       <div className="flex items-center gap-4">

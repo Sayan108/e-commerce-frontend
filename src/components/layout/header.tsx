@@ -175,12 +175,12 @@ export function Header() {
                   >
                     Orders
                   </Link>
-                  <a
+                  <Button
                     onClick={() => logOut()}
                     className="transition-colors hover:text-primary cursor-pointer"
                   >
                     Logout
-                  </a>
+                  </Button>
                 </>
               ) : (
                 <>

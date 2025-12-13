@@ -1,24 +1,39 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useAddress } from "@/hooks/useAddress";
-import { PlusCircle } from "lucide-react";
+import {
+  PlusCircle,
+  Home,
+  Truck,
+  CreditCard,
+  MapPin,
+  Check,
+} from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AddressForm } from "@/components/address/addressForm";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function AddressPage() {
   const router = useRouter();
+  const [modalOpen, setModalOpen] = useState(false);
 
   const {
     addresses,
     loading,
-    error,
     currentShippingAddress,
     currentbillingAddress,
+    saveAddress,
     fetchAddress,
     selectBillingAddress,
     selectShipingAddress,
@@ -28,43 +43,40 @@ export default function AddressPage() {
     fetchAddress();
   }, []);
 
+  const AddressSkeleton = () => (
+    <div className="space-y-3">
+      {[1, 2].map((i) => (
+        <div key={i} className="flex gap-3 rounded-xl border p-4">
+          <Skeleton className="h-5 w-5 rounded-full" />
+          <div className="space-y-2 w-full">
+            <Skeleton className="h-4 w-2/3" />
+            <Skeleton className="h-3 w-1/2" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  const EmptyState = () => (
+    <div className="py-10 text-center text-muted-foreground">
+      <MapPin className="mx-auto mb-2 h-6 w-6" />
+      No saved addresses found
+    </div>
+  );
+
   return (
     <div className="mx-auto max-w-2xl py-8">
-      <Card className="shadow-md">
-        <CardHeader>
-          <CardTitle className="text-2xl">Select Shipping Address</CardTitle>
+      <Card className="shadow-lg rounded-2xl">
+        <CardHeader className="flex flex-row items-center gap-2">
+          <Truck className="h-6 w-6 text-primary" />
+          <CardTitle className="text-2xl">Shipping Address</CardTitle>
         </CardHeader>
 
         <CardContent className="space-y-6">
-          {/* ================= LOADING SPINNER ================ */}
+          {loading && <AddressSkeleton />}
+          {!loading && addresses.length === 0 && <EmptyState />}
 
-          {/* ================= SKELETON PLACEHOLDERS ================ */}
-          {loading && (
-            <div className="space-y-4">
-              {[1, 2].map((i) => (
-                <div
-                  key={i}
-                  className="border rounded-lg p-4 flex items-start space-x-3"
-                >
-                  <Skeleton className="h-5 w-5 rounded-full" />
-                  <div className="space-y-2 w-full">
-                    <Skeleton className="h-4 w-2/3" />
-                    <Skeleton className="h-3 w-1/2" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* ================= NO ADDRESS FOUND ================ */}
-          {!loading && addresses.length === 0 && (
-            <div className="text-center py-10 text-muted-foreground">
-              No saved addresses found.
-            </div>
-          )}
-
-          {/* ================= SHIPPING ADDRESSES ================ */}
-          {!loading && (
+          {!loading && addresses.length > 0 && (
             <RadioGroup
               value={currentShippingAddress?._id}
               className="space-y-4"
@@ -73,18 +85,15 @@ export default function AddressPage() {
                 <Label
                   key={address._id}
                   htmlFor={`shipping-${address._id}`}
-                  className="
-                    flex items-start space-x-3 rounded-lg border p-4 cursor-pointer
-                    has-[:checked]:border-primary has-[:checked]:bg-secondary/40
-                  "
+                  className="flex cursor-pointer gap-3 rounded-xl border p-4 transition hover:bg-muted has-[:checked]:border-primary has-[:checked]:bg-secondary/40"
                 >
                   <RadioGroupItem
                     value={address._id}
                     id={`shipping-${address._id}`}
                     onClick={() => selectShipingAddress(address)}
                   />
-
-                  <div>
+                  <Home className="h-5 w-5 text-muted-foreground" />
+                  <div className="flex-1">
                     <p className="font-semibold capitalize">
                       {address.addressType} – {address.lineOne}, {address.city}
                     </p>
@@ -92,36 +101,23 @@ export default function AddressPage() {
                       {address.state}, {address.zip}, {address.country}
                     </p>
                   </div>
+                  {currentShippingAddress?._id === address._id && (
+                    <Check className="h-5 w-5 text-primary" />
+                  )}
                 </Label>
               ))}
             </RadioGroup>
           )}
 
-          {/* ================= BILLING SECTION TITLE ================ */}
-          <div className="pt-4 border-t">
-            <CardTitle className="text-xl">Select Billing Address</CardTitle>
+          <div className="pt-6 border-t flex items-center gap-2">
+            <CreditCard className="h-5 w-5 text-primary" />
+            <CardTitle className="text-xl">Billing Address</CardTitle>
           </div>
 
-          {/* ================= BILLING SKELETON ================ */}
-          {loading && (
-            <div className="space-y-4">
-              {[1, 2].map((i) => (
-                <div
-                  key={i}
-                  className="border rounded-lg p-4 flex items-start space-x-3"
-                >
-                  <Skeleton className="h-5 w-5 rounded-full" />
-                  <div className="space-y-2 w-full">
-                    <Skeleton className="h-4 w-2/3" />
-                    <Skeleton className="h-3 w-1/2" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          {loading && <AddressSkeleton />}
+          {!loading && addresses.length === 0 && <EmptyState />}
 
-          {/* ================= BILLING ADDRESSES ================ */}
-          {!loading && (
+          {!loading && addresses.length > 0 && (
             <RadioGroup
               value={currentbillingAddress?._id}
               className="space-y-4"
@@ -130,18 +126,15 @@ export default function AddressPage() {
                 <Label
                   key={address._id}
                   htmlFor={`billing-${address._id}`}
-                  className="
-                    flex items-start space-x-3 rounded-lg border p-4 cursor-pointer
-                    has-[:checked]:border-primary has-[:checked]:bg-secondary/40
-                  "
+                  className="flex cursor-pointer gap-3 rounded-xl border p-4 transition hover:bg-muted has-[:checked]:border-primary has-[:checked]:bg-secondary/40"
                 >
                   <RadioGroupItem
                     value={address._id}
                     id={`billing-${address._id}`}
                     onClick={() => selectBillingAddress(address)}
                   />
-
-                  <div>
+                  <Home className="h-5 w-5 text-muted-foreground" />
+                  <div className="flex-1">
                     <p className="font-semibold capitalize">
                       {address.addressType} – {address.lineOne}, {address.city}
                     </p>
@@ -149,32 +142,45 @@ export default function AddressPage() {
                       {address.state}, {address.zip}, {address.country}
                     </p>
                   </div>
+                  {currentbillingAddress?._id === address._id && (
+                    <Check className="h-5 w-5 text-primary" />
+                  )}
                 </Label>
               ))}
             </RadioGroup>
           )}
 
-          {/* ================= ADD NEW ADDRESS BUTTON ================ */}
-          {/* <Button
+          <Button
             variant="outline"
-            className="w-full flex items-center gap-2 mt-4"
-            onClick={() => router.push("/profile/address/add")}
+            className="w-full flex items-center gap-2 rounded-xl"
+            onClick={() => setModalOpen(true)}
           >
             <PlusCircle className="h-4 w-4" />
             Add New Address
-          </Button> */}
+          </Button>
 
-          {/* ================= CONTINUE BUTTON ================ */}
           <Button
+            size="lg"
+            className="w-full rounded-xl"
             disabled={!currentShippingAddress || !currentbillingAddress}
             onClick={() => router.push("/checkout/payment")}
-            className="w-full mt-2"
-            size="lg"
           >
             Continue to Payment
           </Button>
         </CardContent>
       </Card>
+
+      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <DialogContent className="rounded-2xl">
+          <DialogHeader>
+            <DialogTitle>Add Address</DialogTitle>
+          </DialogHeader>
+          <AddressForm
+            onSave={saveAddress}
+            closeDialog={() => setModalOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

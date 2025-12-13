@@ -39,7 +39,13 @@ export function ProductCard({
     >
       {/* Product Image */}
       <div className="relative w-full aspect-square overflow-hidden">
-        <Link href={`/products/${product._id}`}>
+        <Link
+          href={`/products/${product._id}`}
+          onClick={() => {
+            console.log(product);
+            dispatch(setCurrentProduct(product));
+          }}
+        >
           <Image
             src={product.imageurl}
             alt={product.name}
@@ -52,33 +58,6 @@ export function ProductCard({
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </Link>
-
-        {/* Hover Overlay Button */}
-        <div
-          className="
-            absolute inset-0 flex items-center justify-center 
-            bg-black/30 opacity-0 group-hover:opacity-100 
-            transition-opacity duration-300
-          "
-        >
-          <Button
-            asChild
-            className="
-              bg-white text-black hover:bg-neutral-200 
-              font-semibold shadow-md
-            "
-          >
-            <Link
-              href={`/products/${product._id}`}
-              onClick={() => {
-                console.log(product);
-                dispatch(setCurrentProduct(product));
-              }}
-            >
-              View Details
-            </Link>
-          </Button>
-        </div>
 
         {/* Discount Badge */}
         {discount > 0 && (

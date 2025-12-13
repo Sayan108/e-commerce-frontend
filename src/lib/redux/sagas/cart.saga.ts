@@ -75,7 +75,7 @@ function* addToCartWorker(action: PayloadAction<number>) {
     const existingIndex = cartItem.findIndex(
       (item) => item.productId === currentProduct?._id
     );
-    if (existingIndex !== -1) yield put(authActions.updateCartCount(1));
+    if (existingIndex === -1) yield put(authActions.updateCartCount(1));
   } catch (err: any) {
     yield put(addToCartFailure(err.message));
     yield put(

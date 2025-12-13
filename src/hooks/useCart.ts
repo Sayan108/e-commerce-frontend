@@ -8,6 +8,7 @@ import {
   deleteCartRequest,
   clearCartRequest,
   addToDraftCart,
+  clearDraftCart,
 } from "@/lib/redux/slices/cart.slice";
 
 import { CartItem } from "@/lib/redux/types/cart.types";
@@ -39,6 +40,10 @@ export const useCart = () => {
     dispatch(addToDraftCart(draftCart));
   };
 
+  const clearDraftCarts = () => {
+    dispatch(clearDraftCart());
+  };
+
   const currentProductCount = (productId: string) => {
     return items?.find((item) => item.productId === productId)?.quantity ?? 1;
   };
@@ -55,5 +60,6 @@ export const useCart = () => {
     clearCart,
     addToDraftCartAndCheckout,
     currentProductCount,
+    clearDraftCarts,
   };
 };

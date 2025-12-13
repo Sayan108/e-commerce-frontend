@@ -4,7 +4,7 @@ export enum Environment {
   PROD = "PROD",
 }
 
-export const Env = Environment.LOCAL;
+export const Env = Environment.STAGING;
 
 export const BaseUrl = {
   [Environment.LOCAL]: {

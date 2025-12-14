@@ -30,6 +30,5 @@ export interface RegisterPayload {
 export interface UpdateUserPayload {
   name?: string;
   email?: string;
-  password: string;
   phone?: string;
 }

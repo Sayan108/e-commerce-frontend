@@ -28,6 +28,10 @@ const categoriesSlice = createSlice({
       state.error = action.payload;
     },
 
+    clearCurrentCategory: (state) => {
+      state.selectedCategory = null;
+    },
+
     setCurrentCategory: (state, action: PayloadAction<Category>) => {
       state.selectedCategory = action.payload;
     },
@@ -41,5 +45,6 @@ export const {
   fetchCategoriesFailure,
 
   setCurrentCategory,
+  clearCurrentCategory,
 } = categoriesSlice.actions;
 export default categoriesSlice.reducer;

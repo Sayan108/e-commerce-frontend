@@ -3,10 +3,14 @@ import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
 import useCategory from "@/hooks/useCategory";
+import { setCurrentCategory } from "@/lib/redux/slices/categories.slice";
+import { useDispatch } from "react-redux";
 
 export function CategoryHighlights() {
   const { categories, loading } = useCategory();
   const highlightedCategories = categories.slice(0, 3);
+
+  const dispatch = useDispatch();
 
   return (
     <section className="container mx-auto max-w-7xl px-4">
@@ -38,7 +42,10 @@ export function CategoryHighlights() {
         {!loading &&
           highlightedCategories.map((category) => (
             <Link
-              href={`/categories/${category._id}`}
+              href={`/categories/${category.name}`}
+              onClick={() => {
+                dispatch(setCurrentCategory(category));
+              }}
               key={category._id}
               className="group"
             >

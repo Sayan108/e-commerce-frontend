@@ -21,7 +21,7 @@ export default function CategoriesPage() {
     fetchProducts();
     fetchProductByCategory(category._id);
     dispatch(setCurrentCategory(category));
-    router.push(`/categories/${category._id}`);
+    router.push(`/categories/${category.name}`);
   };
 
   return (

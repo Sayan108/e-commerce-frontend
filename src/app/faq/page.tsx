@@ -7,9 +7,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Skeleton } from "@/components/ui/skeleton";
 import { HelpCircle } from "lucide-react";
+import useFaqs from "@/hooks/useFaqs";
 
 export default function FAQPage() {
+  const { faqs, loading } = useFaqs();
+
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
       {/* HEADER */}
@@ -31,61 +35,38 @@ export default function FAQPage() {
         <CardHeader>
           <CardTitle className="text-xl">General Questions</CardTitle>
         </CardHeader>
+
         <CardContent>
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="item-1">
-              <AccordionTrigger>How do I place an order?</AccordionTrigger>
-              <AccordionContent>
-                Browse products, add them to your cart, and proceed to checkout.
-                Select your address, choose a payment method, and confirm your
-                order.
-              </AccordionContent>
-            </AccordionItem>
+          {/* 🔄 Loading Skeleton */}
+          {loading && (
+            <div className="space-y-4">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="rounded-lg border px-4 py-3 space-y-2">
+                  <Skeleton className="h-5 w-3/4" />
+                  <Skeleton className="h-4 w-full" />
+                </div>
+              ))}
+            </div>
+          )}
 
-            <AccordionItem value="item-2">
-              <AccordionTrigger>
-                Can I change my order after placing it?
-              </AccordionTrigger>
-              <AccordionContent>
-                Orders can only be modified before they are shipped. Please
-                contact support as soon as possible for assistance.
-              </AccordionContent>
-            </AccordionItem>
+          {/* 📭 Empty State */}
+          {!loading && faqs?.length === 0 && (
+            <div className="text-center py-10 text-muted-foreground">
+              No FAQs available at the moment.
+            </div>
+          )}
 
-            <AccordionItem value="item-3">
-              <AccordionTrigger>
-                What payment methods are supported?
-              </AccordionTrigger>
-              <AccordionContent>
-                We accept UPI, credit/debit cards, net banking, and select
-                wallet payments.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="item-4">
-              <AccordionTrigger>How long does delivery take?</AccordionTrigger>
-              <AccordionContent>
-                Delivery typically takes 3–7 business days depending on your
-                location.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="item-5">
-              <AccordionTrigger>How can I track my order?</AccordionTrigger>
-              <AccordionContent>
-                Once your order is shipped, you’ll receive a tracking link via
-                SMS or email.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="item-6">
-              <AccordionTrigger>What is your return policy?</AccordionTrigger>
-              <AccordionContent>
-                Returns are accepted within 7 days of delivery for eligible
-                products. Items must be unused and in original packaging.
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+          {/* ✅ FAQ List */}
+          {!loading && faqs?.length > 0 && (
+            <Accordion type="single" collapsible className="w-full">
+              {faqs.map((faq: any, index: number) => (
+                <AccordionItem key={faq._id || faq.id} value={`item-${index}`}>
+                  <AccordionTrigger>{faq.question}</AccordionTrigger>
+                  <AccordionContent>{faq.answer}</AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          )}
         </CardContent>
       </Card>
     </div>

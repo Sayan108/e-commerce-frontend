@@ -8,6 +8,8 @@ export enum ApiEndpoints {
 
   DASHBOARD_BANNER = "/ecommercedashboard/banner",
   DASHBOARD_VIDEO = "/ecommercedashboard/videos",
+  DASHBOARD_FAQ = "/ecommercedashboard/faq",
+  CONTACT_US_INFO = "/ecommercedashboard/contactusinfo",
 
   CATEGORIES = "/categories",
 

@@ -7,7 +7,8 @@ import { ProductCardSkeleton } from "@/components/products/product-card-skeleton
 import { useSelector } from "react-redux";
 import { RootState } from "@/lib/redux";
 import useProducts from "@/hooks/useProducts";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { clearCurrentCategory } from "@/lib/redux/slices/categories.slice";
 
 export default function CategoryPage({
   params,
@@ -15,6 +16,8 @@ export default function CategoryPage({
   params: { categoryId: string };
 }) {
   const { loading, products } = useProducts();
+
+  const hasMounted = useRef(false);
 
   const { selectedCategory } = useSelector(
     (state: RootState) => state.categories
@@ -36,6 +39,17 @@ export default function CategoryPage({
       </div>
     );
   }
+
+  useEffect(() => {
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      return;
+    }
+
+    return () => {
+      clearCurrentCategory();
+    };
+  }, []);
 
   return (
     <div className="container mx-auto max-w-7xl px-4 py-8">

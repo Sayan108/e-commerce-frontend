@@ -1,4 +1,5 @@
 "use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -56,16 +57,17 @@ export function HeroSection({ bannerList, loading }: HeroProp) {
         onMouseLeave={plugin.current.reset}
       >
         <CarouselContent>
-          {bannerList.map((banner) => (
-            <CarouselItem key={banner._id}>
+          {bannerList.map((banner, index) => (
+            <CarouselItem key={banner._id ?? index}>
               <Card className="border-none rounded-none">
                 <CardContent className="relative aspect-[16/7] w-full p-0">
+                  {/* IMAGE */}
                   {banner.imageurl && (
                     <Image
                       src={banner.imageurl}
                       alt={banner.name}
                       fill
-                      priority
+                      priority={index === 0}
                       className="object-cover"
                     />
                   )}
@@ -84,32 +86,35 @@ export function HeroSection({ bannerList, loading }: HeroProp) {
                         {banner.description}
                       </p>
 
-                      <div className="mt-6 space-y-4">
-                        <ul className="flex flex-wrap gap-3 text-sm text-white/90">
-                          <li className="rounded-full bg-white/10 px-3 py-1">
-                            Free Shipping
-                          </li>
-                          <li className="rounded-full bg-white/10 px-3 py-1">
-                            Easy Returns
-                          </li>
-                          <li className="rounded-full bg-white/10 px-3 py-1">
-                            Secure Payments
-                          </li>
-                        </ul>
-
-                        <div className="flex items-center gap-4">
-                          <Button asChild size="lg" className="rounded-xl px-6">
-                            <Link
-                              href={banner.link}
-                              className="flex items-center gap-2"
+                      {/* SUB FEATURES */}
+                      {banner.subFeatures?.length > 0 && (
+                        <ul className="mt-5 flex flex-wrap gap-3 text-sm text-white/90">
+                          {banner.subFeatures.map((feature, idx) => (
+                            <li
+                              key={idx}
+                              className="rounded-full bg-white/10 px-3 py-1 backdrop-blur"
                             >
-                              Shop now <ArrowRight className="h-4 w-4" />
-                            </Link>
-                          </Button>
-                          <span className="text-sm text-white/80">
-                            Limited time offers available
-                          </span>
-                        </div>
+                              {feature}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+
+                      {/* CTA */}
+                      <div className="mt-6 flex flex-wrap items-center gap-4">
+                        <Button asChild size="lg" className="rounded-xl px-6">
+                          <Link
+                            href={banner.link ?? "/"}
+                            className="flex items-center gap-2"
+                          >
+                            {banner.ctaButtonTitle ?? "Shop Now"}
+                            <ArrowRight className="h-4 w-4" />
+                          </Link>
+                        </Button>
+
+                        {/* <span className="text-sm text-white/80">
+                          Limited time offers available
+                        </span> */}
                       </div>
                     </div>
                   </div>
@@ -119,10 +124,17 @@ export function HeroSection({ bannerList, loading }: HeroProp) {
           ))}
         </CarouselContent>
 
-        {/* CONTROLS */}
+        {/* PREV / NEXT BUTTONS */}
         <div className="pointer-events-none absolute inset-0 hidden md:flex items-center justify-between px-4">
-          <CarouselPrevious className="pointer-events-auto" />
-          <CarouselNext className="pointer-events-auto" />
+          <CarouselPrevious className="pointer-events-auto bg-white/80 hover:bg-white" />
+          <CarouselNext className="pointer-events-auto bg-white/80 hover:bg-white" />
+        </div>
+
+        {/* DOT INDICATORS */}
+        <div className="absolute bottom-5 left-1/2 z-10 flex -translate-x-1/2 gap-2">
+          {bannerList.map((_, index) => (
+            <div key={index} className="h-2 w-2 rounded-full bg-white/50" />
+          ))}
         </div>
       </Carousel>
     </section>

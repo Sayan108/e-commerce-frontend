@@ -30,6 +30,10 @@ export const getBanner = () => client.get(ApiEndpoints.DASHBOARD_BANNER);
 
 export const getVideos = () => client.get(ApiEndpoints.DASHBOARD_VIDEO);
 
+export const getFAQs = () => client.get(ApiEndpoints.DASHBOARD_FAQ);
+
+export const getContactUsInfo = () => client.get(ApiEndpoints.CONTACT_US_INFO);
+
 export const getCategories = () => client.get(ApiEndpoints.CATEGORIES);
 
 export const getProducts = (params: ProductFilter) =>

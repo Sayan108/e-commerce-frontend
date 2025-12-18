@@ -24,7 +24,7 @@ export function FeaturedProducts() {
   const { products, fetchProducts, loading } = useProducts();
 
   useEffect(() => {
-    fetchProducts();
+    fetchProducts({});
   }, []);
 
   return (

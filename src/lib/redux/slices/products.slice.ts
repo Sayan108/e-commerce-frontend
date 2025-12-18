@@ -13,6 +13,7 @@ const initialState: ProductState = {
   products: [],
   totalCount: 0,
   loading: false,
+  reviewLoading: false,
   error: null,
   currentProduct: null,
   currentProductReview: [],
@@ -24,7 +25,7 @@ const productsSlice = createSlice({
   name: "products",
   initialState,
   reducers: {
-    fetchProductsStart: (state) => {
+    fetchProductsStart: (state, _: PayloadAction<ProductFilter>) => {
       state.loading = true;
       state.error = null;
     },
@@ -52,20 +53,34 @@ const productsSlice = createSlice({
       state = initialState;
     },
 
+    getProductDetailRequested: (state, _: PayloadAction<string>) => {
+      state.loading = true;
+      state.error = null;
+    },
+
+    getProductRequestSuccess: (state, action: PayloadAction<Product>) => {
+      (state.loading = false), (state.currentProduct = action.payload);
+    },
+
+    getProductDetailsFailure: (state, action: PayloadAction<any>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
     setCurrentProduct: (state, action: PayloadAction<Product>) => {
       state.currentProduct = action.payload;
     },
 
-    getReviewsRequest(state, action: PayloadAction<string>) {
-      state.loading = true;
+    getReviewsRequest(state, _: PayloadAction<string>) {
+      state.reviewLoading = true;
       state.error = null;
     },
     getReviewsSuccess(state, action: PayloadAction<ReviewType[]>) {
       state.currentProductReview = action.payload;
-      state.loading = false;
+      state.reviewLoading = false;
     },
     getReviewsFailure(state, action: PayloadAction<any>) {
-      state.loading = false;
+      state.reviewLoading = false;
       state.error = action.payload;
     },
 
@@ -77,14 +92,14 @@ const productsSlice = createSlice({
         productId: string;
       }>
     ) {
-      state.loading = true;
+      state.reviewLoading = true;
     },
     addReviewSuccess(state, action: PayloadAction<ReviewType>) {
       state.currentProductReview.unshift(action.payload);
-      state.loading = false;
+      state.reviewLoading = false;
     },
     addReviewFailure(state, action: PayloadAction<any>) {
-      state.loading = false;
+      state.reviewLoading = false;
       state.error = action.payload;
     },
   },
@@ -100,7 +115,9 @@ export const {
 
   setProductFilter,
 
-  setCurrentProduct,
+  getProductDetailRequested,
+  getProductRequestSuccess,
+  getProductDetailsFailure,
 
   addReviewRequest,
   addReviewSuccess,

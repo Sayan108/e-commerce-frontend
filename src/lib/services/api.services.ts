@@ -36,8 +36,16 @@ export const getContactUsInfo = () => client.get(ApiEndpoints.CONTACT_US_INFO);
 
 export const getCategories = () => client.get(ApiEndpoints.CATEGORIES);
 
+export const getFeaturedCategories = () =>
+  client.get(ApiEndpoints.FEAURED_CATEGORIES);
+
 export const getProducts = (params: ProductFilter) =>
   client.get(ApiEndpoints.PRODUCTS, { params });
+
+export const getProductById = (productId: string) =>
+  client.get(`${ApiEndpoints.PRODUCTS}/${productId}`);
+
+export const getNewArrivals = () => client.get(ApiEndpoints.NEWARRIVAL_PRODUCS);
 
 export const getAddress = () => client.get<Address>(ApiEndpoints.ADDRESS);
 
@@ -71,6 +79,9 @@ export const createOrder = (payload: any) =>
 
 export const getOrders = (userId: string) =>
   client.get(`${ApiEndpoints.ORDER}/${userId}`);
+
+export const getOrderById = (orderId: string) =>
+  client.get(`${ApiEndpoints.ORDER}/${orderId}`);
 
 export const getReviews = (productId: string) =>
   client.get(`${ApiEndpoints.REVIEWS}/${productId}`);

@@ -5,6 +5,8 @@ import { ArrowRight } from "lucide-react";
 import useCategory from "@/hooks/useCategory";
 import { setCurrentCategory } from "@/lib/redux/slices/categories.slice";
 import { useDispatch } from "react-redux";
+import OptimizedImage from "../shared/errorHandledImage";
+import { productFallback } from "@/lib/utils/constants";
 
 export function CategoryHighlights() {
   const { categories, loading } = useCategory();
@@ -42,7 +44,7 @@ export function CategoryHighlights() {
         {!loading &&
           highlightedCategories.map((category) => (
             <Link
-              href={`/categories/${category.name}`}
+              href={`/categories/${category._id}`}
               onClick={() => {
                 dispatch(setCurrentCategory(category));
               }}
@@ -52,10 +54,10 @@ export function CategoryHighlights() {
               <Card className="relative overflow-hidden transition-all duration-300 group-hover:shadow-xl group-hover:-translate-y-1">
                 <CardContent className="p-0">
                   <div className="relative aspect-[4/5] w-full">
-                    <Image
-                      src={category.imageurl}
+                    <OptimizedImage
+                      src={category.imageurl ?? productFallback}
                       alt={category.name}
-                      fill
+                      fallback={productFallback}
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />

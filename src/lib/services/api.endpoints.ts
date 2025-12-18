@@ -13,7 +13,11 @@ export enum ApiEndpoints {
 
   CATEGORIES = "/categories",
 
+  FEAURED_CATEGORIES = "/categories/featured",
+
   PRODUCTS = "/products",
+
+  NEWARRIVAL_PRODUCS = "/products/newarrival",
 
   ADDRESS = "/address",
 

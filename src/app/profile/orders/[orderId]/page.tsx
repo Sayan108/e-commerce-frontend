@@ -12,6 +12,8 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useOrders } from "@/hooks/useOrder";
+import OptimizedImage from "@/components/shared/errorHandledImage";
+import { productFallback } from "@/lib/utils/constants";
 
 /* ---------------- TRACKING STEPS ---------------- */
 const trackingSteps = [
@@ -162,14 +164,10 @@ export default function OrderDetailPage({
           <ul className="divide-y">
             {order.items.map((item: any) => (
               <li key={item.productId} className="flex gap-4 py-4 items-center">
-                <Image
-                  src={
-                    item.thumbnail ||
-                    "https://cdn-icons-png.flaticon.com/512/685/685388.png"
-                  }
+                <OptimizedImage
+                  src={item.thumbnail || productFallback}
                   alt={item.itemname}
-                  width={72}
-                  height={72}
+                  fallback={productFallback}
                   className="rounded-lg object-cover border"
                 />
 

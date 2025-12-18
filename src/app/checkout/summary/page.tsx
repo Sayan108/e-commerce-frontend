@@ -12,6 +12,8 @@ import { useAddress } from "@/hooks/useAddress";
 import { useOrders } from "@/hooks/useOrder";
 import { OrderType } from "@/lib/redux/slices/order.slice";
 import { Loader2, ArrowLeft } from "lucide-react";
+import { productFallback } from "@/lib/utils/constants";
+import OptimizedImage from "@/components/shared/errorHandledImage";
 
 export default function SummaryPage() {
   const router = useRouter();
@@ -71,11 +73,10 @@ export default function SummaryPage() {
                       className="flex items-center justify-between py-3"
                     >
                       <div className="flex items-center gap-3">
-                        <Image
-                          src={item.thumbnail ?? ""}
+                        <OptimizedImage
+                          src={item.thumbnail ?? productFallback}
                           alt={item.itemname}
-                          width={64}
-                          height={64}
+                          fallback={productFallback}
                           className="h-16 w-16 rounded border object-cover"
                         />
                         <div>

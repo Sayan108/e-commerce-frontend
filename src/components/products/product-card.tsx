@@ -6,10 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Product } from "@/lib/redux/types/product.types";
 import { useDispatch } from "react-redux";
-import { setCurrentProduct } from "@/lib/redux/slices/products.slice";
 import { useCart } from "@/hooks/useCart";
 import { Loader } from "lucide-react";
 import useProducts from "@/hooks/useProducts";
+import OptimizedImage from "../shared/errorHandledImage";
+import { productFallback } from "@/lib/utils/constants";
 
 interface ProductCardProps {
   product: Product;
@@ -27,7 +28,7 @@ export function ProductCard({
 
   const { addToCart, loading } = useCart();
 
-  const { currentProduct, setProduct } = useProducts();
+  const { currentProduct } = useProducts();
 
   return (
     <Card
@@ -39,23 +40,16 @@ export function ProductCard({
     >
       {/* Product Image */}
       <div className="relative w-full aspect-square overflow-hidden">
-        <Link
-          href={`/products/${product._id}`}
-          onClick={() => {
-            console.log(product);
-            dispatch(setCurrentProduct(product));
-          }}
-        >
-          <Image
-            src={product.imageurl}
+        <Link href={`/products/${product._id}`}>
+          <OptimizedImage
+            src={product.imageurl ?? productFallback}
             alt={product.name}
-            fill
+            fallback={productFallback}
             className="
               object-cover rounded-t-xl 
               transition-all duration-500 
               group-hover:scale-110 group-hover:brightness-90
             "
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </Link>
 
@@ -75,12 +69,7 @@ export function ProductCard({
 
       {/* Product Content */}
       <div className="p-4 flex flex-col gap-3">
-        <Link
-          href={`/products/${product._id}`}
-          onClick={() => {
-            dispatch(setCurrentProduct(product));
-          }}
-        >
+        <Link href={`/products/${product._id}`}>
           <h3
             className="
               text-lg font-semibold leading-tight 
@@ -109,7 +98,6 @@ export function ProductCard({
         {showAddTocart && (
           <Button
             onClick={() => {
-              setProduct(product);
               addToCart(1);
             }}
             className="w-full rounded-lg py-5 font-semibold transition-all"

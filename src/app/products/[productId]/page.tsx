@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Star, Minus, Plus, Loader } from "lucide-react";
+import { useParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,12 +13,15 @@ import { useCart } from "@/hooks/useCart";
 import useProducts from "@/hooks/useProducts";
 import { navigate } from "@/hooks/useNavigation";
 import { ReviewModal } from "@/components/shared/reviewModal";
+import OptimizedImage from "@/components/shared/errorHandledImage";
+import { AvatarFallback } from "@/components/ui/avatar";
+import { productFallback, profileFallBack } from "@/lib/utils/constants";
 
 /* ---------------------- SKELETON ---------------------- */
 const ProductPageSkeleton = () => (
   <div className="container mx-auto max-w-7xl px-4 py-6">
-    <div className="grid md:grid-cols-2 gap-6 lg:gap-12">
-      <Skeleton className="aspect-square w-full rounded-lg" />
+    <div className="grid md:grid-cols-2 gap-8">
+      <Skeleton className="aspect-square w-full rounded-xl" />
       <div className="space-y-4">
         <Skeleton className="h-8 w-3/4" />
         <Skeleton className="h-5 w-32" />
@@ -30,16 +34,13 @@ const ProductPageSkeleton = () => (
 );
 
 /* ---------------------- MAIN PAGE ---------------------- */
-export default function ProductPage({
-  params,
-}: {
-  params: { productId: string };
-}) {
+export default function ProductPage() {
   const {
     currentProduct: product,
-    loading: reviewsLoading,
-    getProductReview,
+    loading: productLoading,
+    getProductDetails,
     postProductReview,
+    reviewLoading,
     currentProductReview,
   } = useProducts();
 
@@ -54,33 +55,31 @@ export default function ProductPage({
   const [quantity, setQuantity] = useState(1);
   const [reviewOpen, setReviewOpen] = useState(false);
 
+  const params = useParams<any>();
+
   useEffect(() => {
-    if (product?._id) {
+    if (params.productId) {
       clearDraftCarts();
-      setQuantity(currentProductCount(product._id));
-      if (product?.rating > 0 || product?.reviewCount > 0) getProductReview();
+      getProductDetails(params.productId);
+      setQuantity(currentProductCount(params.productId) || 1);
     }
-  }, [product?._id]);
+  }, [params.productId]);
 
-  if (!product) return <ProductPageSkeleton />;
+  if (productLoading || !product) return <ProductPageSkeleton />;
 
-  const stars = Math.round(product.rating || 4);
+  const stars = Math.round(product.rating);
 
   return (
     <div className="min-h-screen relative">
       {/* MAIN CONTENT */}
-      <div className="container mx-auto max-w-7xl px-4 py-6 pb-24 md:pb-20">
-        <div className="grid md:grid-cols-2 gap-6 lg:gap-12">
+      <div className="container mx-auto max-w-7xl px-4 py-6 pb-32">
+        <div className="grid md:grid-cols-2 gap-8">
           {/* IMAGE */}
-          <div className="aspect-square relative w-full rounded-lg overflow-hidden">
-            <Image
-              src={
-                product.imageurl ||
-                "https://cdn-icons-png.flaticon.com/512/685/685388.png"
-              }
+          <div className="aspect-square relative rounded-xl overflow-hidden border">
+            <OptimizedImage
+              src={product.imageurl}
               alt={product.name}
-              fill
-              className="object-cover"
+              fallback="/product.webp"
             />
           </div>
 
@@ -88,11 +87,12 @@ export default function ProductPage({
           <div className="flex flex-col">
             <h1 className="text-3xl font-bold">{product.name}</h1>
 
+            {/* RATING */}
             <div className="mt-2 flex items-center gap-2">
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
-                  className={`w-5 h-5 ${
+                  className={`h-5 w-5 ${
                     i < stars
                       ? "fill-primary text-primary"
                       : "text-muted-foreground"
@@ -100,19 +100,20 @@ export default function ProductPage({
                 />
               ))}
               <span className="text-sm text-muted-foreground">
-                ({product.reviewCount})
+                ({product.reviewCount || 0})
               </span>
             </div>
 
-            <p className="mt-3 text-3xl font-bold">₹{product.price}</p>
-            <p className="mt-4 text-sm text-muted-foreground">
+            <p className="mt-4 text-3xl font-bold">₹{product.price}</p>
+
+            <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
               {product.description}
             </p>
 
             {/* QUANTITY */}
-            <div className="mt-5">
+            <div className="mt-6">
               <label className="text-sm font-medium">Quantity</label>
-              <div className="mt-1 flex items-center border rounded-md w-fit">
+              <div className="mt-2 flex items-center border rounded-md w-fit overflow-hidden">
                 <Button
                   variant="ghost"
                   size="icon"
@@ -120,11 +121,13 @@ export default function ProductPage({
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
+
                 <Input
                   readOnly
                   value={quantity}
-                  className="w-14 text-center border-0"
+                  className="w-14 text-center border-0 focus-visible:ring-0"
                 />
+
                 <Button
                   variant="ghost"
                   size="icon"
@@ -136,47 +139,68 @@ export default function ProductPage({
             </div>
 
             {/* REVIEWS */}
-            <div className="mt-6">
-              <h3 className="text-lg font-semibold">Customer Reviews</h3>
+            <div className="mt-8">
+              <h3 className="text-lg font-semibold mb-3">Customer Reviews</h3>
 
-              <div className="mt-3 space-y-3">
-                {!reviewsLoading && currentProductReview?.length === 0 && (
+              <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
+                {!reviewLoading && currentProductReview?.length === 0 && (
                   <p className="text-sm text-muted-foreground">
                     No reviews yet.
                   </p>
                 )}
 
-                {currentProductReview?.map((r) => (
-                  <div
-                    key={r?._id}
-                    className="p-3 border rounded-lg flex items-start gap-3"
-                  >
-                    {/* Profile Picture */}
-                    <div className="flex-shrink-0">
-                      <Image
-                        src={r?.userProfilePicture || "/avatar-placeholder.png"}
-                        alt={r?.userName || "User"}
-                        width={40}
-                        height={40}
-                        className="rounded-full object-cover"
-                      />
-                    </div>
+                {currentProductReview?.map((r) => {
+                  const stars = Math.round(r?.rating || 0);
 
-                    {/* Review Content */}
-                    <div>
-                      <p className="text-sm font-medium">{r?.userName}</p>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {r?.comment}
-                      </p>
+                  return (
+                    <div
+                      key={r?._id}
+                      className="p-3 border rounded-lg flex gap-3"
+                    >
+                      {/* Avatar */}
+                      <OptimizedImage
+                        src={r?.userProfilePicture || profileFallBack}
+                        alt={r?.userName || "User"}
+                        fallback={profileFallBack}
+                        className="rounded-full"
+                        isAvatar
+                      />
+
+                      {/* Content */}
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm font-medium">
+                            {r?.userName || "Anonymous"}
+                          </p>
+
+                          {/* ⭐ Rating */}
+                          <div className="flex gap-0.5">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                className={`h-4 w-4 ${
+                                  i < stars
+                                    ? "fill-primary text-primary"
+                                    : "text-muted-foreground"
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {r?.comment || "No comment provided."}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               <Button
                 size="sm"
                 variant="secondary"
-                className="mt-3"
+                className="mt-4"
                 onClick={() => setReviewOpen(true)}
               >
                 Write a Review
@@ -187,14 +211,24 @@ export default function ProductPage({
       </div>
 
       {/* STICKY FOOTER */}
-      <div className="fixed bottom-0 inset-x-0 bg-background border-t p-3">
-        <div className="container mx-auto max-w-7xl flex gap-3">
-          <Button className="flex-1" onClick={() => addToCart(quantity)}>
-            {loading ? <Loader className="h-4 w-4" /> : "Add to cart"}
+      <div className="fixed bottom-0 inset-x-0 bg-background border-t z-50">
+        <div className="container mx-auto max-w-7xl p-3 flex gap-3">
+          <Button
+            className="flex-1"
+            disabled={loading}
+            onClick={() => addToCart(quantity)}
+          >
+            {loading ? (
+              <Loader className="h-4 w-4 animate-spin" />
+            ) : (
+              "Add to cart"
+            )}
           </Button>
+
           <Button
             variant="secondary"
             className="flex-1"
+            disabled={loading}
             onClick={() => {
               addToDraftCartAndCheckout(quantity);
               navigate("/checkout/address");
@@ -208,7 +242,7 @@ export default function ProductPage({
       {/* REVIEW MODAL */}
       <ReviewModal
         open={reviewOpen}
-        loading={reviewsLoading}
+        loading={reviewLoading}
         onClose={() => setReviewOpen(false)}
         onSubmit={(rating, comment) => {
           postProductReview({ productId: product._id, rating, comment });

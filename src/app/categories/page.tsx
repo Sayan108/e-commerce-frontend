@@ -10,18 +10,16 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Category } from "@/lib/redux/types/category.types";
 import useProducts from "@/hooks/useProducts";
+import OptimizedImage from "@/components/shared/errorHandledImage";
+import { productFallback } from "@/lib/utils/constants";
 
 export default function CategoriesPage() {
   const { categories, loading } = useCategory();
-  const { fetchProductByCategory, fetchProducts } = useProducts();
-  const dispatch = useDispatch();
+
   const router = useRouter();
 
   const handleClick = (category: Category) => {
-    fetchProducts();
-    fetchProductByCategory(category._id);
-    dispatch(setCurrentCategory(category));
-    router.push(`/categories/${category.name}`);
+    router.push(`/categories/${category._id}`);
   };
 
   return (
@@ -59,10 +57,10 @@ export default function CategoriesPage() {
                 <CardContent className="p-0 flex flex-col h-full cursor-pointer">
                   {/* IMAGE */}
                   <div className="relative aspect-[4/3] w-full overflow-hidden">
-                    <Image
+                    <OptimizedImage
                       src={category.imageurl}
                       alt={category.name}
-                      fill
+                      fallback={productFallback}
                       className="object-cover transition-transform duration-500 group-hover:scale-110"
                     />
 

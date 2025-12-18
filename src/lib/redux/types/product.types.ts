@@ -46,7 +46,7 @@ export interface ProductState {
   error: string | null;
   filter: ProductFilter;
   currentProduct: Product | null;
-
+  reviewLoading: boolean;
   currentProductReview: ReviewType[];
 }
 

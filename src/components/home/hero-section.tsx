@@ -17,6 +17,8 @@ import { Card, CardContent } from "../ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Banner } from "@/lib/redux/types/dashboard.types";
 import { ArrowRight } from "lucide-react";
+import OptimizedImage from "../shared/errorHandledImage";
+import { productFallback } from "@/lib/utils/constants";
 
 /* ---------------- HERO SKELETON ---------------- */
 export const HeroSkeleton = () => (
@@ -63,11 +65,10 @@ export function HeroSection({ bannerList, loading }: HeroProp) {
                 <CardContent className="relative aspect-[16/7] w-full p-0">
                   {/* IMAGE */}
                   {banner.imageurl && (
-                    <Image
+                    <OptimizedImage
                       src={banner.imageurl}
                       alt={banner.name}
-                      fill
-                      priority={index === 0}
+                      fallback={productFallback}
                       className="object-cover"
                     />
                   )}

@@ -11,10 +11,14 @@ import {
   addReviewRequest,
   addReviewSuccess,
   addReviewFailure,
+  getProductDetailRequested,
+  getProductRequestSuccess,
+  getProductDetailsFailure,
 } from "../slices/products.slice";
 
 import { AxiosResponse } from "axios";
 import {
+  getProductById,
   getProducts,
   getReviews,
   postReview,
@@ -24,11 +28,9 @@ import { store } from "..";
 // Fetch Products Data with Filters and Pagination
 
 // Fetch Products by Category
-function* fetchProducts() {
-  console.log("ggghgh");
+function* fetchProducts(action: ReturnType<typeof fetchProductsStart>) {
   try {
-    const { filter } = store.getState().products;
-    const response: AxiosResponse = yield call(getProducts, filter);
+    const response: AxiosResponse = yield call(getProducts, action.payload);
 
     yield put(
       fetchProductsSuccess({
@@ -40,6 +42,18 @@ function* fetchProducts() {
     yield put(
       fetchProductsFailure(error?.message || "Failed to load products")
     );
+  }
+}
+
+function* fetchProductDetailsById(
+  action: ReturnType<typeof getProductDetailRequested>
+) {
+  try {
+    const response: AxiosResponse = yield call(getProductById, action.payload);
+    yield put(getProductRequestSuccess(response.data.product));
+    yield put(getReviewsRequest(response.data.product._id));
+  } catch (error) {
+    yield put(getProductDetailsFailure(error));
   }
 }
 
@@ -55,7 +69,7 @@ function* handleGetReviews(action: ReturnType<typeof getReviewsRequest>) {
 function* handleAddReview(action: ReturnType<typeof addReviewRequest>) {
   try {
     const newReview: AxiosResponse = yield call(postReview, action.payload);
-    yield put(addReviewSuccess(newReview.data.data));
+    yield put(addReviewSuccess(newReview.data.review));
   } catch (err: any) {
     yield put(addReviewFailure(err.message));
   }
@@ -64,6 +78,7 @@ function* handleAddReview(action: ReturnType<typeof addReviewRequest>) {
 // Watcher saga
 export default function* productsRootSaga() {
   yield takeLatest(fetchProductsStart.type, fetchProducts);
+  yield takeLatest(getProductDetailRequested.type, fetchProductDetailsById);
   yield takeLatest(getReviewsRequest.type, handleGetReviews);
   yield takeLatest(addReviewRequest.type, handleAddReview);
 }

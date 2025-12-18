@@ -17,6 +17,8 @@ import { Separator } from "@/components/ui/separator";
 import { Trash2, Minus, Plus, ShoppingBag, ArrowRight } from "lucide-react";
 import { CartItem } from "@/lib/redux/types/cart.types";
 import { useEffect } from "react";
+import OptimizedImage from "@/components/shared/errorHandledImage";
+import { productFallback } from "@/lib/utils/constants";
 
 export default function CartPage() {
   const {
@@ -73,12 +75,10 @@ export default function CartPage() {
                       className="flex flex-col md:flex-row items-start md:items-center p-5 gap-5"
                     >
                       {/* IMAGE */}
-                      <Image
-                        src={item.thumbnail ?? ""}
+                      <OptimizedImage
+                        src={item.thumbnail ?? productFallback}
                         alt={item.itemname}
-                        width={120}
-                        height={120}
-                        className="rounded-md object-cover border"
+                        fallback={productFallback}
                       />
 
                       {/* DETAILS */}

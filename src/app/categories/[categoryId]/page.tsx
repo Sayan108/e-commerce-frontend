@@ -1,23 +1,24 @@
 "use client";
 
 import { ProductCard } from "@/components/products/product-card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { ProductCardSkeleton } from "@/components/products/product-card-skeleton";
 
 import { useSelector } from "react-redux";
 import { RootState } from "@/lib/redux";
 import useProducts from "@/hooks/useProducts";
-import { useEffect, useRef } from "react";
-import { clearCurrentCategory } from "@/lib/redux/slices/categories.slice";
+import { useEffect } from "react";
 
-export default function CategoryPage({
-  params,
-}: {
-  params: { categoryId: string };
-}) {
-  const { loading, products } = useProducts();
+import { useParams } from "next/navigation";
 
-  const hasMounted = useRef(false);
+export default function CategoryPage() {
+  const { loading, products, fetchProductByCategory } = useProducts();
+
+  const params = useParams<any>();
+
+  useEffect(() => {
+    fetchProductByCategory(params.categoryId);
+  }, [params]);
 
   const { selectedCategory } = useSelector(
     (state: RootState) => state.categories
@@ -39,17 +40,6 @@ export default function CategoryPage({
       </div>
     );
   }
-
-  useEffect(() => {
-    if (!hasMounted.current) {
-      hasMounted.current = true;
-      return;
-    }
-
-    return () => {
-      clearCurrentCategory();
-    };
-  }, []);
 
   return (
     <div className="container mx-auto max-w-7xl px-4 py-8">

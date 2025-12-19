@@ -20,8 +20,6 @@ export interface ProductFilter {
   inStock?: boolean;
   sortBy?: string;
   sortOrder?: SortOrder;
-  page?: number;
-  limit?: number;
 }
 
 export interface PaginatedResponse<T> {
@@ -41,13 +39,14 @@ export interface ReviewType {
 
 export interface ProductState {
   products: Product[];
-  totalCount: number;
+  pagination: { total: number; page: number; limit: number; pages: number };
   loading: boolean;
   error: string | null;
   filter: ProductFilter;
   currentProduct: Product | null;
   reviewLoading: boolean;
   currentProductReview: ReviewType[];
+  hasMore: boolean;
 }
 
 export enum SortOrder {

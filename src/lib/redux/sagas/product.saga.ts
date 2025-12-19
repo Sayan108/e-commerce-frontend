@@ -18,24 +18,27 @@ import {
 
 import { AxiosResponse } from "axios";
 import {
+  getNewArrivals,
   getProductById,
   getProducts,
   getReviews,
   postReview,
 } from "@/lib/services/api.services";
-import { store } from "..";
 
 // Fetch Products Data with Filters and Pagination
 
 // Fetch Products by Category
 function* fetchProducts(action: ReturnType<typeof fetchProductsStart>) {
   try {
-    const response: AxiosResponse = yield call(getProducts, action.payload);
+    let response: AxiosResponse;
+    if (Object.keys(action.payload).length > 0)
+      response = yield call(getProducts, action.payload);
+    else response = yield call(getNewArrivals);
 
     yield put(
       fetchProductsSuccess({
-        data: response.data.data.data,
-        totalCount: response.data.data.pagination.total,
+        products: response.data.data.data,
+        pagination: response.data.data.pagination,
       })
     );
   } catch (error: any) {

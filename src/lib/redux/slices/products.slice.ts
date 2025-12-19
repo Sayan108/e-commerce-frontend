@@ -11,13 +11,19 @@ import {
 // Initial state
 const initialState: ProductState = {
   products: [],
-  totalCount: 0,
+  pagination: {
+    limit: 10,
+    page: 1,
+    total: 0,
+    pages: 0,
+  },
   loading: false,
   reviewLoading: false,
   error: null,
   currentProduct: null,
   currentProductReview: [],
   filter: {},
+  hasMore: false,
 };
 
 // Slice
@@ -28,18 +34,29 @@ const productsSlice = createSlice({
     fetchProductsStart: (state, _: PayloadAction<ProductFilter>) => {
       state.loading = true;
       state.error = null;
+      state.currentProduct = null;
+      state.products = [];
     },
     fetchProductsSuccess: (
       state,
-      action: PayloadAction<PaginatedResponse<Product>>
+      action: PayloadAction<{
+        products: Product[];
+        pagination: {
+          total: number;
+          page: number;
+          limit: number;
+          pages: number;
+        };
+      }>
     ) => {
-      state.products = action.payload.data;
-      state.totalCount = action.payload.totalCount;
+      state.products = action.payload.products;
+      state.pagination = action.payload.pagination;
       state.loading = false;
     },
     fetchProductsFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.error = action.payload;
+      state.products = [];
     },
 
     setProductFilter: (
@@ -56,6 +73,7 @@ const productsSlice = createSlice({
     getProductDetailRequested: (state, _: PayloadAction<string>) => {
       state.loading = true;
       state.error = null;
+      state.currentProduct = null;
     },
 
     getProductRequestSuccess: (state, action: PayloadAction<Product>) => {
@@ -65,6 +83,7 @@ const productsSlice = createSlice({
     getProductDetailsFailure: (state, action: PayloadAction<any>) => {
       state.loading = false;
       state.error = action.payload;
+      state.currentProduct = null;
     },
 
     setCurrentProduct: (state, action: PayloadAction<Product>) => {
@@ -74,6 +93,7 @@ const productsSlice = createSlice({
     getReviewsRequest(state, _: PayloadAction<string>) {
       state.reviewLoading = true;
       state.error = null;
+      state.currentProductReview = [];
     },
     getReviewsSuccess(state, action: PayloadAction<ReviewType[]>) {
       state.currentProductReview = action.payload;
@@ -82,6 +102,7 @@ const productsSlice = createSlice({
     getReviewsFailure(state, action: PayloadAction<any>) {
       state.reviewLoading = false;
       state.error = action.payload;
+      state.currentProductReview = [];
     },
 
     addReviewRequest(

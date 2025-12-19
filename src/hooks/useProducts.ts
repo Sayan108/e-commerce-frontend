@@ -2,10 +2,9 @@
 import { RootState } from "@/lib/redux";
 import {
   addReviewRequest,
+  fetchMoreProductsStart,
   fetchProductsStart,
   getProductDetailRequested,
-  getReviewsRequest,
-  setProductFilter,
 } from "@/lib/redux/slices/products.slice";
 import { ProductFilter } from "@/lib/redux/types/product.types";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,19 +18,25 @@ const useProducts = () => {
     error,
     currentProduct,
     currentProductReview,
+    pagination,
+    moreLoading,
   } = useSelector((state: RootState) => state.products);
 
   const fetchProducts = (filter: ProductFilter) => {
-    console.log(filter);
     dispatch(fetchProductsStart(filter));
   };
 
-  const fetchProductByCategory = (categoryId: string) => {
-    fetchProducts({ categoryId });
+  const fetchPaginatedProducts = (categoryId: string) => {
+    const { limit, page, totalPages } = pagination;
+
+    if (totalPages > page) {
+      const filter: ProductFilter = { categoryId, limit, page: page + 1 };
+      dispatch(fetchMoreProductsStart(filter));
+    }
   };
 
-  const updateFilter = (filter: ProductFilter) => {
-    dispatch(setProductFilter(filter));
+  const fetchProductByCategory = (categoryId: string) => {
+    fetchProducts({ categoryId, limit: 12, page: 1 });
   };
 
   const getProductDetails = (productId: string) => {
@@ -50,13 +55,14 @@ const useProducts = () => {
     loading,
     reviewLoading,
     currentProductReview,
+    moreLoading,
     error,
 
     fetchProducts,
     getProductDetails,
-    updateFilter,
     fetchProductByCategory,
     postProductReview,
+    fetchPaginatedProducts,
   };
 };
 

@@ -15,9 +15,10 @@ const initialState: ProductState = {
     limit: 10,
     page: 1,
     total: 0,
-    pages: 0,
+    totalPages: 0,
   },
   loading: false,
+  moreLoading: false,
   reviewLoading: false,
   error: null,
   currentProduct: null,
@@ -45,7 +46,7 @@ const productsSlice = createSlice({
           total: number;
           page: number;
           limit: number;
-          pages: number;
+          totalPages: number;
         };
       }>
     ) => {
@@ -59,11 +60,29 @@ const productsSlice = createSlice({
       state.products = [];
     },
 
-    setProductFilter: (
+    fetchMoreProductsStart: (state, _: PayloadAction<ProductFilter>) => {
+      state.moreLoading = true;
+    },
+    fetchMoreProductsSuccess: (
       state,
-      action: PayloadAction<Partial<ProductFilter>>
+      action: PayloadAction<{
+        products: Product[];
+        pagination: {
+          total: number;
+          page: number;
+          limit: number;
+          totalPages: number;
+        };
+      }>
     ) => {
-      state.filter = { ...state.filter, ...action.payload };
+      state.products = [...state.products, ...action.payload.products];
+      state.pagination = action.payload.pagination;
+      state.moreLoading = false;
+    },
+    fetchMoreProductsFailure: (state, action: PayloadAction<string>) => {
+      state.moreLoading = false;
+      state.error = action.payload;
+      state.products = [];
     },
 
     clearProducts: (state) => {
@@ -123,6 +142,19 @@ const productsSlice = createSlice({
       state.reviewLoading = false;
       state.error = action.payload;
     },
+    setPagination(
+      state,
+      action: PayloadAction<
+        Partial<{
+          total: number;
+          page: number;
+          limit: number;
+          totalPages: number;
+        }>
+      >
+    ) {
+      state.pagination = { ...state.pagination, ...action.payload };
+    },
   },
 });
 
@@ -132,9 +164,11 @@ export const {
   fetchProductsSuccess,
   fetchProductsFailure,
 
-  clearProducts,
+  fetchMoreProductsStart,
+  fetchMoreProductsSuccess,
+  fetchMoreProductsFailure,
 
-  setProductFilter,
+  clearProducts,
 
   getProductDetailRequested,
   getProductRequestSuccess,
@@ -147,5 +181,7 @@ export const {
   getReviewsSuccess,
   getReviewsRequest,
   getReviewsFailure,
+
+  setPagination,
 } = productsSlice.actions;
 export default productsSlice.reducer;

@@ -10,6 +10,7 @@ export interface Product {
   categoryId: string;
   reviewCount: number;
   rating: number;
+  features: string[];
 }
 
 export interface ProductFilter {
@@ -20,6 +21,9 @@ export interface ProductFilter {
   inStock?: boolean;
   sortBy?: string;
   sortOrder?: SortOrder;
+  limit?: number;
+
+  page?: number;
 }
 
 export interface PaginatedResponse<T> {
@@ -39,8 +43,14 @@ export interface ReviewType {
 
 export interface ProductState {
   products: Product[];
-  pagination: { total: number; page: number; limit: number; pages: number };
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
   loading: boolean;
+  moreLoading: boolean;
   error: string | null;
   filter: ProductFilter;
   currentProduct: Product | null;

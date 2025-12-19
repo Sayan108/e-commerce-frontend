@@ -110,6 +110,19 @@ export default function ProductPage() {
               {product.description}
             </p>
 
+            {/* FEATURES */}
+            {product.features && (
+              <div className="mt-6">
+                <h3 className="text-sm font-semibold mb-2">Key Features</h3>
+
+                <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
+                  {product.features.map((feature, i) => (
+                    <li key={i}>{feature.trim()}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             {/* QUANTITY */}
             <div className="mt-6">
               <label className="text-sm font-medium">Quantity</label>

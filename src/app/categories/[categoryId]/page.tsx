@@ -7,22 +7,41 @@ import { ProductCardSkeleton } from "@/components/products/product-card-skeleton
 import { useSelector } from "react-redux";
 import { RootState } from "@/lib/redux";
 import useProducts from "@/hooks/useProducts";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { useParams } from "next/navigation";
 
 export default function CategoryPage() {
-  const { loading, products, fetchProductByCategory } = useProducts();
+  const {
+    loading,
+    products,
+    fetchProductByCategory,
+    fetchPaginatedProducts,
+    moreLoading,
+  } = useProducts();
 
   const params = useParams<any>();
+  const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     fetchProductByCategory(params.categoryId);
-  }, [params]);
+  }, [params.categoryId]);
 
   const { selectedCategory } = useSelector(
     (state: RootState) => state.categories
   );
+
+  const handleScroll = () => {
+    const el = scrollRef.current;
+    if (!el || loading || moreLoading) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = el;
+
+    // Trigger when 150px near bottom
+    if (scrollTop + clientHeight >= scrollHeight - 150) {
+      fetchPaginatedProducts(params.categoryId);
+    }
+  };
 
   if (loading) {
     return (
@@ -42,30 +61,46 @@ export default function CategoryPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-7xl px-4 py-8">
-      <header className="mb-8">
-        <h1 className="text-4xl font-bold tracking-tight font-headline">
-          {selectedCategory?.name}
-        </h1>
-        <p className="mt-2 text-lg text-muted-foreground">
-          Browse through our collection of{" "}
-          {selectedCategory?.name.toLowerCase()}.
-        </p>
-      </header>
+    <div
+      ref={scrollRef}
+      onScroll={handleScroll}
+      className="h-[calc(100vh-64px)] overflow-y-auto"
+    >
+      <div className="container mx-auto max-w-7xl px-4 py-8">
+        <header className="mb-8">
+          <h1 className="text-4xl font-bold tracking-tight font-headline">
+            {selectedCategory?.name}
+          </h1>
+          <p className="mt-2 text-lg text-muted-foreground">
+            Browse through our collection of{" "}
+            {selectedCategory?.name.toLowerCase()}.
+          </p>
+        </header>
 
-      <Tabs defaultValue="all" className="w-full">
-        <TabsContent value="all">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {products.map((product) => (
-              <ProductCard
-                key={product._id}
-                product={product}
-                showAddTocart={false}
-              />
-            ))}
+        <Tabs defaultValue="all" className="w-full">
+          <TabsContent value="all">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {products.map((product) => (
+                <ProductCard
+                  key={product._id}
+                  product={product}
+                  showAddTocart={false}
+                />
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
+
+        {moreLoading && (
+          <div className="py-8">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <ProductCardSkeleton key={i} />
+              ))}
+            </div>
           </div>
-        </TabsContent>
-      </Tabs>
+        )}
+      </div>
     </div>
   );
 }

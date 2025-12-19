@@ -6,10 +6,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Search } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchProductsStart,
-  setProductFilter,
-} from "@/lib/redux/slices/products.slice";
+import { fetchProductsStart } from "@/lib/redux/slices/products.slice";
 import { RootState } from "@/lib/redux";
 
 interface SearchBarProps {}
@@ -22,7 +19,7 @@ export function SearchBar({}: SearchBarProps) {
   const { filter } = useSelector((state: RootState) => state.products);
 
   useEffect(() => {
-    dispatch(fetchProductsStart());
+    ///  dispatch(fetchProductsStart());
   }, [filter]);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -30,7 +27,7 @@ export function SearchBar({}: SearchBarProps) {
     if (query.trim()) {
       router.push(`/search?q=${encodeURIComponent(query.trim())}`);
       setQuery("");
-      dispatch(setProductFilter({ search: query.trim() }));
+      // dispatch(setProductFilter({ search: query.trim() }));
     }
   };
 

@@ -14,6 +14,9 @@ import {
   getProductDetailRequested,
   getProductRequestSuccess,
   getProductDetailsFailure,
+  fetchMoreProductsStart,
+  fetchMoreProductsSuccess,
+  fetchMoreProductsFailure,
 } from "../slices/products.slice";
 
 import { AxiosResponse } from "axios";
@@ -34,16 +37,35 @@ function* fetchProducts(action: ReturnType<typeof fetchProductsStart>) {
     if (Object.keys(action.payload).length > 0)
       response = yield call(getProducts, action.payload);
     else response = yield call(getNewArrivals);
+    console.log(response.data.newarrivals);
 
     yield put(
       fetchProductsSuccess({
-        products: response.data.data.data,
+        products: response?.data?.data?.data ?? response?.data?.data,
+
         pagination: response.data.data.pagination,
       })
     );
   } catch (error: any) {
     yield put(
       fetchProductsFailure(error?.message || "Failed to load products")
+    );
+  }
+}
+
+function* fetchMoreProducts(action: ReturnType<typeof fetchMoreProductsStart>) {
+  try {
+    const response: AxiosResponse = yield call(getProducts, action.payload);
+
+    yield put(
+      fetchMoreProductsSuccess({
+        products: response?.data?.data?.data,
+        pagination: response.data.data.pagination,
+      })
+    );
+  } catch (error: any) {
+    yield put(
+      fetchMoreProductsFailure(error?.message || "Failed to load products")
     );
   }
 }
@@ -84,4 +106,5 @@ export default function* productsRootSaga() {
   yield takeLatest(getProductDetailRequested.type, fetchProductDetailsById);
   yield takeLatest(getReviewsRequest.type, handleGetReviews);
   yield takeLatest(addReviewRequest.type, handleAddReview);
+  yield takeLatest(fetchMoreProductsStart.type, fetchMoreProducts);
 }

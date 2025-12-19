@@ -1,7 +1,11 @@
 "use client";
 import { RootState } from "@/lib/redux";
-import { fetchCategoriesStart } from "@/lib/redux/slices/categories.slice";
-import React, { useEffect } from "react";
+import {
+  fetchCategoriesStart,
+  setCurrentCategory,
+} from "@/lib/redux/slices/categories.slice";
+import { Category } from "@/lib/redux/types/category.types";
+
 import { useDispatch, useSelector } from "react-redux";
 
 const useCategory = () => {
@@ -10,14 +14,21 @@ const useCategory = () => {
     (state: RootState) => state.categories
   );
 
-  useEffect(() => {
-    dispatch(fetchCategoriesStart());
-  }, [dispatch]);
+  const fetchCategory = (isFeatured?: boolean) => {
+    dispatch(fetchCategoriesStart(isFeatured));
+  };
+
+  const updateCurrentCategory = (category: Category) => {
+    dispatch(setCurrentCategory(category));
+  };
 
   return {
     categories,
     loading,
     error,
+
+    fetchCategory,
+    updateCurrentCategory,
   };
 };
 

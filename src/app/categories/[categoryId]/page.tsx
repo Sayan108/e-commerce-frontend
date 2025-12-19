@@ -7,7 +7,7 @@ import { ProductCardSkeleton } from "@/components/products/product-card-skeleton
 import { useSelector } from "react-redux";
 import { RootState } from "@/lib/redux";
 import useProducts from "@/hooks/useProducts";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 import { useParams } from "next/navigation";
 
@@ -21,64 +21,63 @@ export default function CategoryPage() {
   } = useProducts();
 
   const params = useParams<any>();
-  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const { selectedCategory } = useSelector(
+    (state: RootState) => state.categories
+  );
 
   useEffect(() => {
     fetchProductByCategory(params.categoryId);
   }, [params.categoryId]);
 
-  const { selectedCategory } = useSelector(
-    (state: RootState) => state.categories
-  );
+  // ---------------- WINDOW SCROLL ----------------
+  useEffect(() => {
+    const handleScroll = () => {
+      if (loading || moreLoading) return;
 
-  const handleScroll = () => {
-    const el = scrollRef.current;
-    if (!el || loading || moreLoading) return;
+      const scrollPosition = window.innerHeight + window.scrollY;
+      const threshold = document.body.offsetHeight - 250;
 
-    const { scrollTop, scrollHeight, clientHeight } = el;
+      if (scrollPosition >= threshold) {
+        fetchPaginatedProducts({ categoryId: params.categoryId });
+      }
+    };
 
-    // Trigger when 150px near bottom
-    if (scrollTop + clientHeight >= scrollHeight - 150) {
-      fetchPaginatedProducts(params.categoryId);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="container mx-auto max-w-7xl px-4 py-8">
-        <div className="animate-pulse">
-          <div className="h-10 bg-muted rounded-md w-1/3 mb-2"></div>
-          <div className="h-6 bg-muted rounded-md w-1/2 mb-8"></div>
-          <div className="h-10 bg-muted rounded-md w-full mb-6"></div>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <ProductCardSkeleton key={i} />
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [loading, moreLoading, params.categoryId, fetchPaginatedProducts]);
 
   return (
-    <div
-      ref={scrollRef}
-      onScroll={handleScroll}
-      className="h-[calc(100vh-64px)] overflow-y-auto"
-    >
-      <div className="container mx-auto max-w-7xl px-4 py-8">
-        <header className="mb-8">
-          <h1 className="text-4xl font-bold tracking-tight font-headline">
-            {selectedCategory?.name}
-          </h1>
-          <p className="mt-2 text-lg text-muted-foreground">
-            Browse through our collection of{" "}
-            {selectedCategory?.name.toLowerCase()}.
-          </p>
-        </header>
+    <div className="container mx-auto max-w-7xl px-4 py-8">
+      {/* Header */}
+      <header className="mb-8">
+        {loading ? (
+          <div className="animate-pulse">
+            <div className="h-10 bg-muted rounded-md w-1/3 mb-2"></div>
+            <div className="h-6 bg-muted rounded-md w-1/2 mb-8"></div>
+          </div>
+        ) : (
+          <>
+            <h1 className="text-4xl font-bold tracking-tight font-headline">
+              {selectedCategory?.name}
+            </h1>
+            <p className="mt-2 text-lg text-muted-foreground">
+              Browse through our collection of{" "}
+              {selectedCategory?.name.toLowerCase()}.
+            </p>
+          </>
+        )}
+      </header>
 
-        <Tabs defaultValue="all" className="w-full">
-          <TabsContent value="all">
+      {/* Tabs */}
+      <Tabs defaultValue="all" className="w-full">
+        <TabsContent value="all">
+          {loading ? (
+            <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <ProductCardSkeleton key={i} />
+              ))}
+            </div>
+          ) : products.length > 0 ? (
             <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3">
               {products.map((product) => (
                 <ProductCard
@@ -88,19 +87,22 @@ export default function CategoryPage() {
                 />
               ))}
             </div>
-          </TabsContent>
-        </Tabs>
-
-        {moreLoading && (
-          <div className="py-8">
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <ProductCardSkeleton key={i} />
-              ))}
+          ) : (
+            <div className="text-center py-20 border-2 border-dashed rounded-lg">
+              <p className="text-muted-foreground">No products found</p>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </TabsContent>
+      </Tabs>
+
+      {/* Loading more */}
+      {moreLoading && (
+        <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <ProductCardSkeleton key={i} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -4,23 +4,27 @@ import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
 import useCategory from "@/hooks/useCategory";
-import { useDispatch } from "react-redux";
-import { setCurrentCategory } from "@/lib/redux/slices/categories.slice";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Category } from "@/lib/redux/types/category.types";
-import useProducts from "@/hooks/useProducts";
 import OptimizedImage from "@/components/shared/errorHandledImage";
 import { productFallback } from "@/lib/utils/constants";
+import { useEffect } from "react";
 
 export default function CategoriesPage() {
-  const { categories, loading } = useCategory();
+  const { categories, loading, fetchCategory, updateCurrentCategory } =
+    useCategory();
 
   const router = useRouter();
 
   const handleClick = (category: Category) => {
     router.push(`/categories/${category._id}`);
+    updateCurrentCategory(category);
   };
+
+  useEffect(() => {
+    fetchCategory();
+  }, []);
 
   return (
     <div className="container mx-auto max-w-7xl px-4 py-10">

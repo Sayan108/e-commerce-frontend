@@ -4,15 +4,18 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
 import useCategory from "@/hooks/useCategory";
-import { setCurrentCategory } from "@/lib/redux/slices/categories.slice";
-import { useDispatch } from "react-redux";
+
 import OptimizedImage from "../shared/errorHandledImage";
 import { productFallback } from "@/lib/utils/constants";
+import { useEffect } from "react";
 
 export function CategoryHighlights() {
-  const { categories, loading } = useCategory();
-  const highlightedCategories = categories.slice(0, 3);
-  const dispatch = useDispatch();
+  const { categories, loading, fetchCategory, updateCurrentCategory } =
+    useCategory();
+
+  useEffect(() => {
+    fetchCategory(true);
+  }, []);
 
   return (
     <section className="container mx-auto max-w-7xl px-4 py-12">
@@ -44,11 +47,11 @@ export function CategoryHighlights() {
 
         {/* DATA */}
         {!loading &&
-          highlightedCategories.map((category) => (
+          categories.map((category) => (
             <Link
               key={category._id}
               href={`/categories/${category._id}`}
-              onClick={() => dispatch(setCurrentCategory(category))}
+              onClick={() => updateCurrentCategory(category)}
               className="group"
             >
               <Card className="relative overflow-hidden transition-all duration-300 md:group-hover:shadow-xl md:group-hover:-translate-y-1">

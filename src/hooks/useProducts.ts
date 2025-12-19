@@ -26,11 +26,12 @@ const useProducts = () => {
     dispatch(fetchProductsStart(filter));
   };
 
-  const fetchPaginatedProducts = (categoryId: string) => {
+  const fetchPaginatedProducts = (payload: ProductFilter) => {
     const { limit, page, totalPages } = pagination;
+    console.log(payload);
 
     if (totalPages > page) {
-      const filter: ProductFilter = { categoryId, limit, page: page + 1 };
+      const filter: ProductFilter = { ...payload, limit, page: page + 1 };
       dispatch(fetchMoreProductsStart(filter));
     }
   };

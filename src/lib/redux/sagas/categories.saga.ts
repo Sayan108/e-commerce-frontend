@@ -7,14 +7,21 @@ import {
   fetchCategoriesStart,
   fetchCategoriesSuccess,
 } from "../slices/categories.slice";
-import { getCategories } from "@/lib/services/api.services";
+import {
+  getCategories,
+  getFeaturedCategories,
+} from "@/lib/services/api.services";
 
 // Fetch Categories Data
-function* fetchCategoriesSaga() {
+function* fetchCategoriesSaga(action: ReturnType<typeof fetchCategoriesStart>) {
   try {
-    const response: AxiosResponse = yield call(getCategories);
+    let response: AxiosResponse;
+    if (!action.payload) response = yield call(getCategories);
+    else response = yield call(getFeaturedCategories);
 
-    yield put(fetchCategoriesSuccess(response.data.list));
+    yield put(
+      fetchCategoriesSuccess(response.data.featured ?? response.data.list)
+    );
   } catch (error: any) {
     yield put(
       fetchCategoriesFailure(error?.message || "Failed to load categories")

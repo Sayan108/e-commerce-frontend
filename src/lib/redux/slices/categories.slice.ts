@@ -15,7 +15,7 @@ const categoriesSlice = createSlice({
   name: "categories",
   initialState,
   reducers: {
-    fetchCategoriesStart: (state) => {
+    fetchCategoriesStart: (state, _: PayloadAction<boolean | undefined>) => {
       state.loading = true;
       state.error = null;
     },

@@ -1,33 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Search } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchProductsStart } from "@/lib/redux/slices/products.slice";
-import { RootState } from "@/lib/redux";
 
-interface SearchBarProps {}
+import useProducts from "@/hooks/useProducts";
 
-export function SearchBar({}: SearchBarProps) {
+export function SearchBar() {
   const [query, setQuery] = useState("");
   const router = useRouter();
-  const dispatch = useDispatch();
 
-  const { filter } = useSelector((state: RootState) => state.products);
-
-  useEffect(() => {
-    ///  dispatch(fetchProductsStart());
-  }, [filter]);
+  const { fetchProducts } = useProducts();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim()) {
       router.push(`/search?q=${encodeURIComponent(query.trim())}`);
-      setQuery("");
-      // dispatch(setProductFilter({ search: query.trim() }));
+
+      fetchProducts({ search: query.trim(), page: 1, limit: 10 });
     }
   };
 

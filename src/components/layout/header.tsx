@@ -162,98 +162,96 @@ export function Header() {
   /* ---------------- MOBILE NAV ---------------- */
 
   const mobileNav = (
-    <div className="container mx-auto flex h-16 items-center justify-between px-4">
-      <Logo />
+    <div className="container mx-auto px-4 py-2 space-y-2">
+      {/* Top row */}
+      <div className="flex items-center justify-between h-12">
+        <Logo />
 
-      <div className="flex items-center gap-2">
-        <SearchDialog open={searchOpen} onOpenChange={setSearchOpen}>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setSearchOpen(true)}
-          >
-            <Search className="h-5 w-5" />
-          </Button>
-        </SearchDialog>
-
-        <Link href="/cart">
-          <Button variant="ghost" size="icon">
-            <div className="relative">
-              <ShoppingCart className="h-5 w-5" />
-              {cartCount > 0 && (
-                <Badge
-                  variant="destructive"
-                  className="absolute -right-2 -top-2 h-5 w-5 p-0 flex items-center justify-center"
-                >
-                  {cartCount}
-                </Badge>
-              )}
-            </div>
-          </Button>
-        </Link>
-
-        <Sheet>
-          <SheetTrigger asChild>
+        <div className="flex items-center gap-2">
+          <Link href="/cart">
             <Button variant="ghost" size="icon">
-              <Menu className="h-5 w-5" />
+              <div className="relative">
+                <ShoppingCart className="h-5 w-5" />
+                {cartCount > 0 && (
+                  <Badge
+                    variant="destructive"
+                    className="absolute -right-2 -top-2 h-5 w-5 p-0 flex items-center justify-center"
+                  >
+                    {cartCount}
+                  </Badge>
+                )}
+              </div>
             </Button>
-          </SheetTrigger>
+          </Link>
 
-          <SheetContent side="right">
-            <nav className="grid gap-4 text-base font-medium mt-10">
-              {navLinks.map(({ href, label, icon: Icon }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className="flex items-center gap-3 text-muted-foreground hover:text-primary"
-                >
-                  <Icon className="h-5 w-5" />
-                  {label}
-                </Link>
-              ))}
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
 
-              <DropdownMenuSeparator />
-
-              {isAuthenticated ? (
-                <>
-                  <Link href="/profile" className="flex items-center gap-3">
-                    <User className="h-5 w-5" />
-                    Profile
-                  </Link>
-
+            <SheetContent side="right">
+              <nav className="grid gap-4 text-base font-medium mt-10">
+                {navLinks.map(({ href, label, icon: Icon }) => (
                   <Link
-                    href="/profile/orders"
-                    className="flex items-center gap-3"
+                    key={href}
+                    href={href}
+                    className="flex items-center gap-3 text-muted-foreground hover:text-primary"
                   >
-                    <Package className="h-5 w-5" />
-                    Orders
+                    <Icon className="h-5 w-5" />
+                    {label}
                   </Link>
+                ))}
 
-                  <Button
-                    variant="ghost"
-                    onClick={logOut}
-                    className="flex items-center gap-3 justify-start text-destructive"
-                  >
-                    <LogOut className="h-5 w-5" />
-                    Logout
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Link href="/login" className="flex items-center gap-3">
-                    <LogIn className="h-5 w-5" />
-                    Login
-                  </Link>
+                <DropdownMenuSeparator />
 
-                  <Link href="/register" className="flex items-center gap-3">
-                    <UserPlus className="h-5 w-5" />
-                    Register
-                  </Link>
-                </>
-              )}
-            </nav>
-          </SheetContent>
-        </Sheet>
+                {isAuthenticated ? (
+                  <>
+                    <Link href="/profile" className="flex items-center gap-3">
+                      <User className="h-5 w-5" />
+                      Profile
+                    </Link>
+
+                    <Link
+                      href="/profile/orders"
+                      className="flex items-center gap-3"
+                    >
+                      <Package className="h-5 w-5" />
+                      Orders
+                    </Link>
+
+                    <Button
+                      variant="ghost"
+                      onClick={logOut}
+                      className="flex items-center gap-3 justify-start text-destructive"
+                    >
+                      <LogOut className="h-5 w-5" />
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/login" className="flex items-center gap-3">
+                      <LogIn className="h-5 w-5" />
+                      Login
+                    </Link>
+
+                    <Link href="/register" className="flex items-center gap-3">
+                      <UserPlus className="h-5 w-5" />
+                      Register
+                    </Link>
+                  </>
+                )}
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </div>
+
+      {/* Search bar row */}
+      <div className="w-full">
+        <SearchBar />
       </div>
     </div>
   );

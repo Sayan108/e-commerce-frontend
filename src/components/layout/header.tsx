@@ -1,7 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { CircleUserRound, Menu, Search, ShoppingCart } from "lucide-react";
+import { useState } from "react";
+import {
+  CircleUserRound,
+  Menu,
+  Search,
+  ShoppingCart,
+  Home,
+  Grid2x2,
+  Phone,
+  User,
+  Package,
+  LogOut,
+  LogIn,
+  UserPlus,
+} from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,66 +27,86 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Badge } from "@/components/ui/badge";
 
 import { Logo } from "../shared/logo";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { Badge } from "../ui/badge";
 import { SearchDialog } from "../shared/search-dialog";
-import { useState } from "react";
 import { SearchBar } from "../shared/search-bar";
-import useProducts from "@/hooks/useProducts";
+
+import { useIsMobile } from "@/hooks/use-mobile";
 import useAuth from "@/hooks/useAuth";
 
 const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/categories", label: "Categories" },
-  { href: "/contact", label: "Contact Us" },
+  { href: "/", label: "Home", icon: Home },
+  { href: "/categories", label: "Categories", icon: Grid2x2 },
+  { href: "/contact", label: "Contact Us", icon: Phone },
 ];
 
 export function Header() {
   const isMobile = useIsMobile();
   const [searchOpen, setSearchOpen] = useState(false);
+
   const {
     isAuthenticated,
     logOut,
     user: { cartItemCount: cartCount = 0 },
   } = useAuth();
 
+  /* ---------------- USER MENU (DESKTOP) ---------------- */
+
   const userMenu = (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="rounded-full">
-          <CircleUserRound />
+          <CircleUserRound className="h-5 w-5" />
           <span className="sr-only">User menu</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+
+      <DropdownMenuContent align="end" className="w-48">
         {isAuthenticated ? (
           <>
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
+
             <DropdownMenuItem asChild>
-              <Link href="/profile">Profile</Link>
+              <Link href="/profile" className="flex items-center gap-2">
+                <User className="h-4 w-4" />
+                Profile
+              </Link>
             </DropdownMenuItem>
+
             <DropdownMenuItem asChild>
-              <Link href="/profile/orders">Orders</Link>
+              <Link href="/profile/orders" className="flex items-center gap-2">
+                <Package className="h-4 w-4" />
+                Orders
+              </Link>
             </DropdownMenuItem>
+
             <DropdownMenuSeparator />
+
             <DropdownMenuItem
-              onClick={() => {
-                logOut();
-              }}
+              onClick={logOut}
+              className="flex items-center gap-2 text-destructive"
             >
+              <LogOut className="h-4 w-4" />
               Logout
             </DropdownMenuItem>
           </>
         ) : (
           <>
             <DropdownMenuItem asChild>
-              <Link href="/login">Login</Link>
+              <Link href="/login" className="flex items-center gap-2">
+                <LogIn className="h-4 w-4" />
+                Login
+              </Link>
             </DropdownMenuItem>
+
             <DropdownMenuItem asChild>
-              <Link href="/register">Register</Link>
+              <Link href="/register" className="flex items-center gap-2">
+                <UserPlus className="h-4 w-4" />
+                Register
+              </Link>
             </DropdownMenuItem>
           </>
         )}
@@ -79,38 +114,44 @@ export function Header() {
     </DropdownMenu>
   );
 
+  /* ---------------- DESKTOP NAV ---------------- */
+
   const desktopNav = (
     <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4 gap-8">
       <Logo />
-      <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
-        {navLinks.map((link) => (
+
+      <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+        {navLinks.map(({ href, label, icon: Icon }) => (
           <Link
-            key={link.href}
-            href={link.href}
-            className="transition-colors hover:text-primary"
+            key={href}
+            href={href}
+            className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
           >
-            {link.label}
+            <Icon className="h-4 w-4" />
+            {label}
           </Link>
         ))}
       </nav>
+
       <div className="flex items-center gap-4 flex-1 justify-end">
         <div className="w-full max-w-sm">
           <SearchBar />
         </div>
+
         {userMenu}
-        <Link href={isAuthenticated ? "/cart" : "/login"} passHref>
-          <Button variant="ghost" size="icon" asChild>
+
+        <Link href={isAuthenticated ? "/cart" : "/login"}>
+          <Button variant="ghost" size="icon">
             <div className="relative">
-              <ShoppingCart />
-              {/* {cartCount > 0 && (
+              <ShoppingCart className="h-5 w-5" />
+              {cartCount > 0 && (
                 <Badge
                   variant="destructive"
-                  className="absolute -right-2 -top-2 h-5 w-5 justify-center p-0"
+                  className="absolute -right-2 -top-2 h-5 w-5 p-0 flex items-center justify-center"
                 >
                   {cartCount}
                 </Badge>
-              )} */}
-              <span className="sr-only">Shopping Cart</span>
+              )}
             </div>
           </Button>
         </Link>
@@ -118,9 +159,12 @@ export function Header() {
     </div>
   );
 
+  /* ---------------- MOBILE NAV ---------------- */
+
   const mobileNav = (
     <div className="container mx-auto flex h-16 items-center justify-between px-4">
       <Logo />
+
       <div className="flex items-center gap-2">
         <SearchDialog open={searchOpen} onOpenChange={setSearchOpen}>
           <Button
@@ -128,78 +172,81 @@ export function Header() {
             size="icon"
             onClick={() => setSearchOpen(true)}
           >
-            <Search />
-            <span className="sr-only">Search</span>
+            <Search className="h-5 w-5" />
           </Button>
         </SearchDialog>
-        <Link href="/cart" passHref>
-          <Button variant="ghost" size="icon" asChild>
+
+        <Link href="/cart">
+          <Button variant="ghost" size="icon">
             <div className="relative">
-              <ShoppingCart />
+              <ShoppingCart className="h-5 w-5" />
               {cartCount > 0 && (
                 <Badge
                   variant="destructive"
-                  className="absolute -right-2 -top-2 h-5 w-5 justify-center p-0"
+                  className="absolute -right-2 -top-2 h-5 w-5 p-0 flex items-center justify-center"
                 >
                   {cartCount}
                 </Badge>
               )}
-              <span className="sr-only">Shopping Cart</span>
             </div>
           </Button>
         </Link>
+
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon">
-              <Menu />
-              <span className="sr-only">Toggle navigation menu</span>
+              <Menu className="h-5 w-5" />
             </Button>
           </SheetTrigger>
+
           <SheetContent side="right">
-            <nav className="grid gap-6 text-lg font-medium mt-10">
-              {navLinks.map((link) => (
+            <nav className="grid gap-4 text-base font-medium mt-10">
+              {navLinks.map(({ href, label, icon: Icon }) => (
                 <Link
-                  key={link.href}
-                  href={link.href}
-                  className="transition-colors hover:text-primary"
+                  key={href}
+                  href={href}
+                  className="flex items-center gap-3 text-muted-foreground hover:text-primary"
                 >
-                  {link.label}
+                  <Icon className="h-5 w-5" />
+                  {label}
                 </Link>
               ))}
+
               <DropdownMenuSeparator />
+
               {isAuthenticated ? (
                 <>
-                  <Link
-                    href="/profile"
-                    className="transition-colors hover:text-primary"
-                  >
+                  <Link href="/profile" className="flex items-center gap-3">
+                    <User className="h-5 w-5" />
                     Profile
                   </Link>
+
                   <Link
                     href="/profile/orders"
-                    className="transition-colors hover:text-primary"
+                    className="flex items-center gap-3"
                   >
+                    <Package className="h-5 w-5" />
                     Orders
                   </Link>
+
                   <Button
-                    onClick={() => logOut()}
-                    className="transition-colors hover:text-primary cursor-pointer"
+                    variant="ghost"
+                    onClick={logOut}
+                    className="flex items-center gap-3 justify-start text-destructive"
                   >
+                    <LogOut className="h-5 w-5" />
                     Logout
                   </Button>
                 </>
               ) : (
                 <>
-                  <Link
-                    href="/login"
-                    className="transition-colors hover:text-primary"
-                  >
+                  <Link href="/login" className="flex items-center gap-3">
+                    <LogIn className="h-5 w-5" />
                     Login
                   </Link>
-                  <Link
-                    href="/register"
-                    className="transition-colors hover:text-primary"
-                  >
+
+                  <Link href="/register" className="flex items-center gap-3">
+                    <UserPlus className="h-5 w-5" />
                     Register
                   </Link>
                 </>
@@ -210,6 +257,8 @@ export function Header() {
       </div>
     </div>
   );
+
+  /* ---------------- ROOT ---------------- */
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

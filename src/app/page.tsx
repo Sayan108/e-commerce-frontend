@@ -28,6 +28,11 @@ export default function Home() {
           <FeaturedProducts />
         </section>
 
+        {/* MARKETING VIDEO */}
+        <section className="container mx-auto px-3 sm:px-4">
+          <MarketingVideo videos={videos} loading={loading} />
+        </section>
+
         {/* SPECIALITIES */}
         <section className="bg-muted/40 py-12 sm:py-16 md:py-20">
           <div className="container mx-auto px-3 sm:px-4">
@@ -35,17 +40,12 @@ export default function Home() {
           </div>
         </section>
 
-        {/* MARKETING VIDEO */}
-        <section className="container mx-auto px-3 sm:px-4">
-          <MarketingVideo videos={videos} loading={loading} />
-        </section>
-
         {/* TESTIMONIALS */}
-        <section className="bg-muted/40 py-12 sm:py-16 md:py-20">
+        {/* <section className="bg-muted/40 py-12 sm:py-16 md:py-20">
           <div className="container mx-auto px-3 sm:px-4">
             <Testimonials />
           </div>
-        </section>
+        </section> */}
       </div>
     </main>
   );

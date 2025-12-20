@@ -102,9 +102,33 @@ export default function ProductPage() {
             </div>
 
             {/* PRICE */}
-            <p className="mt-3 text-2xl md:text-3xl font-bold">
-              ₹{product.price}
-            </p>
+            <div className="mt-3 flex flex-wrap items-end gap-2">
+              {/* Selling Price */}
+              <span className="text-2xl sm:text-3xl font-bold">
+                ₹{product.price}
+              </span>
+
+              {/* Original Price */}
+              {product.originalPrice &&
+                product.originalPrice > product.price && (
+                  <span className="text-sm sm:text-base line-through text-muted-foreground">
+                    ₹{product.originalPrice}
+                  </span>
+                )}
+
+              {/* Discount Badge */}
+              {product.originalPrice &&
+                product.originalPrice > product.price && (
+                  <span className="text-xs sm:text-sm font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded-md">
+                    {Math.round(
+                      ((product.originalPrice - product.price) /
+                        product.originalPrice) *
+                        100
+                    )}
+                    % OFF
+                  </span>
+                )}
+            </div>
 
             {/* DESCRIPTION */}
             <p className="mt-3 text-sm md:text-base text-muted-foreground">

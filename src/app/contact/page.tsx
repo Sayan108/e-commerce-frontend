@@ -19,6 +19,7 @@ import { Mail, Phone, MapPin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import useContactUsInfo from "@/hooks/useContactUsinfo";
 import { Skeleton } from "@/components/ui/skeleton";
+import { JSX } from "react";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -183,7 +184,15 @@ export default function ContactPage() {
   );
 }
 
-function InfoItem({ icon, title, value }: any) {
+function InfoItem({
+  icon,
+  title,
+  value,
+}: {
+  icon: JSX.Element;
+  title: string;
+  value: string;
+}) {
   return (
     <div className="flex items-start gap-4">
       <div className="text-primary mt-1">{icon}</div>

@@ -38,7 +38,7 @@ export default function AddressesPage() {
     return (
       <div className="space-y-4">
         {[1, 2].map((i) => (
-          <Skeleton key={i} className="h-28 w-full rounded-xl" />
+          <Skeleton key={i} className="h-32 w-full rounded-xl" />
         ))}
       </div>
     );
@@ -48,26 +48,26 @@ export default function AddressesPage() {
   return (
     <Card className="shadow-sm">
       {/* HEADER */}
-      <CardHeader className="flex flex-row items-center justify-between">
+      <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <CardTitle className="text-xl">My Addresses</CardTitle>
-          <p className="text-sm text-muted-foreground">
+          <CardTitle className="text-lg sm:text-xl">My Addresses</CardTitle>
+          <p className="text-xs sm:text-sm text-muted-foreground">
             Manage your saved delivery locations
           </p>
         </div>
 
-        <Button onClick={() => setAddOpen(true)}>
+        <Button onClick={() => setAddOpen(true)} className="w-full sm:w-auto">
           <Plus className="mr-2 h-4 w-4" />
           Add Address
         </Button>
       </CardHeader>
 
       {/* CONTENT */}
-      <CardContent className="grid gap-4 md:grid-cols-2">
+      <CardContent className="grid gap-4 sm:grid-cols-1 md:grid-cols-2">
         {addresses.length === 0 && (
-          <div className="col-span-full text-center py-10 text-muted-foreground">
+          <div className="col-span-full text-center py-12 text-muted-foreground">
             <MapPin className="mx-auto h-8 w-8 mb-3" />
-            <p>No saved addresses yet</p>
+            <p className="text-sm">No saved addresses yet</p>
             <Button className="mt-4" onClick={() => setAddOpen(true)}>
               Add your first address
             </Button>
@@ -80,61 +80,64 @@ export default function AddressesPage() {
           return (
             <div
               key={address._id}
-              className="relative rounded-xl border p-4 transition hover:shadow-md"
+              className="rounded-xl border p-4 transition hover:shadow-md bg-background"
             >
-              {/* ADDRESS TYPE BADGE */}
-              <div className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-muted px-2 py-1 text-xs capitalize">
-                {isHome ? (
-                  <Home className="h-3 w-3" />
-                ) : (
-                  <Briefcase className="h-3 w-3" />
-                )}
-                {address.addressType}
-              </div>
+              {/* HEADER ROW */}
+              <div className="mb-3 flex items-start justify-between gap-3">
+                <div className="flex items-center gap-2 text-sm font-medium capitalize">
+                  {address.addressType === "home" ? (
+                    <Home className="h-4 w-4 text-primary" />
+                  ) : (
+                    <Briefcase className="h-4 w-4 text-primary" />
+                  )}
+                  {address.addressType}
+                </div>
 
-              {/* MAIN CONTENT */}
-              <div className="flex gap-3">
-                <MapPin className="h-5 w-5 mt-1 text-primary" />
+                <div className="flex gap-2">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => setEditAddress(address)}
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
 
-                <div className="flex-1">
-                  <p className="font-medium">{address.lineOne}</p>
-
-                  <p className="text-sm text-muted-foreground">
-                    {address.city}, {address.state} – {address.zip}
-                  </p>
-
-                  <p className="text-xs text-muted-foreground">
-                    {address.country}
-                  </p>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => deleteAddress(address._id)}
+                  >
+                    <Trash className="h-4 w-4 text-red-500" />
+                  </Button>
                 </div>
               </div>
 
-              {/* ACTIONS */}
-              <div className="mt-4 flex justify-end gap-2">
-                <Button
-                  size="icon"
-                  variant="outline"
-                  onClick={() => setEditAddress(address)}
-                >
-                  <Edit className="h-4 w-4" />
-                </Button>
+              {/* ADDRESS BODY */}
+              <div className="flex gap-3">
+                <MapPin className="h-5 w-5 mt-1 text-primary shrink-0" />
 
-                <Button
-                  size="icon"
-                  variant="outline"
-                  onClick={() => deleteAddress(address._id)}
-                >
-                  <Trash className="h-4 w-4 text-red-500" />
-                </Button>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium break-words leading-snug">
+                    {address.lineOne}
+                  </p>
+
+                  <p className="text-sm text-muted-foreground break-words">
+                    {address.city}, {address.state} – {address.zip}
+                  </p>
+
+                  <p className="text-xs text-muted-foreground break-words">
+                    {address.country}
+                  </p>
+                </div>
               </div>
             </div>
           );
         })}
       </CardContent>
 
-      {/* EDIT DIALOG */}
+      {/* EDIT */}
       <Dialog open={!!editAddress} onOpenChange={() => setEditAddress(null)}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Edit Address</DialogTitle>
           </DialogHeader>
@@ -149,9 +152,9 @@ export default function AddressesPage() {
         </DialogContent>
       </Dialog>
 
-      {/* ADD DIALOG */}
+      {/* ADD */}
       <Dialog open={addOpen} onOpenChange={setAddOpen}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Add New Address</DialogTitle>
           </DialogHeader>

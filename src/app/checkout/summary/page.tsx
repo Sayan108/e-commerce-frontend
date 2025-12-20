@@ -10,10 +10,10 @@ import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/hooks/useCart";
 import { useAddress } from "@/hooks/useAddress";
 import { useOrders } from "@/hooks/useOrder";
-import { OrderType } from "@/lib/redux/slices/order.slice";
 import { Loader2, ArrowLeft } from "lucide-react";
 import { productFallback } from "@/lib/utils/constants";
 import OptimizedImage from "@/components/shared/errorHandledImage";
+import { OrderType } from "@/lib/redux/types/order.types";
 
 export default function SummaryPage() {
   const router = useRouter();
@@ -73,12 +73,14 @@ export default function SummaryPage() {
                       className="flex items-center justify-between py-3"
                     >
                       <div className="flex items-center gap-3">
-                        <OptimizedImage
-                          src={item.thumbnail ?? productFallback}
-                          alt={item.itemname}
-                          fallback={productFallback}
-                          className="h-16 w-16 rounded border object-cover"
-                        />
+                        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-md border bg-muted">
+                          <OptimizedImage
+                            src={item.thumbnail ?? productFallback}
+                            alt={item.itemname}
+                            fallback={productFallback}
+                            className="object-cover"
+                          />
+                        </div>
                         <div>
                           <p className="text-sm font-medium capitalize">
                             {item.itemname}

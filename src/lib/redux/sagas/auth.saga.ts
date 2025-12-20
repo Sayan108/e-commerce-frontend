@@ -13,10 +13,9 @@ import { ISnackBarType, showSnackbar } from "../slices/snackbar.slice";
 import { navigate } from "@/hooks/useNavigation";
 
 // ---- LOGIN ----
-function* loginSaga(action: any) {
+function* loginSaga(action: ReturnType<typeof authActions.loginRequest>) {
   try {
-    const { successCallBack, ...rest } = action.payload;
-    const res: AxiosResponse = yield call(loginApi, rest);
+    const res: AxiosResponse = yield call(loginApi, action.payload);
     console.log(res.data);
     yield put(authActions.loginSuccess(res.data));
     yield put(
@@ -27,9 +26,10 @@ function* loginSaga(action: any) {
     );
     navigate("/");
   } catch (e: any) {
+    console.log(e);
     yield put(
       showSnackbar({
-        message: e.response?.data?.message || "Login failed",
+        message: e.response?.data?.error || "Login failed",
         type: ISnackBarType.success,
       })
     );
@@ -40,10 +40,9 @@ function* loginSaga(action: any) {
 }
 
 // ---- REGISTER ----
-function* registerSaga(action: any) {
+function* registerSaga(action: ReturnType<typeof authActions.registerRequest>) {
   try {
-    const { successCallBack, ...rest } = action.payload;
-    const res: AxiosResponse = yield call(registerApi, rest);
+    const res: AxiosResponse = yield call(registerApi, action.payload);
     console.log(res.data);
     yield put(authActions.registerSuccess(res.data));
 
@@ -78,7 +77,9 @@ function* getProfileSaga() {
 }
 
 // ---- UPDATE USER ----
-function* updateUserSaga(action: any) {
+function* updateUserSaga(
+  action: ReturnType<typeof authActions.updateUserRequest>
+) {
   try {
     const res: AxiosResponse = yield call(updateUserApi, action.payload);
     yield put(authActions.updateUserSuccess(res.data.updateSelf));

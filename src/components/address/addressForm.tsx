@@ -43,7 +43,7 @@ type AddressFormValues = z.infer<typeof addressSchema>;
 ================================ */
 interface AddressFormProps {
   address?: Address; // edit mode
-  onSave: any;
+  onSave: (payload: Address) => void;
   closeDialog: () => void;
 }
 
@@ -70,7 +70,7 @@ export const AddressForm = ({
       onSave({ ...address, ...data });
     } else {
       // ✅ CREATE
-      onSave(data);
+      onSave(data as Address);
     }
     closeDialog();
   };

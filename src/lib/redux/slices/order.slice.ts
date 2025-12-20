@@ -1,39 +1,6 @@
 // src/lib/redux/slices/order.slice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface OrderItem {
-  userId: string;
-  productId: string;
-  quantity: number;
-  price: number;
-  productname: string;
-  thumbnail?: string;
-}
-
-export enum OrderType {
-  items,
-  fullCart,
-}
-
-export interface Order {
-  _id: string;
-  userId: string;
-  items: OrderItem[];
-  total: number;
-  status: string;
-  billingaddress: string;
-  shippingaddress: string;
-  createdAt: string;
-}
-
-interface OrderState {
-  orders: Order[];
-  orderDetails: Order | null;
-  loading: boolean;
-  placingOrder: boolean;
-  error: string | null;
-  currentOrder: Order | null;
-}
+import { Order, OrderState, OrderType } from "../types/order.types";
 
 const initialState: OrderState = {
   orders: [],

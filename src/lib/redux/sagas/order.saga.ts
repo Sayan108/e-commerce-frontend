@@ -17,10 +17,10 @@ import { navigate } from "@/hooks/useNavigation";
 import { ISnackBarType, showSnackbar } from "../slices/snackbar.slice";
 import { clearDraftCart } from "../slices/cart.slice";
 
-function* fetchOrdersWorker(): any {
+function* fetchOrdersWorker() {
   try {
     const userId = store.getState().auth.user._id;
-    const res = yield call(getOrders, userId);
+    const res: AxiosResponse = yield call(getOrders, userId);
     console.log(res);
     yield put(fetchOrdersSuccess(res.data.orders.data));
   } catch (err: any) {
@@ -28,7 +28,7 @@ function* fetchOrdersWorker(): any {
   }
 }
 
-function* placeOrderWorker(action: any): any {
+function* placeOrderWorker() {
   try {
     const shippingAddressId =
       store.getState().address.currentShippingAddress?._id;
@@ -50,7 +50,7 @@ function* placeOrderWorker(action: any): any {
         type: ISnackBarType.success,
       })
     );
-    if (draftCart.length === 0) yield put(authActions.updateCartCount(-1));
+    if (draftCart.length === 0) yield put(authActions.updateCartCount(0));
     else yield put(clearDraftCart());
   } catch (err: any) {
     yield put(placeOrderFailure(err.message));

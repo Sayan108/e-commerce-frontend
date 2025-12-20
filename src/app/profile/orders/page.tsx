@@ -1,5 +1,10 @@
 "use client";
 
+import { format } from "date-fns";
+import Link from "next/link";
+import { useEffect } from "react";
+import { ShoppingBag } from "lucide-react";
+
 import {
   Table,
   TableBody,
@@ -9,9 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import {
   Card,
   CardContent,
@@ -19,59 +22,42 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { ShoppingBag } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useEffect } from "react";
+
 import { useOrders } from "@/hooks/useOrder";
 
-// Skeleton Loader
+/* ---------------- SKELETON ---------------- */
 const OrdersSkeleton = () => (
   <Card>
     <CardHeader className="space-y-2">
       <Skeleton className="h-6 w-40" />
       <Skeleton className="h-4 w-64" />
     </CardHeader>
-
-    <CardContent className="px-0">
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              {[1, 2, 3, 4, 5].map((i) => (
-                <TableHead key={i}>
-                  <Skeleton className="h-5 w-24" />
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-
-          <TableBody>
-            {Array.from({ length: 3 }).map((_, i) => (
-              <TableRow key={i}>
-                <TableCell>
-                  <Skeleton className="h-5 w-24" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-5 w-28" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-6 w-20 rounded-full" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-5 w-16 ml-auto" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-9 w-24 ml-auto" />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+    <CardContent className="space-y-4">
+      {[1, 2, 3].map((i) => (
+        <Skeleton key={i} className="h-24 w-full rounded-lg" />
+      ))}
     </CardContent>
   </Card>
 );
 
+/* ---------------- STATUS BADGE ---------------- */
+const StatusBadge = ({ status }: { status: string }) => (
+  <Badge
+    variant={
+      status === "Delivered"
+        ? "default"
+        : status === "Processing"
+        ? "secondary"
+        : "outline"
+    }
+    className="capitalize"
+  >
+    {status}
+  </Badge>
+);
+
+/* ---------------- PAGE ---------------- */
 export default function OrdersPage() {
   const { getOrders, orders, loading, setCurrentOrder } = useOrders();
 
@@ -85,12 +71,12 @@ export default function OrdersPage() {
     <Card>
       <CardHeader>
         <CardTitle className="text-xl">My Orders</CardTitle>
-        <CardDescription>View your order history and status.</CardDescription>
+        <CardDescription>View your order history and status</CardDescription>
       </CardHeader>
 
-      <CardContent className="px-0">
+      <CardContent>
         {orders.length === 0 ? (
-          <div className="text-center py-14 border-2 border-dashed rounded-lg mx-4">
+          <div className="text-center py-14 border-2 border-dashed rounded-lg">
             <ShoppingBag className="mx-auto h-12 w-12 text-muted-foreground" />
             <h3 className="mt-4 text-lg font-semibold">No Orders Yet</h3>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -101,67 +87,96 @@ export default function OrdersPage() {
             </Button>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="min-w-[140px]">Order ID</TableHead>
-                  <TableHead className="min-w-[120px]">Date</TableHead>
-                  <TableHead className="min-w-[120px]">Status</TableHead>
-                  <TableHead className="text-right min-w-[100px]">
-                    Total
-                  </TableHead>
-                  <TableHead className="text-right min-w-[120px]">
-                    Actions
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
+          <>
+            {/* ================= MOBILE VIEW ================= */}
+            <div className="space-y-4 md:hidden">
+              {orders.map((order) => (
+                <Card key={order.orderNumber} className="p-4">
+                  <div className="flex justify-between items-start gap-3">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Order ID</p>
+                      <p className="font-medium truncate max-w-[160px]">
+                        {order.orderNumber}
+                      </p>
+                    </div>
+                    <StatusBadge status={order.status} />
+                  </div>
 
-              <TableBody>
-                {orders.map((order) => (
-                  <TableRow key={order._id}>
-                    <TableCell className="font-medium">{order._id}</TableCell>
+                  <div className="mt-3 flex justify-between text-sm">
+                    <span className="text-muted-foreground">Date</span>
+                    <span>{format(new Date(order.createdAt), "PPP")}</span>
+                  </div>
 
-                    <TableCell>
-                      {format(new Date(order.createdAt), "PPP")}
-                    </TableCell>
+                  <div className="mt-2 flex justify-between text-sm font-medium">
+                    <span>Total</span>
+                    <span>₹{order.total.toFixed(2)}</span>
+                  </div>
 
-                    <TableCell>
-                      <Badge
-                        variant={
-                          order.status === "Delivered"
-                            ? "default"
-                            : order.status === "Processing"
-                            ? "secondary"
-                            : "outline"
-                        }
-                        className="px-3 py-1"
-                      >
-                        {order.status}
-                      </Badge>
-                    </TableCell>
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="sm"
+                    className="mt-4 w-full"
+                  >
+                    <Link
+                      href={`/profile/orders/${order._id}`}
+                      onClick={() => setCurrentOrder(order)}
+                    >
+                      View Details
+                    </Link>
+                  </Button>
+                </Card>
+              ))}
+            </div>
 
-                    <TableCell className="text-right font-medium">
-                      ₹{order.total.toFixed(2)}
-                    </TableCell>
-
-                    <TableCell className="text-right">
-                      <Button asChild variant="outline" size="sm">
-                        <Link
-                          onClick={() => {
-                            setCurrentOrder(order);
-                          }}
-                          href={`/profile/orders/${order._id}`}
-                        >
-                          View Details
-                        </Link>
-                      </Button>
-                    </TableCell>
+            {/* ================= DESKTOP VIEW ================= */}
+            <div className="hidden md:block">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Order ID</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Total</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                </TableHeader>
+
+                <TableBody>
+                  {orders.map((order) => (
+                    <TableRow key={order._id}>
+                      <TableCell className="font-medium">
+                        {order.orderNumber}
+                      </TableCell>
+
+                      <TableCell>
+                        {format(new Date(order.createdAt), "PPP")}
+                      </TableCell>
+
+                      <TableCell>
+                        <StatusBadge status={order.status} />
+                      </TableCell>
+
+                      <TableCell className="text-right font-medium">
+                        ₹{order.total.toFixed(2)}
+                      </TableCell>
+
+                      <TableCell className="text-right">
+                        <Button asChild variant="outline" size="sm">
+                          <Link
+                            href={`/profile/orders/${order._id}`}
+                            onClick={() => setCurrentOrder(order)}
+                          >
+                            View Details
+                          </Link>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </>
         )}
       </CardContent>
     </Card>

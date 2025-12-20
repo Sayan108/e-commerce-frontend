@@ -10,6 +10,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { HelpCircle } from "lucide-react";
 import useFaqs from "@/hooks/useFaqs";
+import { faq } from "@/lib/redux/types/dashboard.types";
 
 export default function FAQPage() {
   const { faqs, loading } = useFaqs();
@@ -59,8 +60,8 @@ export default function FAQPage() {
           {/* ✅ FAQ List */}
           {!loading && faqs?.length > 0 && (
             <Accordion type="single" collapsible className="w-full">
-              {faqs.map((faq: any, index: number) => (
-                <AccordionItem key={faq._id || faq.id} value={`item-${index}`}>
+              {faqs.map((faq: faq, index: number) => (
+                <AccordionItem key={faq._id} value={`item-${index}`}>
                   <AccordionTrigger>{faq.question}</AccordionTrigger>
                   <AccordionContent>{faq.answer}</AccordionContent>
                 </AccordionItem>

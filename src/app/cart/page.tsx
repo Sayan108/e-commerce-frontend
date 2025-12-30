@@ -26,6 +26,7 @@ export default function CartPage() {
     updateCart: updateQuantity,
     deleteCart: removeFromCart,
     fetchCart,
+    loading,
   } = useCart();
   const cartTotal = cartItems.reduce(
     (total, item) => total + item.quantity * item.price,
@@ -75,11 +76,13 @@ export default function CartPage() {
                       className="flex flex-col md:flex-row items-start md:items-center p-5 gap-5"
                     >
                       {/* IMAGE */}
-                      <OptimizedImage
-                        src={item.thumbnail ?? productFallback}
-                        alt={item.itemname}
-                        fallback={productFallback}
-                      />
+                      <div className="relative w-20 h-20 shrink-0">
+                        <OptimizedImage
+                          src={item.thumbnail ?? productFallback}
+                          alt={item.itemname}
+                          fallback={productFallback}
+                        />
+                      </div>
 
                       {/* DETAILS */}
                       <div className="flex-grow">
@@ -97,6 +100,7 @@ export default function CartPage() {
                         <Button
                           variant="ghost"
                           size="icon"
+                          disabled={loading}
                           onClick={() =>
                             updateQuantity({
                               _id: item._id,
@@ -117,6 +121,7 @@ export default function CartPage() {
                         <Button
                           variant="ghost"
                           size="icon"
+                          disabled={loading}
                           onClick={() =>
                             updateQuantity({
                               _id: item._id,
@@ -137,6 +142,7 @@ export default function CartPage() {
                       <Button
                         variant="ghost"
                         size="icon"
+                        disabled={loading}
                         onClick={() => removeFromCart(item._id)}
                         className="text-muted-foreground hover:text-destructive"
                       >
@@ -176,7 +182,12 @@ export default function CartPage() {
               </CardContent>
 
               <CardFooter>
-                <Button asChild size="lg" className="w-full gap-2">
+                <Button
+                  asChild
+                  size="lg"
+                  className="w-full gap-2"
+                  disabled={loading || cartItems.length === 0}
+                >
                   <Link href="/checkout/address">
                     Proceed to Checkout
                     <ArrowRight className="h-5 w-5 ml-1" />
